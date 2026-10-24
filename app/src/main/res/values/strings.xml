@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Vinilos</string>
+    <string name="albums">Álbumes</string>
+    <string name="search_albums">Buscar álbumes</string>
+    <string name="catalog_error">No pudimos cargar los álbumes. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="catalog_empty">Todavía no hay álbumes disponibles.</string>
+    <string name="no_search_results">No encontramos álbumes con esa búsqueda.</string>
+    <string name="retry">Reintentar</string>
+    <string name="loading">Cargando álbumes</string>
+    <string name="unknown_artist">Artista no disponible</string>
+    <string name="album_cover">Portada de %1$s</string>
+    <string name="select_album">Seleccionar %1$s, %2$s</string>
+    <string name="detail_pending">Seleccionaste %1$s. El detalle se integrará en HU02.</string>
+    <plurals name="album_count"><item quantity="one">%d álbum</item><item quantity="other">%d álbumes</item></plurals>
+</resources>

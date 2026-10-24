@@ -6,7 +6,7 @@
         android:paddingTop="12dp" android:paddingBottom="24dp" android:accessibilityHeading="true" />
     <EditText android:id="@+id/search_albums" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:minHeight="48dp" android:background="@drawable/search_background" android:paddingStart="20dp"
-        android:paddingEnd="20dp" android:hint="@string/search_albums" android:contentDescription="@string/search_albums"
+        android:paddingEnd="20dp" android:hint="@string/search_albums"
         android:inputType="text" android:imeOptions="actionSearch" android:maxLines="1" android:autofillHints="" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="16dp" android:paddingBottom="12dp">

@@ -50,20 +50,38 @@ Reglas de integración:
 
 ## Ejecución local
 
-> Sección en construcción: se completará en el Sprint 1 con las instrucciones detalladas.
+Proyecto inicial de HU01 (Visitante). [Alcance, integración con HU02 y pruebas](docs/HU01-avance.md).
 
 Requisitos previos:
 
-- Android Studio (versión estable más reciente) con Android SDK y un emulador configurado
+- Android Studio compatible con AGP 8.7.3, JDK 17, Android SDK 35 y un emulador configurado
 - Docker Desktop (o Node.js LTS) para ejecutar el backend BackVynils
 - Git
 
 Pasos generales:
 
-1. Clonar este repositorio y abrirlo en Android Studio.
+1. Clonar este repositorio, seleccionar la rama del avance y abrir la raíz en Android Studio.
 2. Levantar el backend siguiendo las instrucciones de [BackVynils](https://github.com/TheSoftwareDesignLab/BackVynils).
-3. Configurar la URL base de la API en la app (desde el emulador, el `localhost` del PC es `10.0.2.2`).
+3. Sincronizar Gradle. La URL de desarrollo predeterminada es `http://10.0.2.2:3000/` (backend del PC desde el emulador). Configurar otra URL mediante `-PVINILOS_API_BASE_URL=https://servidor/`; siempre debe terminar en `/`. En un dispositivo físico usar una dirección accesible desde ese dispositivo. No se incluyen claves ni una instancia pública de backend.
 4. Ejecutar la app en un emulador o dispositivo físico.
+
+Desde terminal (SDK instalado y `ANDROID_HOME` o `local.properties` configurado):
+
+```bash
+./gradlew testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
+./gradlew connectedDebugAndroidTest  # requiere emulador o dispositivo conectado
+# Otra instancia de backend:
+./gradlew assembleDebug -PVINILOS_API_BASE_URL=https://servidor/
+```
+
+Windows: usar `gradlew.bat`. El APK debug se genera en
+`app/build/outputs/apk/debug/app-debug.apk`; instalar con `adb install -r` sobre ese archivo.
+La configuración mínima es Android 5.0 (API 21); su ejecución debe comprobarse en dispositivo.
+HTTP solo está habilitado en debug para desarrollo local; la distribución release requiere HTTPS.
+
+HU01 muestra el catálogo obtenido de `GET /albums`, búsqueda y estados de carga/vacío/error.
+Al seleccionar entrega el ID para HU02; el detalle todavía muestra un aviso temporal.
+No se implementan aún los flujos de otras historias ni se presenta este avance como release final.
 
 ## Documentación
 

@@ -41,6 +41,8 @@ jobs:
         include:
           - api-level: 21
             target: default
+          - api-level: 29
+            target: default
           - api-level: 34
             target: google_apis
     steps:

@@ -46,6 +46,35 @@ class AlbumServiceAdapterTest {
         } finally { server.shutdown() }
     }
 
+    @Test fun `consulta el detalle por id y transforma tracks`() = runTest {
+        val server = MockWebServer()
+        server.start()
+        try {
+            server.enqueue(MockResponse().setBody("""{
+                "id":7,"name":"Re","cover":"https://example.org/re.jpg",
+                "releaseDate":"1994-01-01T00:00:00.000Z","description":"Álbum de estudio",
+                "genre":"Rock","recordLabel":"Warner Music Mexico",
+                "performers":[{"name":"Café Tacvba"}],
+                "tracks":[{"id":1,"name":"El aparato","duration":"4:20"}]
+            }"""))
+            val result = repository(server).getAlbum(7)
+            assertEquals("/albums/7", server.takeRequest(2, TimeUnit.SECONDS)?.path)
+            assertEquals("Re", result.name)
+            assertEquals("El aparato", result.tracks.single().name)
+            assertEquals(listOf("Café Tacvba"), result.performers)
+        } finally { server.shutdown() }
+    }
+
+    @Test fun `rechaza detalle cuyo id no corresponde al solicitado`() = runTest {
+        val server = MockWebServer()
+        server.start()
+        try {
+            server.enqueue(MockResponse().setBody("""{"id":8,"name":"Otro"}"""))
+            try { repository(server).getAlbum(7); fail("Debe rechazar un álbum diferente") }
+            catch (_: IllegalArgumentException) { }
+        } finally { server.shutdown() }
+    }
+
     private fun repository(server: MockWebServer) = RemoteAlbumRepository(AlbumServiceAdapter(
         Retrofit.Builder().baseUrl(server.url("/"))
             .addConverterFactory(GsonConverterFactory.create()).build().create(AlbumService::class.java)))

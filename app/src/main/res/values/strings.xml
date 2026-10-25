@@ -10,6 +10,16 @@
     <string name="unknown_artist">Artista no disponible</string>
     <string name="album_cover">Portada de %1$s</string>
     <string name="select_album">Seleccionar %1$s, %2$s</string>
-    <string name="detail_pending">Seleccionaste %1$s. El detalle se integrará en HU02.</string>
+    <string name="loading_album_detail">Cargando detalle del álbum</string>
+    <string name="album_cover_loading">Portada del álbum</string>
+    <string name="detail_error">No pudimos cargar el detalle del álbum. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="album_information">Información del álbum</string>
+    <string name="tracks">Canciones</string>
+    <string name="not_available">No disponible</string>
+    <string name="release_date_value">Lanzamiento: %1$s</string>
+    <string name="genre_value">Género: %1$s</string>
+    <string name="record_label_value">Sello discográfico: %1$s</string>
+    <string name="no_description">Este álbum no tiene descripción.</string>
+    <string name="no_tracks">Este álbum no tiene canciones registradas.</string>
     <plurals name="album_count"><item quantity="one">%d álbum</item><item quantity="other">%d álbumes</item></plurals>
 </resources>

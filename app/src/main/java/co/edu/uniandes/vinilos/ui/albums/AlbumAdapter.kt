@@ -22,7 +22,11 @@ class AlbumAdapter(private val selected: (Album) -> Unit) : ListAdapter<Album, A
                 album.genre.ifBlank { root.context.getString(R.string.unknown_artist) }
             }
             albumCover.contentDescription = root.context.getString(R.string.album_cover, album.name)
-            albumCover.load(album.cover) { placeholder(R.drawable.ic_album); error(R.drawable.ic_album) }
+            albumCover.load(album.cover) {
+                addHeader("User-Agent", "VinilosAndroid/1.0 (https://github.com/Osaron/vinilos-android)")
+                placeholder(R.drawable.ic_album)
+                error(R.drawable.ic_album)
+            }
             root.contentDescription = root.context.getString(R.string.select_album, album.name, albumArtist.text)
             root.setOnClickListener { selected(album) }
         }

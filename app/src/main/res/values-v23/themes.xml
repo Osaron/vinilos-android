@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.Vinilos" parent="Base.Theme.Vinilos">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">#FAFAFA</item>
+    </style>
+</resources>

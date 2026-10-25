@@ -2,6 +2,7 @@ package co.edu.uniandes.vinilos
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
@@ -54,6 +55,9 @@ class AlbumDetailTest {
                     .check(matches(withText(containsString("El aparato (4:20)"))))
                     .check(matches(isDisplayed()))
                 assertEquals(7, requestedId)
+                // En API 21 el buscador del catálogo puede dejar abierto el teclado;
+                // si no se cierra, el primer Atrás solo oculta el teclado.
+                closeSoftKeyboard()
                 pressBack()
                 onView(withId(R.id.album_list)).check(matches(isDisplayed()))
             }

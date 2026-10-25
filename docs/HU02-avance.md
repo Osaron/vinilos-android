@@ -16,20 +16,28 @@
 - Estados de éxito, error y reintento del ViewModel.
 - Flujo Espresso catálogo -> detalle -> catálogo con repositorio controlado.
 
-## Verificación pendiente
+## Verificación automatizada
 
-El equipo de desarrollo debe ejecutar y registrar:
+La ejecución de GitHub Actions
+[40234412802](https://github.com/Osaron/vinilos-android/actions/runs/40234412802)
+terminó correctamente después de actualizar HU02 sobre `develop`. Verificó:
 
 ```bash
-./gradlew test
-./gradlew lint
-./gradlew assembleDebug
-./gradlew assembleAndroidTest
+./gradlew --no-daemon testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
+```
+
+## Verificación pendiente en dispositivo
+
+El equipo de desarrollo todavía debe ejecutar y registrar:
+
+```bash
 ./gradlew connectedAndroidTest
 ```
 
 `connectedAndroidTest` requiere un emulador o dispositivo activo. La compatibilidad mínima debe comprobarse en Android API 21 y, si es posible, también en una API moderna.
 
-## Dependencia de integración
+## Integración
 
-Esta implementación parte temporalmente de `feature/HU01-catalogo-albumes`, porque el PR #36 aún no se encontraba integrado en `develop`. Antes de integrar HU02, se debe actualizar la rama sobre el `develop` que ya contenga HU01.
+HU01 fue integrada mediante el PR #36. La rama `feature/HU02-detalle-album`
+fue actualizada sobre `develop` y el PR #38 apunta a esa rama base. Sus tres
+commits están atribuidos a `@h-gordillog` y el PR está listo para revisión.

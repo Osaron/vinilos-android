@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -46,7 +47,12 @@ class AlbumDetailTest {
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
                 )
                 onView(withId(R.id.detail_name)).check(matches(withText("Re")))
-                onView(withText(containsString("El aparato (4:20)"))).check(matches(isDisplayed()))
+                // En pantallas pequeñas (p. ej. API 21) los tracks quedan bajo la portada:
+                // se desplaza el ScrollView antes de verificar que son visibles.
+                onView(withId(R.id.detail_tracks))
+                    .perform(scrollTo())
+                    .check(matches(withText(containsString("El aparato (4:20)"))))
+                    .check(matches(isDisplayed()))
                 assertEquals(7, requestedId)
                 pressBack()
                 onView(withId(R.id.album_list)).check(matches(isDisplayed()))

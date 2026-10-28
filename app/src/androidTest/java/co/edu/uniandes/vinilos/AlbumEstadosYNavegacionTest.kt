@@ -33,7 +33,7 @@ import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
- * Escenarios E2E de estados y navegación de HU01 y HU02 (ESC-14 a ESC-20 de
+ * Escenarios E2E de estados y navegación de HU01 y HU02 (ESC-14 a ESC-21 de
  * «Sprint 1 ‐ Artefactos de prueba»).
  *
  * Usan un repositorio controlado para fijar los datos y los tiempos de respuesta de cada
@@ -171,6 +171,22 @@ class AlbumEstadosYNavegacionTest {
             onView(withId(R.id.album_list)).check(matches(isDisplayed()))
             Catalogo.muestraAlbum("Re")
         }
+
+    /** ESC-21 (BUG-01, #46): un álbum sin intérpretes muestra «Artista no disponible» en la tarjeta y en el detalle. */
+    @Test
+    fun esc21_albumSinInterpretesMuestraArtistaNoDisponible() {
+        val sinInterpretes = Album(42, "Album sin artista", "", emptyList(), "Rock")
+        conRepositorio(RepositorioControlado(albums = { listOf(sinInterpretes) })) {
+            val artistaNoDisponible = app.getString(R.string.unknown_artist)
+
+            Catalogo.muestraAlbum("Album sin artista")
+            esperar { onView(withId(R.id.album_artist)).check(matches(withText(artistaNoDisponible))) }
+
+            Catalogo.abrirAlbumEnPosicion(0)
+            Detalle.muestraNombre("Album sin artista")
+            onView(withId(R.id.detail_performers)).check(matches(withText(artistaNoDisponible)))
+        }
+    }
 
     // ---------------------------------------------------------------------------------------
     // Páginas (Page Object): agrupan las interacciones de cada pantalla.

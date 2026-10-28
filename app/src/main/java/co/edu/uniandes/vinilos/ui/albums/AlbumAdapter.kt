@@ -18,9 +18,8 @@ class AlbumAdapter(private val selected: (Album) -> Unit) : ListAdapter<Album, A
     inner class Holder(private val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(album: Album) = with(binding) {
             albumName.text = album.name
-            albumArtist.text = album.performers.joinToString(", ").ifBlank {
-                album.genre.ifBlank { root.context.getString(R.string.unknown_artist) }
-            }
+            albumArtist.text = album.performers.joinToString(", ")
+                .ifBlank { root.context.getString(R.string.unknown_artist) }
             albumCover.contentDescription = root.context.getString(R.string.album_cover, album.name)
             albumCover.load(album.cover) {
                 addHeader("User-Agent", "VinilosAndroid/1.0 (https://github.com/Osaron/vinilos-android)")

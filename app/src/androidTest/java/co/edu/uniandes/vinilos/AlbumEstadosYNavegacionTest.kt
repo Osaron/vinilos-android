@@ -144,7 +144,7 @@ class AlbumEstadosYNavegacionTest {
         val repositorio = RepositorioControlado(albums = { catalogo }, detalle = { respuesta.await() })
         conRepositorio(repositorio) { escenario ->
             Catalogo.muestraAlbum("Re")
-            Catalogo.abrirAlbumEnPosicion(0)
+            escenario.tocarAlbumSinEsperar(0)
 
             esperar { assertTrue(escenario.estaVisible(R.id.detail_loading)) }
             assertFalse(escenario.estaVisible(R.id.detail_content))
@@ -268,6 +268,21 @@ class AlbumEstadosYNavegacionTest {
         var visible = false
         onActivity { actividad -> visible = actividad.findViewById<View>(id)?.isShown == true }
         return visible
+    }
+
+    /**
+     * Toca la tarjeta en [posicion] sin la sincronización de Espresso. Se usa cuando la pantalla
+     * siguiente queda con un indicador de carga animado: en Android 5 (API 21) Espresso puede
+     * esperar indefinidamente a que esa animación termine después del clic.
+     */
+    private fun ActivityScenario<MainActivity>.tocarAlbumSinEsperar(posicion: Int) {
+        onActivity { actividad ->
+            val lista = actividad.findViewById<RecyclerView>(R.id.album_list)
+            val tarjeta = checkNotNull(lista.findViewHolderForAdapterPosition(posicion)) {
+                "No hay una tarjeta visible en la posición $posicion"
+            }
+            tarjeta.itemView.performClick()
+        }
     }
 
     private companion object {

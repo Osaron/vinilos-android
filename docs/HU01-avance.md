@@ -1,4 +1,6 @@
-# HU01 — Avance del catálogo
+# HU01 — Registro histórico del avance del catálogo
+
+> Este documento conserva el estado del avance del 24 de octubre. HU02 ya está integrada en el código de Sprint 1; las referencias siguientes a trabajo pendiente describen ese momento. Para el estado vigente, consulta [entrega-sprint1.md](entrega-sprint1.md) y la wiki de Sprint 1.
 
 Responsable funcional: @Tibisaytarazona. Issues #1, #2, #3 y #4, Sprint 1.
 

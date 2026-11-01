@@ -26,7 +26,7 @@ La app replica la funcionalidad de la versión web de Vinilos (catálogo de álb
 | HU06 | Consultar la información detallada de un coleccionista | 3 |
 | HU08 | Asociar tracks con un álbum | 3 |
 
-**Estado actual (Sprint 1, en curso):** HU01 muestra el catálogo obtenido de `GET /albums`, con búsqueda y estados de carga, vacío y error. Al seleccionar un álbum se entrega su ID para HU02; el detalle de álbum está en desarrollo. Los flujos de las demás historias aún no están implementados. Más detalle en [docs/HU01-avance.md](docs/HU01-avance.md).
+**Estado actual (Sprint 1, cerrado):** HU01 y HU02 están completas, probadas e integradas en `main`. El catálogo (`GET /albums`) tiene búsqueda y estados de carga, vacío y error; el detalle de álbum muestra intérpretes, fecha, género, sello, descripción y canciones, con navegación de regreso y compatibilidad desde Android 5.0 (API 21). El cierre está liberado como [release v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0), con APK firmado y trazabilidad al commit probado. Los flujos de las demás historias (HU03 en adelante) aún no están implementados. Historial del avance en [docs/HU01-avance.md](docs/HU01-avance.md).
 
 ## Tecnologías
 
@@ -110,7 +110,7 @@ El APK queda en `app/build/outputs/apk/debug/app-debug.apk`. Para instalarlo en 
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los releases del repositorio.
+También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los [releases del repositorio](https://github.com/Osaron/vinilos-android/releases); el cierre de esta iteración es [v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0).
 
 ### 8. Ejecutar las pruebas
 

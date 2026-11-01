@@ -151,3 +151,10 @@ Reglas de integración:
 ## Documentación
 
 Toda la documentación del proyecto (backlog, diseño UX/UI, arquitectura, estrategia y artefactos de prueba, reglas de trabajo, actas y retrospectivas) está en la [wiki del repositorio](https://github.com/Osaron/vinilos-android/wiki), organizada por sprint: Inception, Sprint 1, Sprint 2 y Sprint 3.
+
+### Diseño UX/UI (Figma)
+
+- Archivo de diseño (editable): https://www.figma.com/design/MkdUukCRycnXvpfRPQj8Tp/Vinilos---Wireframes-UX-UI?node-id=0-1
+- Prototipo navegable: ver link en la wiki / mensaje del equipo.
+
+Incluye la pantalla inicial de selección de rol ("Visitante" / "Coleccionista") y el flujo completo de Visitante (HU01–HU06, sin el botón "+" de crear álbum ni "Agregar canción"). Capturas en [`docs/wireframes/flujo-visitante-y-selector-rol/`](docs/wireframes/flujo-visitante-y-selector-rol/).

@@ -25,6 +25,12 @@ android {
     kotlinOptions { jvmTarget = "17" }
 }
 
+tasks.withType<Test> {
+    // sun.jnu.encoding por defecto es Cp1252 en Windows en español; sin esto, el
+    // worker de pruebas no resuelve clases cuando la ruta del proyecto tiene tildes.
+    jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.jnu.encoding=UTF-8")
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")

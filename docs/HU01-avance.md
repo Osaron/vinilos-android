@@ -2,6 +2,15 @@
 
 Responsable funcional: @Tibisaytarazona. Issues #1, #2, #3 y #4, Sprint 1.
 
+> **Cierre (revisión de Donaldo, 1 de noviembre de 2026):** HU01 y HU02 quedaron
+> integradas en `develop` y liberadas en `main` mediante el PR #48 y el release
+> [v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0). Las
+> pendientes señaladas abajo (navegación a HU02, validación en API 21, cierre de
+> los issues #3 y #4) ya se verificaron: Espresso cubre catálogo y detalle en API
+> 21, 29 y 34 en CI, y la aceptación manual contra BackVynils real no encontró
+> defectos bloqueantes. Lo que sigue en este documento es el registro histórico
+> del avance, no el estado vigente.
+
 ## Alcance y diseño
 
 El catálogo de Visitante usa una grilla de dos columnas, nombre, portada y artistas,

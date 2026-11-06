@@ -1,5 +1,6 @@
 package co.edu.uniandes.vinilos
 
+import android.app.Activity
 import android.os.SystemClock
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
 import co.edu.uniandes.vinilos.data.AlbumRepository
 import co.edu.uniandes.vinilos.model.Album
 import co.edu.uniandes.vinilos.model.AlbumDetail
@@ -54,16 +58,17 @@ class AlbumEstadosYNavegacionTest {
     @Test
     fun esc14_muestraCargandoMientrasLlegaElCatalogo() {
         val respuesta = CompletableDeferred<List<Album>>()
-        conRepositorio(RepositorioControlado(albums = { respuesta.await() })) { escenario ->
-            esperar { assertTrue(escenario.estaVisible(R.id.loading_indicator)) }
-            assertFalse(escenario.estaVisible(R.id.album_list))
-            assertFalse(escenario.estaVisible(R.id.status_message))
-            assertFalse(escenario.estaVisible(R.id.retry_button))
+        conRepositorio(RepositorioControlado(albums = { respuesta.await() })) {
+            esperar { assertTrue(estaVisible(R.id.loading_indicator)) }
+            assertFalse(estaVisible(R.id.album_list))
+            assertFalse(estaVisible(R.id.status_message))
+            assertFalse(estaVisible(R.id.retry_button))
 
             respuesta.complete(listOf(re))
 
+            // Espresso se usa solo cuando el indicador de carga ya no está animando.
+            esperar { assertFalse(estaVisible(R.id.loading_indicator)) }
             Catalogo.muestraAlbum("Re")
-            assertFalse(escenario.estaVisible(R.id.loading_indicator))
         }
     }
 
@@ -142,18 +147,19 @@ class AlbumEstadosYNavegacionTest {
     fun esc19_muestraCargandoMientrasLlegaElDetalle() {
         val respuesta = CompletableDeferred<AlbumDetail>()
         val repositorio = RepositorioControlado(albums = { catalogo }, detalle = { respuesta.await() })
-        conRepositorio(repositorio) { escenario ->
+        conRepositorio(repositorio) {
             Catalogo.muestraAlbum("Re")
-            escenario.tocarAlbumSinEsperar(0)
+            tocarAlbumSinEsperar(0)
 
-            esperar { assertTrue(escenario.estaVisible(R.id.detail_loading)) }
-            assertFalse(escenario.estaVisible(R.id.detail_content))
-            assertFalse(escenario.estaVisible(R.id.detail_error_group))
+            esperar { assertTrue(estaVisible(R.id.detail_loading)) }
+            assertFalse(estaVisible(R.id.detail_content))
+            assertFalse(estaVisible(R.id.detail_error_group))
 
             respuesta.complete(detalleDe(re))
 
+            // Espresso se usa solo cuando el indicador de carga ya no está animando.
+            esperar { assertFalse(estaVisible(R.id.detail_loading)) }
             Detalle.muestraNombre("Re")
-            assertFalse(escenario.estaVisible(R.id.detail_loading))
         }
     }
 
@@ -261,28 +267,44 @@ class AlbumEstadosYNavegacionTest {
     }
 
     /**
-     * Indica si la vista está visible en pantalla. Se consulta directamente en la actividad para
-     * no depender de la sincronización de Espresso mientras hay un indicador de carga activo.
+     * Indica si la vista está visible en la actividad en primer plano. Se consulta en el hilo
+     * principal con `runOnMainSync`, que no espera a que la app esté inactiva: en Android 5
+     * (API 21), con las animaciones desactivadas, el indicador de carga indeterminado puede
+     * mantener ocupado el hilo principal y `onActivity`/Espresso quedarían esperando sin fin.
      */
-    private fun ActivityScenario<MainActivity>.estaVisible(id: Int): Boolean {
+    private fun estaVisible(id: Int): Boolean {
         var visible = false
-        onActivity { actividad -> visible = actividad.findViewById<View>(id)?.isShown == true }
+        enHiloPrincipal { actividad -> visible = actividad.findViewById<View>(id)?.isShown == true }
         return visible
     }
 
     /**
      * Toca la tarjeta en [posicion] sin la sincronización de Espresso. Se usa cuando la pantalla
-     * siguiente queda con un indicador de carga animado: en Android 5 (API 21) Espresso puede
-     * esperar indefinidamente a que esa animación termine después del clic.
+     * siguiente queda con un indicador de carga animado (ver [estaVisible]).
      */
-    private fun ActivityScenario<MainActivity>.tocarAlbumSinEsperar(posicion: Int) {
-        onActivity { actividad ->
-            val lista = actividad.findViewById<RecyclerView>(R.id.album_list)
-            val tarjeta = checkNotNull(lista.findViewHolderForAdapterPosition(posicion)) {
-                "No hay una tarjeta visible en la posición $posicion"
-            }
-            tarjeta.itemView.performClick()
+    private fun tocarAlbumSinEsperar(posicion: Int) = enHiloPrincipal { actividad ->
+        val lista = actividad.findViewById<RecyclerView>(R.id.album_list)
+        val tarjeta = checkNotNull(lista.findViewHolderForAdapterPosition(posicion)) {
+            "No hay una tarjeta visible en la posición $posicion"
         }
+        tarjeta.itemView.performClick()
+    }
+
+    /** Ejecuta [accion] en el hilo principal sobre la actividad reanudada, sin esperar inactividad. */
+    private fun enHiloPrincipal(accion: (Activity) -> Unit) {
+        var error: Throwable? = null
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            try {
+                val actividad = checkNotNull(
+                    ActivityLifecycleMonitorRegistry.getInstance()
+                        .getActivitiesInStage(Stage.RESUMED).firstOrNull(),
+                ) { "No hay una actividad en primer plano" }
+                accion(actividad)
+            } catch (e: Throwable) {
+                error = e
+            }
+        }
+        error?.let { throw it }
     }
 
     private companion object {

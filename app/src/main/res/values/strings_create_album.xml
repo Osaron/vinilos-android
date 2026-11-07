@@ -1,0 +1,27 @@
+<resources>
+    <!-- HU07: crear álbum (flujo Coleccionista). Archivo propio para no editar strings.xml en paralelo. -->
+    <string name="add_album">Agregar álbum</string>
+    <string name="create_album_title">Nuevo álbum</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save_album">Guardar álbum</string>
+    <string name="saving_album">Guardando álbum</string>
+    <string name="album_name_label">Nombre</string>
+    <string name="album_name_hint">Ej. Buscando América</string>
+    <string name="album_cover_label">URL de la portada</string>
+    <string name="album_cover_hint">https://…</string>
+    <string name="album_release_date_label">Fecha de lanzamiento</string>
+    <string name="album_release_date_hint">dd/mm/aaaa</string>
+    <string name="album_description_label">Descripción</string>
+    <string name="album_description_hint">Describe el álbum</string>
+    <string name="album_genre_label">Género</string>
+    <string name="album_record_label_label">Sello discográfico</string>
+    <string name="select_genre">Selecciona un género</string>
+    <string name="select_record_label">Selecciona un sello</string>
+    <string name="error_required">Este campo es obligatorio.</string>
+    <string name="error_invalid_url">Ingresa una URL que empiece por http:// o https://.</string>
+    <string name="error_invalid_date">Usa el formato dd/mm/aaaa con una fecha real.</string>
+    <string name="error_future_date">La fecha no puede ser posterior a hoy.</string>
+    <string name="error_not_allowed">Selecciona una opción de la lista.</string>
+    <string name="create_album_error">No pudimos crear el álbum. Tus datos se conservan; verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="album_created">Álbum «%1$s» creado.</string>
+</resources>

@@ -8,6 +8,7 @@ import co.edu.uniandes.vinilos.ui.albums.AlbumCatalogFragment
 import co.edu.uniandes.vinilos.ui.albums.AlbumDetailFragment
 
 import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
+import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +40,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, ArtistCatalogFragment())
                     .addToBackStack("artist_catalog").commit()
+            }
+        }
+        supportFragmentManager.setFragmentResultListener(AlbumCatalogFragment.OPEN_COLLECTORS, this) { _, _ ->
+            if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is CollectorCatalogFragment) {
+                hideKeyboard()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, CollectorCatalogFragment())
+                    .addToBackStack("collector_catalog").commit()
             }
         }
         if (savedInstanceState == null) supportFragmentManager.beginTransaction()

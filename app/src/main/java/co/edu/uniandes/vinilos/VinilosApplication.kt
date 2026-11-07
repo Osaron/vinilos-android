@@ -8,6 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class VinilosApplication : Application() {
+    var collectorRepository: CollectorRepository = RemoteCollectorRepository(CollectorServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(CollectorService::class.java)
+    ))
     var artistRepository: ArtistRepository = RemoteArtistRepository(ArtistServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
             .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).build())

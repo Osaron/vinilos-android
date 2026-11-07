@@ -35,4 +35,15 @@
     <string name="select_artist">Seleccionar %1$s, %2$s</string>
     <string name="artist_selected">Artista seleccionado: %1$s</string>
     <plurals name="artist_count"><item quantity="one">%d artista</item><item quantity="other">%d artistas</item></plurals>
+    <string name="collectors">Coleccionistas</string>
+    <string name="view_collectors">Coleccionistas</string>
+    <string name="search_collectors">Buscar coleccionistas</string>
+    <string name="loading_collectors">Cargando coleccionistas</string>
+    <string name="collectors_error">No pudimos cargar los coleccionistas. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="collectors_empty">Todavía no hay coleccionistas disponibles.</string>
+    <string name="collectors_no_results">No encontramos coleccionistas con esa búsqueda.</string>
+    <string name="collector_member">Miembro de la comunidad Vinilos</string>
+    <string name="select_collector">Seleccionar coleccionista %1$s</string>
+    <string name="collector_selected">Coleccionista seleccionado: %1$s</string>
+    <plurals name="collector_count"><item quantity="one">%d coleccionista</item><item quantity="other">%d coleccionistas</item></plurals>
 </resources>

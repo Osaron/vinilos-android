@@ -15,7 +15,7 @@ Resultado inicial: **0 errores, 27 advertencias**.
 
 | Regla | Archivos | Anotación | Justificación |
 |---|---|---|---|
-| `Overdraw` (4) | `fragment_album_catalog`, `fragment_album_detail`, `fragment_artist_catalog`, `fragment_create_album` | `tools:ignore="Overdraw"` | El fondo explícito `#FAFAFA` corrige el fondo negro (#43) y transparente (#44) observados en Android 5.0 / API 21. Quitarlo reintroduce esos defectos; el costo es una capa de dibujo por pantalla |
+| `Overdraw` (4 + 1 de HU05) | `fragment_album_catalog`, `fragment_album_detail`, `fragment_artist_catalog`, `fragment_create_album` y `fragment_collector_catalog` (HU05, integrada después de la revisión inicial) | `tools:ignore="Overdraw"` | El fondo explícito `#FAFAFA` corrige el fondo negro (#43) y transparente (#44) observados en Android 5.0 / API 21. Quitarlo reintroduce esos defectos; el costo es una capa de dibujo por pantalla |
 | `UnusedAttribute` – `accessibilityHeading` (3) | Catálogo, detalle y formulario | `tools:targetApi="p"` | Marca encabezados para TalkBack desde API 28; en versiones anteriores se ignora sin efectos |
 | `UnusedAttribute` – `foreground`, `clipToOutline` (2) | `item_album.xml` | `tools:targetApi="s"` | Efecto de pulsación y esquinas recortadas en APIs nuevas; en API 21–22 la tarjeta funciona igual sin ellos |
 | `UnusedAttribute` – `usesCleartextTraffic` (1) | `src/debug/AndroidManifest.xml` | `tools:targetApi="m"` | Solo en debug, para el backend local por HTTP. En API 21–22 HTTP ya está permitido por defecto |

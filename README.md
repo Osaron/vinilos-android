@@ -26,7 +26,7 @@ La app replica la funcionalidad de la versión web de Vinilos (catálogo de álb
 | HU06 | Consultar la información detallada de un coleccionista | 3 |
 | HU08 | Asociar tracks con un álbum | 3 |
 
-**Estado del Sprint 1:** HU01 (catálogo) y HU02 (detalle) están implementadas. El catálogo consulta `GET /albums`, permite buscar por nombre o artista y maneja carga, vacío y error. Al seleccionar un álbum, HU02 consulta `GET /albums/{id}`, muestra sus datos y tracks y permite regresar conservando la búsqueda. Las demás historias pertenecen a sprints posteriores. Consulta el [cierre y verificación de la entrega](docs/entrega-sprint1.md).
+**Estado actual (Sprint 1, cerrado):** HU01 y HU02 están completas, probadas e integradas en `main`. El catálogo (`GET /albums`) tiene búsqueda y estados de carga, vacío y error; el detalle de álbum muestra intérpretes, fecha, género, sello, descripción y canciones, con navegación de regreso y compatibilidad desde Android 5.0 (API 21). El cierre está liberado como [release v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0), con APK firmado y trazabilidad al commit probado. HU03 dispone de servicio de músicos y bandas; este avance agrega su listado, búsqueda, estados y selección, con el detalle HU04 pendiente de integrar. Guía y límites en [docs/HU03-listado.md](docs/HU03-listado.md). Las demás historias conservan su estado de avance independiente. Historial del avance en [docs/HU01-avance.md](docs/HU01-avance.md); cierre del Sprint 1 en [docs/entrega-sprint1.md](docs/entrega-sprint1.md).
 
 ## Tecnologías
 
@@ -57,8 +57,7 @@ La app replica la funcionalidad de la versión web de Vinilos (catálogo de álb
 ```bash
 git clone https://github.com/Osaron/vinilos-android.git
 cd vinilos-android
-git checkout main      # versión entregada; develop contiene la integración
-# Para reproducir una entrega concreta: git checkout <tag-del-release>
+git checkout develop   # rama de integración; main contiene los releases
 ```
 
 ### 3. Levantar el backend (BackVynils)
@@ -111,7 +110,7 @@ El APK queda en `app/build/outputs/apk/debug/app-debug.apk`. Para instalarlo en 
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los releases del repositorio.
+También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los [releases del repositorio](https://github.com/Osaron/vinilos-android/releases); el cierre de esta iteración es [v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0).
 
 ### 8. Ejecutar las pruebas
 
@@ -124,9 +123,7 @@ También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar ap
 Las pruebas Espresso habituales usan un repositorio controlado. Las dos pruebas contra BackVynils real se omiten por defecto; para ejecutarlas con el backend disponible y datos de álbumes:
 
 ```bash
-./gradlew connectedDebugAndroidTest \
-  -Pandroid.testInstrumentationRunnerArguments.backendReal=true \
-  -Pandroid.testInstrumentationRunnerArguments.class=co.edu.uniandes.vinilos.BackVynilsRealE2ETest
+./gradlew connectedDebugAndroidTest   -Pandroid.testInstrumentationRunnerArguments.backendReal=true   -Pandroid.testInstrumentationRunnerArguments.class=co.edu.uniandes.vinilos.BackVynilsRealE2ETest
 ```
 
 Para otra dirección de backend, añade `-PVINILOS_API_BASE_URL=http://<host>:3000/` al mismo comando. Un backend vacío no satisface estas dos pruebas.
@@ -162,3 +159,15 @@ Reglas de integración:
 ## Documentación
 
 Toda la documentación del proyecto (backlog, diseño UX/UI, arquitectura, estrategia y artefactos de prueba, reglas de trabajo, actas y retrospectivas) está en la [wiki del repositorio](https://github.com/Osaron/vinilos-android/wiki), organizada por sprint: Inception, Sprint 1, Sprint 2 y Sprint 3.
+
+Documentación técnica por historia en el repositorio:
+
+- **Revisión de Lint del Sprint 2:** advertencias corregidas, conservadas con justificación y pospuestas en [docs/lint-sprint2.md](docs/lint-sprint2.md).
+- **HU07 – Crear un álbum (Sprint 2):** contrato POST /albums acordado con el backend, componentes (Fragment → ViewModel → Repository → Service Adapter → Retrofit), diagrama de secuencia del flujo Coleccionista y pruebas en [docs/HU07-creacion.md](docs/HU07-creacion.md).
+
+### Diseño UX/UI (Figma)
+
+- Archivo de diseño (editable): https://www.figma.com/design/MkdUukCRycnXvpfRPQj8Tp/Vinilos---Wireframes-UX-UI?node-id=0-1
+- Prototipo navegable: ver link en la wiki / mensaje del equipo.
+
+Incluye la pantalla inicial de selección de rol ("Visitante" / "Coleccionista") y el flujo completo de Visitante (HU01–HU06, sin el botón "+" de crear álbum ni "Agregar canción"). Capturas en [`docs/wireframes/flujo-visitante-y-selector-rol/`](docs/wireframes/flujo-visitante-y-selector-rol/).

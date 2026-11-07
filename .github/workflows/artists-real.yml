@@ -1,0 +1,81 @@
+name: HU03 Backend real
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - '.github/workflows/artists-real.yml'
+      - 'app/src/androidTest/java/co/edu/uniandes/vinilos/ArtistBackendRealTest.kt'
+      - 'app/src/main/java/co/edu/uniandes/vinilos/ui/artists/**'
+      - 'app/src/main/java/co/edu/uniandes/vinilos/data/Artist*'
+permissions:
+  contents: read
+jobs:
+  artists-real:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: vinyls
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: TheSoftwareDesignLab/BackVynils
+          ref: 7178f83662022904dc9e88b8a2292568954b56cf
+          path: backend-test
+      - name: Construir y levantar BackVynils aislado
+        run: |
+          docker build -t vinilos-backend-test backend-test
+          docker run -d --name vinilos-backend-test --network host -e DB_HOST=127.0.0.1 -e DB_USER=postgres -e DB_PASS=postgres -e DB_NAME=vinyls -e USE_SSL=false vinilos-backend-test
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://localhost:3000/musicians > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          docker logs vinilos-backend-test
+          exit 1
+      - name: Cargar datos solo en la base efímera del runner
+        env:
+          PGPASSWORD: postgres
+        run: |
+          python3 -c "from pathlib import Path; print(Path('backend-test/sql/data.sql').read_text(encoding='utf-8-sig'))" > /tmp/vinilos-test-data.sql
+          psql -h localhost -U postgres -d vinyls -v ON_ERROR_STOP=1 -f /tmp/vinilos-test-data.sql
+          curl --fail http://localhost:3000/musicians
+          curl --fail http://localhost:3000/bands
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          script: ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.backendReal=true -Pandroid.testInstrumentationRunnerArguments.class=co.edu.uniandes.vinilos.ArtistBackendRealTest
+      - name: Conservar log del backend
+        if: always()
+        run: docker logs vinilos-backend-test > backend-test.log 2>&1 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hu03-backend-real
+          path: |
+            app/build/reports/androidTests/
+            backend-test.log

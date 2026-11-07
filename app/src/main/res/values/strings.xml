@@ -22,4 +22,17 @@
     <string name="no_description">Este álbum no tiene descripción.</string>
     <string name="no_tracks">Este álbum no tiene canciones registradas.</string>
     <plurals name="album_count"><item quantity="one">%d álbum</item><item quantity="other">%d álbumes</item></plurals>
+    <string name="artists">Artistas</string>
+    <string name="view_artists">Ver artistas</string>
+    <string name="back_to_albums">Volver a álbumes</string>
+    <string name="search_artists">Buscar artistas</string>
+    <string name="loading_artists">Cargando artistas</string>
+    <string name="artists_error">No pudimos cargar los artistas. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="artists_empty">Todavía no hay artistas disponibles.</string>
+    <string name="artists_no_results">No encontramos artistas con esa búsqueda.</string>
+    <string name="artist_band">Banda</string>
+    <string name="artist_musician">Músico</string>
+    <string name="select_artist">Seleccionar %1$s, %2$s</string>
+    <string name="artist_selected">Artista seleccionado: %1$s</string>
+    <plurals name="artist_count"><item quantity="one">%d artista</item><item quantity="other">%d artistas</item></plurals>
 </resources>

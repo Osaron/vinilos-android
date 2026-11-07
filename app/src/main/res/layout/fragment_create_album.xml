@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HU07 (#17): formulario base de creación de álbum. Los errores se muestran en TextView
+     propios (no setError) para que sean visibles sin foco y legibles por TalkBack. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FAFAFA" android:fillViewport="true"
+    tools:ignore="Overdraw">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+
+        <TextView android:id="@+id/create_album_title" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="@string/create_album_title"
+            android:textSize="24sp" android:textColor="#222222" android:paddingTop="12dp"
+            android:paddingBottom="16dp" android:accessibilityHeading="true" tools:targetApi="p" />
+
+        <!-- Nombre -->
+        <TextView android:id="@+id/name_label" style="@style/Vinilos.FormLabel"
+            android:labelFor="@+id/name_input" android:text="@string/album_name_label" />
+        <EditText android:id="@+id/name_input" style="@style/Vinilos.FormInput"
+            android:inputType="textCapSentences"
+            android:maxLength="200" android:autofillHints="" />
+        <TextView android:id="@+id/name_error" style="@style/Vinilos.FormError" />
+
+        <!-- Portada: el backend solo acepta una URL de texto -->
+        <TextView android:id="@+id/cover_label" style="@style/Vinilos.FormLabel"
+            android:labelFor="@+id/cover_input" android:text="@string/album_cover_label" />
+        <EditText android:id="@+id/cover_input" style="@style/Vinilos.FormInput"
+            android:inputType="textUri" android:autofillHints="" />
+        <TextView android:id="@+id/cover_error" style="@style/Vinilos.FormError" />
+
+        <!-- Fecha: se escribe dd/MM/yyyy y se envía yyyy-MM-dd -->
+        <TextView android:id="@+id/release_date_label" style="@style/Vinilos.FormLabel"
+            android:labelFor="@+id/release_date_input" android:text="@string/album_release_date_label" />
+        <EditText android:id="@+id/release_date_input" style="@style/Vinilos.FormInput"
+            android:inputType="date"
+            android:maxLength="10" android:autofillHints="" />
+        <TextView android:id="@+id/release_date_error" style="@style/Vinilos.FormError" />
+
+        <!-- Descripción: obligatoria en el backend -->
+        <TextView android:id="@+id/description_label" style="@style/Vinilos.FormLabel"
+            android:labelFor="@+id/description_input" android:text="@string/album_description_label" />
+        <EditText android:id="@+id/description_input" style="@style/Vinilos.FormInput"
+            android:minLines="3" android:gravity="top|start"
+            android:inputType="textMultiLine|textCapSentences" android:autofillHints="" />
+        <TextView android:id="@+id/description_error" style="@style/Vinilos.FormError" />
+
+        <!-- Género: lista cerrada del backend -->
+        <TextView android:id="@+id/genre_label" style="@style/Vinilos.FormLabel"
+            android:text="@string/album_genre_label" />
+        <Spinner android:id="@+id/genre_input" style="@style/Vinilos.FormInput"
+            android:contentDescription="@string/album_genre_label" />
+        <TextView android:id="@+id/genre_error" style="@style/Vinilos.FormError" />
+
+        <!-- Sello: lista cerrada del backend -->
+        <TextView android:id="@+id/record_label_label" style="@style/Vinilos.FormLabel"
+            android:text="@string/album_record_label_label" />
+        <Spinner android:id="@+id/record_label_input" style="@style/Vinilos.FormInput"
+            android:contentDescription="@string/album_record_label_label" />
+        <TextView android:id="@+id/record_label_error" style="@style/Vinilos.FormError" />
+
+        <TextView android:id="@+id/create_status_message" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:paddingTop="16dp" android:textColor="#B00020"
+            android:text="@string/create_album_error" android:accessibilityLiveRegion="polite"
+            android:visibility="gone" />
+
+        <ProgressBar android:id="@+id/saving_indicator" android:layout_width="48dp"
+            android:layout_height="48dp" android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp" android:contentDescription="@string/saving_album"
+            android:visibility="gone" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:paddingTop="16dp">
+            <Button android:id="@+id/cancel_button" style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:minHeight="48dp" android:text="@string/cancel" />
+            <Button android:id="@+id/save_button" style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:minHeight="48dp" android:text="@string/save_album" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

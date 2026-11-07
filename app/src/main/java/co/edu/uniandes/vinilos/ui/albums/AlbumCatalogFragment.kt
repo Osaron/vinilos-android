@@ -29,8 +29,16 @@ class AlbumCatalogFragment : Fragment(R.layout.fragment_album_catalog) {
         }
         binding.albumList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.albumList.adapter = albumAdapter
+        binding.addAlbum.setOnClickListener {
+            parentFragmentManager.setFragmentResult(CreateAlbumFragment.OPEN_CREATE_ALBUM, bundleOf())
+        }
+        // HU07: al volver de crear un álbum, el catálogo se recarga para mostrarlo.
+        parentFragmentManager.setFragmentResultListener(CreateAlbumFragment.ALBUM_CREATED, viewLifecycleOwner) { _, _ ->
+            viewModel.refresh()
+        }
         binding.searchAlbums.setText(viewModel.state.value.query)
         binding.searchAlbums.doAfterTextChanged { viewModel.search(it.toString()) }
+        binding.openArtists.setOnClickListener { parentFragmentManager.setFragmentResult(OPEN_ARTISTS, bundleOf()) }
         binding.retryButton.setOnClickListener { viewModel.refresh() }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -52,5 +60,8 @@ class AlbumCatalogFragment : Fragment(R.layout.fragment_album_catalog) {
         }
     }
 
-    companion object { const val ALBUM_SELECTED = "album_selected" }
+    companion object {
+        const val ALBUM_SELECTED = "album_selected"
+        const val OPEN_ARTISTS = "open_artists"
+    }
 }

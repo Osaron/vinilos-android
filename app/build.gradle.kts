@@ -12,8 +12,8 @@ android {
         applicationId = "co.edu.uniandes.vinilos"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"${apiUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
     }
@@ -23,6 +23,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+}
+
+tasks.withType<Test> {
+    // sun.jnu.encoding por defecto es Cp1252 en Windows en español; sin esto, el
+    // worker de pruebas no resuelve clases cuando la ruta del proyecto tiene tildes.
+    jvmArgs("-Dfile.encoding=UTF-8", "-Dsun.jnu.encoding=UTF-8")
 }
 
 dependencies {

@@ -152,6 +152,10 @@ Reglas de integración:
 
 Toda la documentación del proyecto (backlog, diseño UX/UI, arquitectura, estrategia y artefactos de prueba, reglas de trabajo, actas y retrospectivas) está en la [wiki del repositorio](https://github.com/Osaron/vinilos-android/wiki), organizada por sprint: Inception, Sprint 1, Sprint 2 y Sprint 3.
 
+Documentación técnica por historia en el repositorio:
+
+- **HU07 – Crear un álbum (Sprint 2, en integración):** contrato POST /albums acordado con el backend, componentes (Fragment → ViewModel → Repository → Service Adapter → Retrofit), diagrama de secuencia del flujo Coleccionista y pruebas en [docs/HU07-creacion.md](docs/HU07-creacion.md).
+
 ### Diseño UX/UI (Figma)
 
 - Archivo de diseño (editable): https://www.figma.com/design/MkdUukCRycnXvpfRPQj8Tp/Vinilos---Wireframes-UX-UI?node-id=0-1

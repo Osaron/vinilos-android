@@ -29,4 +29,7 @@
                 android:minHeight="48dp" android:text="@string/retry" android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
+    <!-- HU07: acceso del flujo Coleccionista al formulario de creación. -->
+    <Button android:id="@+id/add_album" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" android:minHeight="48dp" android:text="@string/add_album" />
 </LinearLayout>

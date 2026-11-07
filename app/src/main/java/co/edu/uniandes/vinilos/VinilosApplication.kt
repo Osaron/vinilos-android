@@ -15,4 +15,12 @@ class VinilosApplication : Application() {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(AlbumService::class.java)
     ))
+
+    // HU07: los tests UI pueden sustituirlo por un doble controlado antes del launch.
+    var albumCreationRepository: AlbumCreationRepository = RemoteAlbumCreationRepository(AlbumCreationServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(AlbumCreationService::class.java)
+    ))
 }

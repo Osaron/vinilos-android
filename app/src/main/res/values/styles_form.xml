@@ -1,6 +1,6 @@
 <resources>
     <!-- Estilos del formulario de HU07; compatibles con API 21. -->
-    <style name="Vinilos.FormLabel">
+    <style name="Vinilos.FormLabel" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">12dp</item>
@@ -9,7 +9,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Vinilos.FormInput">
+    <style name="Vinilos.FormInput" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">48dp</item>
@@ -20,7 +20,7 @@
         <item name="android:paddingBottom">8dp</item>
     </style>
 
-    <style name="Vinilos.FormError">
+    <style name="Vinilos.FormError" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">4dp</item>

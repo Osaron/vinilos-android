@@ -37,6 +37,10 @@ class CollectorBackendRealTest {
         val expected = read()
         assertTrue("La base de prueba debe contener coleccionistas", expected.isNotEmpty())
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+            if (largeFont) scenario.onActivity { activity ->
+                assertEquals("La prueba debe ejecutarse con fuente al 150 %",
+                    1.5f, activity.resources.configuration.fontScale, 0.05f)
+            }
             onView(withId(R.id.open_collectors)).perform(scrollTo(), click())
             val resources = InstrumentationRegistry.getInstrumentation().targetContext.resources
             waitFor {
@@ -75,10 +79,14 @@ class CollectorBackendRealTest {
         }
     }
 
+    private val largeFont: Boolean
+        get() = InstrumentationRegistry.getArguments().getString("largeFont") == "true"
+
     private fun capture(name: String) {
+        val outputName = if (largeFont) name.removeSuffix(".png") + "-letra-grande.png" else name
         // Download permanece disponible después de que Gradle desinstale la app.
         val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
-        val descriptor = automation.executeShellCommand("screencap -p /sdcard/Download/$name")
+        val descriptor = automation.executeShellCommand("screencap -p /sdcard/Download/$outputName")
         android.os.ParcelFileDescriptor.AutoCloseInputStream(descriptor).use { it.readBytes() }
     }
 

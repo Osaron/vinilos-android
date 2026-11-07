@@ -28,8 +28,9 @@
             <Button android:id="@+id/retry_button" android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:minHeight="48dp" android:text="@string/retry" android:visibility="gone" />
         </LinearLayout>
+        <!-- HU07: acceso del flujo Coleccionista. Flota sobre la lista para no quitarle alto. -->
+        <Button android:id="@+id/add_album" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" android:layout_margin="8dp" android:minHeight="48dp"
+            android:elevation="6dp" android:text="@string/add_album" />
     </FrameLayout>
-    <!-- HU07: acceso del flujo Coleccionista al formulario de creación. -->
-    <Button android:id="@+id/add_album" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:minHeight="48dp" android:text="@string/add_album" />
 </LinearLayout>

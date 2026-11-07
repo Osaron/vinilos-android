@@ -8,7 +8,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -99,7 +98,9 @@ class CreateAlbumFragment : Fragment(R.layout.fragment_create_album) {
         parentFragmentManager.setFragmentResult(
             ALBUM_CREATED, bundleOf("albumId" to album.id, "albumName" to album.name),
         )
-        Toast.makeText(requireContext(), getString(R.string.album_created, album.name), Toast.LENGTH_SHORT).show()
+        // Sin Toast: en API 21 su inflado falla con el tema de la app. El catálogo recargado es la
+        // confirmación visible; TalkBack la anuncia.
+        view?.announceForAccessibility(getString(R.string.album_created, album.name))
         close()
     }
 

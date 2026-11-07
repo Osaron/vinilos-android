@@ -76,12 +76,10 @@ class CollectorBackendRealTest {
     }
 
     private fun capture(name: String) {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val bitmap = checkNotNull(instrumentation.uiAutomation.takeScreenshot())
-        try {
-            val file = java.io.File(instrumentation.targetContext.getExternalFilesDir(null), name)
-            file.outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
-        } finally { bitmap.recycle() }
+        // Download permanece disponible después de que Gradle desinstale la app.
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        val descriptor = automation.executeShellCommand("screencap -p /sdcard/Download/$name")
+        android.os.ParcelFileDescriptor.AutoCloseInputStream(descriptor).use { it.readBytes() }
     }
 
     private fun read(): List<Expected> {

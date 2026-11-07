@@ -6,13 +6,9 @@
     <string name="save_album">Guardar álbum</string>
     <string name="saving_album">Guardando álbum</string>
     <string name="album_name_label">Nombre</string>
-    <string name="album_name_hint">Ej. Buscando América</string>
-    <string name="album_cover_label">URL de la portada</string>
-    <string name="album_cover_hint">https://…</string>
-    <string name="album_release_date_label">Fecha de lanzamiento</string>
-    <string name="album_release_date_hint">dd/mm/aaaa</string>
+    <string name="album_cover_label">URL de la portada (http:// o https://)</string>
+    <string name="album_release_date_label">Fecha de lanzamiento (dd/mm/aaaa)</string>
     <string name="album_description_label">Descripción</string>
-    <string name="album_description_hint">Describe el álbum</string>
     <string name="album_genre_label">Género</string>
     <string name="album_record_label_label">Sello discográfico</string>
     <string name="select_genre">Selecciona un género</string>

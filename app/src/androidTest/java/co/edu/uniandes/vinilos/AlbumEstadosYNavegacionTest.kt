@@ -98,6 +98,9 @@ class AlbumEstadosYNavegacionTest {
     fun esc16_abreElDetalleDelAlbumCorrectoEntreVarios() {
         val repositorio = RepositorioControlado(albums = { catalogo })
         conRepositorio(repositorio) {
+            // La tercera tarjeta puede quedar fuera de pantalla según el espacio disponible.
+            onView(withId(R.id.album_list)).perform(
+                RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
             Catalogo.muestraAlbum("A Night at the Opera")
             Catalogo.abrirAlbumEnPosicion(2)
 

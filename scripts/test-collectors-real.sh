@@ -2,8 +2,8 @@
 set -euo pipefail
 capture_results() {
   mkdir -p collector-captures
-  adb pull /sdcard/Android/data/co.edu.uniandes.vinilos/files/coleccionistas-listado.png collector-captures/ || true
-  adb pull /sdcard/Android/data/co.edu.uniandes.vinilos/files/coleccionistas-busqueda.png collector-captures/ || true
+  adb pull /sdcard/Download/coleccionistas-listado.png collector-captures/
+  adb pull /sdcard/Download/coleccionistas-busqueda.png collector-captures/
 }
 trap capture_results EXIT
 ./gradlew --no-daemon connectedDebugAndroidTest \

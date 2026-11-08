@@ -109,6 +109,66 @@ HU03 ya publica `artistId`, `artistType` y `artistName`. HU04 consumirá esos va
 
 La navegación de regreso debe conservar el ViewModel de HU03, incluida la consulta escrita y la lista visible. La implementación seguirá el patrón actual con back stack y Fragment Result, salvo que el análisis de la fase de diseño encuentre una alternativa más consistente con el proyecto.
 
+## Diagrama de componentes y secuencia implementada
+
+El catálogo publica la selección con tipo e ID. `MainActivity` valida el destino y abre el detalle; la consulta y la adaptación de datos permanecen fuera de la vista. El estado vuelve al Fragment mediante `StateFlow`, y Coil carga las imágenes de manera independiente.
+
+```mermaid
+flowchart LR
+    Catalogo[ArtistCatalogFragment / ArtistAdapter]
+    Activity[MainActivity]
+    Detail[ArtistDetailFragment]
+    VM[ArtistDetailViewModel]
+    Repo[ArtistDetailRepository]
+    Adapter[ArtistDetailServiceAdapter]
+    API[BackVynils API]
+    Coil[Coil / caché de imágenes]
+
+    Catalogo -->|FragmentResult: tipo e ID| Activity
+    Activity -->|argumentos: tipo e ID| Detail
+    Detail -->|eventos y StateFlow| VM
+    VM --> Repo --> Adapter -->|GET musicians/{id} o bands/{id}| API
+    API -->|DTO| Adapter
+    Adapter -->|modelo ArtistDetail| Repo
+    Repo --> VM
+    VM -->|carga / contenido / error| Detail
+    Detail -->|URL e ImageView| Coil
+    Detail -->|Atrás: popBackStack| Activity
+    Activity -->|restaura el Fragment del catálogo| Catalogo
+```
+
+```mermaid
+sequenceDiagram
+    actor Persona
+    participant Catalogo as ArtistCatalogFragment
+    participant Activity as MainActivity
+    participant Pantalla as ArtistDetailFragment
+    participant VM as ArtistDetailViewModel
+    participant Repo as ArtistDetailRepository / Adapter
+    participant API as BackVynils
+
+    Persona->>Catalogo: Selecciona una fila
+    Catalogo->>Activity: FragmentResult(artistId, artistType, artistName)
+    Activity->>Activity: Valida ID y evita navegación duplicada
+    Activity->>Pantalla: Añade detalle al back stack
+    Pantalla->>VM: Observa StateFlow en STARTED
+    VM-->>Pantalla: Estado de carga
+    VM->>Repo: getArtistDetail(tipo, ID)
+    Repo->>API: GET /musicians/{id} o /bands/{id}
+    API-->>Repo: DTO de artista y álbumes
+    Repo-->>VM: ArtistDetail validado
+    VM-->>Pantalla: Estado de contenido
+    Pantalla-->>Persona: Renderiza biografía, fecha y álbumes
+    opt Falla de red o HTTP
+        VM-->>Pantalla: Estado de error recuperable
+        Persona->>Pantalla: Pulsa Reintentar
+        Pantalla->>VM: refresh()
+    end
+    Persona->>Pantalla: Pulsa Atrás
+    Pantalla->>Activity: popBackStack()
+    Activity-->>Catalogo: Restaura búsqueda y lista
+```
+
 ## Matriz inicial de pruebas
 
 | ID | Nivel | Escenario | Resultado esperado |

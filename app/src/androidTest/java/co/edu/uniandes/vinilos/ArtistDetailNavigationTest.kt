@@ -105,6 +105,28 @@ class ArtistDetailNavigationTest {
         }
     }
 
+    @Test fun salir_del_detalle_durante_la_carga_cancela_la_consulta() {
+        val pending = CompletableDeferred<ArtistDetail>()
+        var cancelled = false
+        withRepositories(detail = { _, _ ->
+            try {
+                pending.await()
+            } finally {
+                cancelled = true
+            }
+        }) {
+            onView(withId(R.id.open_artists)).perform(click())
+            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
+            onView(withText("Queen")).perform(click())
+            onView(withId(R.id.artist_detail_loading)).check(matches(isDisplayed()))
+            pressBack()
+            esperar { onView(withId(R.id.search_artists)).check(matches(isDisplayed())) }
+            esperar { assertEquals(true, cancelled) }
+            pending.complete(ArtistDetail(101, ArtistType.BAND, "Queen", null, "Rock"))
+            onView(withId(R.id.search_artists)).check(matches(isDisplayed()))
+        }
+    }
+
     @Test fun error_de_detalle_permite_reintentar_y_recuperar() {
         var calls = 0
         withRepositories(detail = { type, id ->

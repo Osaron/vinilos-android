@@ -20,6 +20,12 @@ class VinilosApplication : Application() {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(ArtistService::class.java)
     ))
+    var artistDetailRepository: ArtistDetailRepository = RemoteArtistDetailRepository(ArtistDetailServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(ArtistDetailService::class.java)
+    ))
     // Punto de composición: los tests UI pueden sustituir la dependencia antes del launch.
     var albumRepository: AlbumRepository = RemoteAlbumRepository(AlbumServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)

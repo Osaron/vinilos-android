@@ -54,5 +54,15 @@
     <string name="collector_member">Miembro de la comunidad Vinilos</string>
     <string name="select_collector">Seleccionar coleccionista %1$s</string>
     <string name="collector_selected">Coleccionista seleccionado: %1$s</string>
+    <string name="view_collector_detail">Ver detalle</string>
+    <string name="loading_collector_detail">Cargando detalle del coleccionista</string>
+    <string name="collector_detail_error">No pudimos cargar el detalle del coleccionista. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="collector_favorites">Artistas y bandas favoritos</string>
+    <string name="collector_no_favorites">Este coleccionista no tiene artistas o bandas favoritos registrados.</string>
+    <string name="collector_comments">Comentarios</string>
+    <string name="collector_no_comments">Este coleccionista no tiene comentarios registrados.</string>
+    <string name="collector_comment_with_rating">%1$s · Calificación: %2$d/5</string>
+    <string name="collector_favorite_accessibility">Artista o banda favorita: %1$s</string>
+    <string name="collector_favorite_image">Imagen de %1$s</string>
     <plurals name="collector_count"><item quantity="one">%d coleccionista</item><item quantity="other">%d coleccionistas</item></plurals>
 </resources>

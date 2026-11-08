@@ -10,6 +10,7 @@ import co.edu.uniandes.vinilos.ui.albums.AlbumDetailFragment
 import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
 import co.edu.uniandes.vinilos.ui.artists.ArtistDetailFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
+import co.edu.uniandes.vinilos.ui.collectors.CollectorDetailFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private var openingArtistDetail = false
@@ -67,6 +68,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     .replace(R.id.fragment_container, CollectorCatalogFragment())
                     .addToBackStack("collector_catalog").commit()
             }
+        }
+        supportFragmentManager.setFragmentResultListener(CollectorCatalogFragment.OPEN_DETAIL, this) { _, data ->
+            val collectorId = data.getInt("collectorId", -1)
+            if (collectorId <= 0 || supportFragmentManager.findFragmentById(R.id.fragment_container) is CollectorDetailFragment) {
+                return@setFragmentResultListener
+            }
+            hideKeyboard()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, CollectorDetailFragment.newInstance(collectorId))
+                .addToBackStack("collector_detail")
+                .commit()
         }
         if (savedInstanceState == null) supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, AlbumCatalogFragment()).commit()

@@ -31,7 +31,7 @@ class AlbumAdapter(private val selected: (Album) -> Unit) : ListAdapter<Album, A
                 listener(onError = { request, result ->
                     if (BuildConfig.DEBUG) {
                         val host = runCatching { URI(request.data.toString()).host }.getOrNull()
-                        Log.w("AlbumCover", "No se pudo cargar portada; host=$host; causa=${result.throwable.javaClass.simpleName}")
+                        Log.w("AlbumCover", "No se pudo cargar portada; host=$host; causa=${result.throwable.javaClass.simpleName}", result.throwable)
                     }
                 })
             }

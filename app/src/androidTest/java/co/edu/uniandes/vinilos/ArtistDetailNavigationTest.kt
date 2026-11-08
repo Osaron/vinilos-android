@@ -1,6 +1,8 @@
 package co.edu.uniandes.vinilos
 
 import android.os.SystemClock
+import android.app.Activity
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.core.os.bundleOf
@@ -14,6 +16,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
+import androidx.recyclerview.widget.RecyclerView
 import co.edu.uniandes.vinilos.data.AlbumRepository
 import co.edu.uniandes.vinilos.data.ArtistDetailRepository
 import co.edu.uniandes.vinilos.data.ArtistRepository
@@ -45,11 +51,11 @@ class ArtistDetailNavigationTest {
                 ArtistAlbum(1, "Buscando América", null, "1984-08-01", "Elektra", "Salsa"),
             ))
         }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Rubén Blades")).check(matches(isDisplayed())) }
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
             onView(withId(R.id.search_artists)).perform(replaceText("ruben"), closeSoftKeyboard())
-            onView(withText("Rubén Blades")).perform(click())
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Rubén Blades"))) }
+            tocarArtista(0)
+            esperarTexto(R.id.artist_detail_title, "Rubén Blades")
             onView(withText("Buscando América")).check(matches(isDisplayed()))
             pressBack()
             onView(withId(R.id.search_artists)).check(matches(withText("ruben")))
@@ -64,10 +70,10 @@ class ArtistDetailNavigationTest {
             calls += type to id
             ArtistDetail(id, type, "Queen", null, "Banda de rock", creationDate = "1970-01-01")
         }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
-            onView(withText("Queen")).perform(click())
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
+            tocarArtista(1)
+            esperarTexto(R.id.artist_detail_title, "Queen")
             onView(withText("1970-01-01")).check(matches(isDisplayed()))
         }
         assertEquals(listOf(ArtistType.BAND to 101), calls)
@@ -79,14 +85,14 @@ class ArtistDetailNavigationTest {
             calls += type to id
             ArtistDetail(id, type, "Queen", null, "Rock")
         }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
             onActivity { activity ->
                 val result = bundleOf("artistId" to 101, "artistType" to ArtistType.BAND.name)
                 activity.supportFragmentManager.setFragmentResult(ArtistCatalogFragment.ARTIST_SELECTED, result)
                 activity.supportFragmentManager.setFragmentResult(ArtistCatalogFragment.ARTIST_SELECTED, result)
             }
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            esperarTexto(R.id.artist_detail_title, "Queen")
             onActivity { activity -> assertEquals(2, activity.supportFragmentManager.backStackEntryCount) }
         }
         assertEquals(listOf(ArtistType.BAND to 101), calls)
@@ -95,13 +101,13 @@ class ArtistDetailNavigationTest {
     @Test fun muestra_carga_y_luego_el_detalle_de_la_respuesta() {
         val pending = CompletableDeferred<ArtistDetail>()
         withRepositories(detail = { type, id -> pending.await() }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
-            onView(withText("Queen")).perform(click())
-            onView(withId(R.id.artist_detail_loading)).check(matches(isDisplayed()))
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
+            tocarArtista(1)
+            esperarVisible(R.id.artist_detail_loading)
             SystemClock.sleep(6_000)
             pending.complete(ArtistDetail(101, ArtistType.BAND, "Queen", null, "Rock"))
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            esperarTexto(R.id.artist_detail_title, "Queen")
         }
     }
 
@@ -115,12 +121,12 @@ class ArtistDetailNavigationTest {
                 cancelled = true
             }
         }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
-            onView(withText("Queen")).perform(click())
-            onView(withId(R.id.artist_detail_loading)).check(matches(isDisplayed()))
-            pressBack()
-            esperar { onView(withId(R.id.search_artists)).check(matches(isDisplayed())) }
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
+            tocarArtista(1)
+            esperarVisible(R.id.artist_detail_loading)
+            enHiloPrincipal { (it as MainActivity).onBackPressedDispatcher.onBackPressed() }
+            esperarVisible(R.id.search_artists)
             esperar { assertEquals(true, cancelled) }
             pending.complete(ArtistDetail(101, ArtistType.BAND, "Queen", null, "Rock"))
             onView(withId(R.id.search_artists)).check(matches(isDisplayed()))
@@ -133,12 +139,12 @@ class ArtistDetailNavigationTest {
             if (++calls == 1) throw IOException("sin red")
             ArtistDetail(101, ArtistType.BAND, "Queen", null, "Rock")
         }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
-            onView(withText("Queen")).perform(click())
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
+            tocarArtista(1)
             esperar { onView(withText(R.string.artist_detail_error)).check(matches(isDisplayed())) }
-            onView(withId(R.id.retry_artist_detail)).perform(click())
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            tocar(R.id.retry_artist_detail)
+            esperarTexto(R.id.artist_detail_title, "Queen")
         }
         assertEquals(2, calls)
     }
@@ -149,12 +155,12 @@ class ArtistDetailNavigationTest {
             calls += type to id
             ArtistDetail(id, type, "Queen", null, "Rock")
         }) {
-            onView(withId(R.id.open_artists)).perform(click())
-            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
-            onView(withText("Queen")).perform(click())
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            tocar(R.id.open_artists)
+            esperarVisible(R.id.artist_list)
+            tocarArtista(1)
+            esperarTexto(R.id.artist_detail_title, "Queen")
             recreate()
-            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            esperarTexto(R.id.artist_detail_title, "Queen")
         }
         assertEquals(listOf(ArtistType.BAND to 101), calls)
     }
@@ -187,5 +193,51 @@ class ArtistDetailNavigationTest {
             }
             SystemClock.sleep(100)
         }
+    }
+
+    /** Lee el árbol de vistas sin la sincronización de Espresso, que puede bloquearse con el spinner en API 21. */
+    private fun esperarVisible(id: Int) = esperarHasta { estaVisible(id) }
+
+    private fun esperarTexto(id: Int, expected: String) = esperar {
+        var actual: CharSequence? = null
+        enHiloPrincipal { actual = it.findViewById<android.widget.TextView>(id)?.text }
+        actual == expected
+    }
+
+    private fun esperarHasta(check: () -> Boolean) {
+        val end = SystemClock.elapsedRealtime() + 5_000
+        while (!check()) {
+            require(SystemClock.elapsedRealtime() <= end) { "La vista esperada no apareció antes del timeout" }
+            SystemClock.sleep(100)
+        }
+    }
+
+    private fun estaVisible(id: Int): Boolean {
+        var visible = false
+        enHiloPrincipal { visible = it.findViewById<View>(id)?.isShown == true }
+        return visible
+    }
+
+    private fun tocar(id: Int) = enHiloPrincipal { activity ->
+        checkNotNull(activity.findViewById<View>(id)) { "No existe la vista $id" }.performClick()
+    }
+
+    private fun tocarArtista(position: Int) = enHiloPrincipal { activity ->
+        val list = checkNotNull(activity.findViewById<RecyclerView>(R.id.artist_list))
+        checkNotNull(list.findViewHolderForAdapterPosition(position)) { "No está visible el artista $position" }
+            .itemView.performClick()
+    }
+
+    private fun enHiloPrincipal(action: (Activity) -> Unit) {
+        var error: Throwable? = null
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            try {
+                val activity = checkNotNull(
+                    ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED).firstOrNull(),
+                ) { "No hay una actividad en primer plano" }
+                action(activity)
+            } catch (failure: Throwable) { error = failure }
+        }
+        error?.let { throw it }
     }
 }

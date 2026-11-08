@@ -3,14 +3,14 @@ package co.edu.uniandes.vinilos
 import android.os.Debug
 import android.os.SystemClock
 import android.util.Log
+import android.app.Activity
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import androidx.test.runner.lifecycle.Stage
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import co.edu.uniandes.vinilos.data.AlbumRepository
 import co.edu.uniandes.vinilos.data.ArtistDetailRepository
@@ -51,18 +51,18 @@ class ArtistDetailPerformanceTest {
 
         try {
             ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-                onView(withId(R.id.open_artists)).perform(click())
-                esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
+                tocar(R.id.open_artists)
+                esperarVisible(R.id.artist_list)
                 val before = memoriaEstabilizada()
                 val timesMs = mutableListOf<Long>()
 
                 repeat(20) { cycle ->
                     val start = SystemClock.elapsedRealtimeNanos()
-                    onView(withText("Queen")).perform(click())
-                    esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+                    tocarArtista(0)
+                    esperarTexto(R.id.artist_detail_title, "Queen")
                     timesMs += (SystemClock.elapsedRealtimeNanos() - start) / 1_000_000
-                    onView(withId(R.id.back_artist_detail)).perform(click())
-                    esperar { onView(withId(R.id.search_artists)).check(matches(isDisplayed())) }
+                    tocar(R.id.back_artist_detail)
+                    esperarVisible(R.id.search_artists)
                     if (cycle == 9) {
                         val middle = memoriaEstabilizada()
                         Log.i(
@@ -104,19 +104,51 @@ class ArtistDetailPerformanceTest {
         return MemorySnapshot(Debug.getPss(), (runtime.totalMemory() - runtime.freeMemory()) / 1024)
     }
 
-    private fun esperar(check: () -> Unit) {
+    /** Polls the view tree directly on main; Espresso waits for idle and can hang on API 21's spinner. */
+    private fun esperarVisible(id: Int) = esperar { estaVisible(id) }
+
+    private fun esperarTexto(id: Int, expected: String) = esperar {
+        var actual: CharSequence? = null
+        enHiloPrincipal { actual = it.findViewById<android.widget.TextView>(id)?.text }
+        actual == expected
+    }
+
+    private fun esperar(check: () -> Boolean) {
         val end = SystemClock.elapsedRealtime() + 5_000
         while (true) {
-            try {
-                check()
-                return
-            } catch (error: AssertionError) {
-                if (SystemClock.elapsedRealtime() > end) throw error
-            } catch (error: androidx.test.espresso.NoMatchingViewException) {
-                if (SystemClock.elapsedRealtime() > end) throw error
-            }
+            if (check()) return
+            require(SystemClock.elapsedRealtime() <= end) { "La vista esperada no apareció antes del timeout" }
             SystemClock.sleep(100)
         }
+    }
+
+    private fun estaVisible(id: Int): Boolean {
+        var visible = false
+        enHiloPrincipal { visible = it.findViewById<View>(id)?.isShown == true }
+        return visible
+    }
+
+    private fun tocar(id: Int) = enHiloPrincipal { activity ->
+        checkNotNull(activity.findViewById<View>(id)) { "No existe la vista $id" }.performClick()
+    }
+
+    private fun tocarArtista(position: Int) = enHiloPrincipal { activity ->
+        val list = checkNotNull(activity.findViewById<RecyclerView>(R.id.artist_list))
+        val row = checkNotNull(list.findViewHolderForAdapterPosition(position)) { "No está visible el artista $position" }
+        row.itemView.performClick()
+    }
+
+    private fun enHiloPrincipal(action: (Activity) -> Unit) {
+        var error: Throwable? = null
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            try {
+                val activity = checkNotNull(
+                    ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED).firstOrNull(),
+                ) { "No hay una actividad en primer plano" }
+                action(activity)
+            } catch (failure: Throwable) { error = failure }
+        }
+        error?.let { throw it }
     }
 
     private data class MemorySnapshot(val pssKb: Long, val javaHeapKb: Long)

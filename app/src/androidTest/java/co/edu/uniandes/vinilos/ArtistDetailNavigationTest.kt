@@ -3,6 +3,7 @@ package co.edu.uniandes.vinilos
 import android.os.SystemClock
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.core.os.bundleOf
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
@@ -21,6 +22,7 @@ import co.edu.uniandes.vinilos.model.Artist
 import co.edu.uniandes.vinilos.model.ArtistAlbum
 import co.edu.uniandes.vinilos.model.ArtistDetail
 import co.edu.uniandes.vinilos.model.ArtistType
+import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
 import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -67,6 +69,25 @@ class ArtistDetailNavigationTest {
             onView(withText("Queen")).perform(click())
             esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
             onView(withText("1970-01-01")).check(matches(isDisplayed()))
+        }
+        assertEquals(listOf(ArtistType.BAND to 101), calls)
+    }
+
+    @Test fun doble_seleccion_rapida_abre_un_solo_detalle_y_consulta_una_vez() {
+        val calls = mutableListOf<Pair<ArtistType, Int>>()
+        withRepositories(detail = { type, id ->
+            calls += type to id
+            ArtistDetail(id, type, "Queen", null, "Rock")
+        }) {
+            onView(withId(R.id.open_artists)).perform(click())
+            esperar { onView(withText("Queen")).check(matches(isDisplayed())) }
+            onActivity { activity ->
+                val result = bundleOf("artistId" to 101, "artistType" to ArtistType.BAND.name)
+                activity.supportFragmentManager.setFragmentResult(ArtistCatalogFragment.ARTIST_SELECTED, result)
+                activity.supportFragmentManager.setFragmentResult(ArtistCatalogFragment.ARTIST_SELECTED, result)
+            }
+            esperar { onView(withId(R.id.artist_detail_title)).check(matches(withText("Queen"))) }
+            onActivity { activity -> assertEquals(2, activity.supportFragmentManager.backStackEntryCount) }
         }
         assertEquals(listOf(ArtistType.BAND to 101), calls)
     }

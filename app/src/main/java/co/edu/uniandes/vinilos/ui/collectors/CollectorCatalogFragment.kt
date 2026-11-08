@@ -33,6 +33,11 @@ class CollectorCatalogFragment : Fragment(R.layout.fragment_collector_catalog) {
         binding.searchCollectors.doAfterTextChanged { viewModel.search(it.toString()) }
         binding.retryCollectors.setOnClickListener { viewModel.refresh() }
         binding.backToAlbums.setOnClickListener { parentFragmentManager.popBackStack() }
+        binding.openCollectorDetail.setOnClickListener {
+            viewModel.state.value.selected?.let { collector ->
+                parentFragmentManager.setFragmentResult(OPEN_DETAIL, bundleOf("collectorId" to collector.id))
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
@@ -49,10 +54,14 @@ class CollectorCatalogFragment : Fragment(R.layout.fragment_collector_catalog) {
                     binding.collectorCount.text = resources.getQuantityString(R.plurals.collector_count, collectors.size, collectors.size)
                     binding.collectorSelection.isVisible = !state.loading && !state.failed && state.selected != null
                     binding.collectorSelection.text = state.selected?.let { getString(R.string.collector_selected, it.name) }.orEmpty()
+                    binding.openCollectorDetail.isVisible = !state.loading && !state.failed && state.selected != null
                     adapter.submitList(collectors)
                 }
             }
         }
     }
-    companion object { const val COLLECTOR_SELECTED = "collector_selected" }
+    companion object {
+        const val COLLECTOR_SELECTED = "collector_selected"
+        const val OPEN_DETAIL = "open_collector_detail"
+    }
 }

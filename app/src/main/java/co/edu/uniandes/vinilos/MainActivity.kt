@@ -8,6 +8,7 @@ import co.edu.uniandes.vinilos.ui.albums.AlbumCatalogFragment
 import co.edu.uniandes.vinilos.ui.albums.AlbumDetailFragment
 
 import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
+import co.edu.uniandes.vinilos.ui.artists.ArtistDetailFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -41,6 +42,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     .replace(R.id.fragment_container, ArtistCatalogFragment())
                     .addToBackStack("artist_catalog").commit()
             }
+        }
+        supportFragmentManager.setFragmentResultListener(ArtistCatalogFragment.ARTIST_SELECTED, this) { _, data ->
+            val artistId = data.getInt("artistId", -1)
+            val artistType = data.getString("artistType").orEmpty()
+            if (artistId <= 0 || supportFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
+                return@setFragmentResultListener
+            }
+            hideKeyboard()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ArtistDetailFragment.newInstance(artistId, artistType))
+                .addToBackStack("artist_detail")
+                .commit()
         }
         supportFragmentManager.setFragmentResultListener(AlbumCatalogFragment.OPEN_COLLECTORS, this) { _, _ ->
             if (supportFragmentManager.findFragmentById(R.id.fragment_container) !is CollectorCatalogFragment) {

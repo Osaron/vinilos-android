@@ -35,6 +35,15 @@
     <string name="select_artist">Seleccionar %1$s, %2$s</string>
     <string name="artist_selected">Artista seleccionado: %1$s</string>
     <plurals name="artist_count"><item quantity="one">%d artista</item><item quantity="other">%d artistas</item></plurals>
+    <string name="back">Atrás</string>
+    <string name="artist_image">Imagen de %1$s</string>
+    <string name="artist_image_loading">Imagen del artista</string>
+    <string name="loading_artist_detail">Cargando detalle del artista</string>
+    <string name="artist_detail_error">No pudimos cargar el detalle del artista. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="artist_biography">Biografía</string>
+    <string name="artist_albums">Álbumes</string>
+    <string name="artist_detail_no_albums">Este artista todavía no tiene álbumes registrados.</string>
+    <plurals name="artist_detail_album_count"><item quantity="one">%d álbum</item><item quantity="other">%d álbumes</item></plurals>
     <string name="collectors">Coleccionistas</string>
     <string name="view_collectors">Coleccionistas</string>
     <string name="search_collectors">Buscar coleccionistas</string>

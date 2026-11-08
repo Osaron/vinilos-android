@@ -147,3 +147,11 @@ La navegación de regreso debe conservar el ViewModel de HU03, incluida la consu
 ## Criterio para comenzar implementación
 
 Antes de crear DTO o layout se deben obtener respuestas reales de al menos un músico y una banda, comparar sus campos con el wireframe y documentar las diferencias. Esa verificación corresponde a la siguiente fase.
+
+## Contrato confirmado en BackVynils local
+
+Validación completada el 2026-11-08 contra `GET /musicians/100` y `GET /bands/101` (HTTP 200), además de las rutas de listado. Los detalles completos y la comparación campo por campo están en [`../evidencias/w5-hernan/hu04/pruebas/CONTRATO_BACKEND_2026-11-08.md`](../../evidencias/w5-hernan/hu04/pruebas/CONTRATO_BACKEND_2026-11-08.md) desde el directorio de trabajo `moviles`.
+
+El modelo común puede contener identidad (`id` + `type`), nombre, imagen opcional, descripción y álbumes. Se conservan como campos opcionales `birthDate` para músico y `creationDate` para banda. El performer no ofrece país ni género/estilo; esos textos del wireframe no se deben inventar. El género de cada álbum sí está disponible. La sección de álbumes obtiene su cantidad de la lista. `performerPrizes` solo expone identificador y fecha, por lo que no se incluye en la pantalla sin completar su contrato.
+
+Para errores, el endpoint no fue manipulado manualmente: 404, 5xx y desconexión se probarán con MockWebServer y el manejo del estado se probará en las fases de implementación.

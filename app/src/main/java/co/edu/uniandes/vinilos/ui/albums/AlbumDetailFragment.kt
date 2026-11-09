@@ -13,6 +13,9 @@ import co.edu.uniandes.vinilos.R
 import co.edu.uniandes.vinilos.VinilosApplication
 import co.edu.uniandes.vinilos.databinding.FragmentAlbumDetailBinding
 import co.edu.uniandes.vinilos.model.AlbumDetail
+import co.edu.uniandes.vinilos.BuildConfig
+import android.util.Log
+import java.net.URI
 import coil.load
 import kotlinx.coroutines.launch
 
@@ -49,6 +52,12 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
             addHeader("User-Agent", "VinilosAndroid/1.0 (https://github.com/Osaron/vinilos-android)")
             placeholder(R.drawable.ic_album)
             error(R.drawable.ic_album)
+            listener(onError = { request, result ->
+                if (BuildConfig.DEBUG) {
+                    val host = runCatching { URI(request.data.toString()).host }.getOrNull()
+                    Log.w("AlbumCover", "No se pudo cargar portada; host=$host; causa=${result.throwable.javaClass.simpleName}", result.throwable)
+                }
+            })
         }
         detailPerformers.text = album.performers.joinToString(", ")
             .ifBlank { getString(R.string.unknown_artist) }

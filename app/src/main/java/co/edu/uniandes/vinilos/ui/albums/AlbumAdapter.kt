@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import co.edu.uniandes.vinilos.R
 import co.edu.uniandes.vinilos.databinding.ItemAlbumBinding
 import co.edu.uniandes.vinilos.model.Album
+import co.edu.uniandes.vinilos.BuildConfig
+import android.util.Log
+import java.net.URI
 import coil.load
 
 class AlbumAdapter(private val selected: (Album) -> Unit) : ListAdapter<Album, AlbumAdapter.Holder>(Diff) {
@@ -25,6 +28,12 @@ class AlbumAdapter(private val selected: (Album) -> Unit) : ListAdapter<Album, A
                 addHeader("User-Agent", "VinilosAndroid/1.0 (https://github.com/Osaron/vinilos-android)")
                 placeholder(R.drawable.ic_album)
                 error(R.drawable.ic_album)
+                listener(onError = { request, result ->
+                    if (BuildConfig.DEBUG) {
+                        val host = runCatching { URI(request.data.toString()).host }.getOrNull()
+                        Log.w("AlbumCover", "No se pudo cargar portada; host=$host; causa=${result.throwable.javaClass.simpleName}", result.throwable)
+                    }
+                })
             }
             root.contentDescription = root.context.getString(R.string.select_album, album.name, albumArtist.text)
             root.setOnClickListener { selected(album) }

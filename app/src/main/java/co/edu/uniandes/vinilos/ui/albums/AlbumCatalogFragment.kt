@@ -38,6 +38,7 @@ class AlbumCatalogFragment : Fragment(R.layout.fragment_album_catalog) {
         }
         binding.searchAlbums.setText(viewModel.state.value.query)
         binding.searchAlbums.doAfterTextChanged { viewModel.search(it.toString()) }
+        binding.openCollectors.setOnClickListener { parentFragmentManager.setFragmentResult(OPEN_COLLECTORS, bundleOf()) }
         binding.openArtists.setOnClickListener { parentFragmentManager.setFragmentResult(OPEN_ARTISTS, bundleOf()) }
         binding.retryButton.setOnClickListener { viewModel.refresh() }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -62,6 +63,7 @@ class AlbumCatalogFragment : Fragment(R.layout.fragment_album_catalog) {
 
     companion object {
         const val ALBUM_SELECTED = "album_selected"
+        const val OPEN_COLLECTORS = "open_collectors"
         const val OPEN_ARTISTS = "open_artists"
     }
 }

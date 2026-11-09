@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="#FAFAFA">
+    <ScrollView android:id="@+id/collector_detail_content" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:fillViewport="true" android:visibility="gone">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+            <Button android:id="@+id/back_collector_detail" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/back" />
+            <TextView android:id="@+id/collector_detail_title" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:accessibilityHeading="true" android:gravity="center"
+                android:paddingTop="12dp" android:textColor="#222222" android:textSize="26sp" />
+            <TextView android:id="@+id/collector_detail_email" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:gravity="center" android:paddingTop="8dp" android:textColor="#555555" />
+            <TextView android:id="@+id/collector_detail_telephone" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:gravity="center" android:paddingTop="4dp" android:textColor="#555555" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:accessibilityHeading="true" android:paddingTop="24dp" android:text="@string/collector_favorites"
+                android:textColor="#222222" android:textSize="18sp" android:textStyle="bold" />
+            <TextView android:id="@+id/collector_detail_favorites_empty" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:paddingTop="8dp" android:text="@string/collector_no_favorites"
+                android:textColor="#555555" android:visibility="gone" />
+            <LinearLayout android:id="@+id/collector_detail_favorites" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="8dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:accessibilityHeading="true" android:paddingTop="24dp" android:text="@string/collector_comments"
+                android:textColor="#222222" android:textSize="18sp" android:textStyle="bold" />
+            <TextView android:id="@+id/collector_detail_comments_empty" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:paddingTop="8dp" android:text="@string/collector_no_comments"
+                android:textColor="#555555" android:visibility="gone" />
+            <LinearLayout android:id="@+id/collector_detail_comments" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="8dp" android:paddingBottom="24dp" />
+        </LinearLayout>
+    </ScrollView>
+    <ProgressBar android:id="@+id/collector_detail_loading" android:layout_width="48dp" android:layout_height="48dp"
+        android:layout_gravity="center" android:contentDescription="@string/loading_collector_detail" />
+    <LinearLayout android:id="@+id/collector_detail_error" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center"
+        android:orientation="vertical" android:visibility="gone">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
+            android:padding="16dp" android:text="@string/collector_detail_error" android:textColor="#333333" />
+        <Button android:id="@+id/retry_collector_detail" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/retry" />
+    </LinearLayout>
+</FrameLayout>

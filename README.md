@@ -26,7 +26,7 @@ La app replica la funcionalidad de la versión web de Vinilos (catálogo de álb
 | HU06 | Consultar la información detallada de un coleccionista | 3 |
 | HU08 | Asociar tracks con un álbum | 3 |
 
-**Estado actual (Sprint 1, cerrado):** HU01 y HU02 están completas, probadas e integradas en `main`. El catálogo (`GET /albums`) tiene búsqueda y estados de carga, vacío y error; el detalle de álbum muestra intérpretes, fecha, género, sello, descripción y canciones, con navegación de regreso y compatibilidad desde Android 5.0 (API 21). El cierre está liberado como [release v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0), con APK firmado y trazabilidad al commit probado. HU03 dispone de servicio de músicos y bandas; este avance agrega su listado, búsqueda, estados y selección, con el detalle HU04 pendiente de integrar. Guía y límites en [docs/HU03-listado.md](docs/HU03-listado.md). Las demás historias conservan su estado de avance independiente. Historial del avance en [docs/HU01-avance.md](docs/HU01-avance.md); cierre del Sprint 1 en [docs/entrega-sprint1.md](docs/entrega-sprint1.md).
+**Estado actual (Sprint 1, cerrado):** HU01 y HU02 están completas, probadas e integradas en `main`. El catálogo (`GET /albums`) tiene búsqueda y estados de carga, vacío y error; el detalle de álbum muestra intérpretes, fecha, género, sello, descripción y canciones, con navegación de regreso y compatibilidad desde Android 5.0 (API 21). El cierre está liberado como [release v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0), con APK firmado y trazabilidad al commit probado. HU03 dispone de servicio de músicos y bandas; este avance agrega su listado, búsqueda, estados y selección, con el detalle HU04 pendiente de integrar. Guía y límites en [docs/HU03-listado.md](docs/HU03-listado.md). Las demás historias conservan su estado de avance independiente. Historial del avance en [docs/HU01-avance.md](docs/HU01-avance.md).
 
 ## Tecnologías
 
@@ -120,14 +120,6 @@ También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar ap
 ./gradlew lintDebug                    # análisis estático de Android
 ```
 
-Las pruebas Espresso habituales usan un repositorio controlado. Las dos pruebas contra BackVynils real se omiten por defecto; para ejecutarlas con el backend disponible y datos de álbumes:
-
-```bash
-./gradlew connectedDebugAndroidTest   -Pandroid.testInstrumentationRunnerArguments.backendReal=true   -Pandroid.testInstrumentationRunnerArguments.class=co.edu.uniandes.vinilos.BackVynilsRealE2ETest
-```
-
-Para otra dirección de backend, añade `-PVINILOS_API_BASE_URL=http://<host>:3000/` al mismo comando. Un backend vacío no satisface estas dos pruebas.
-
 Los reportes quedan en `app/build/reports/`. La estrategia de pruebas, el inventario de escenarios y los resultados de cada sprint están en la [wiki](https://github.com/Osaron/vinilos-android/wiki), en la página *Estrategia de pruebas* de cada sprint.
 
 ### Solución de problemas
@@ -162,8 +154,7 @@ Toda la documentación del proyecto (backlog, diseño UX/UI, arquitectura, estra
 
 Documentación técnica por historia en el repositorio:
 
-- **Revisión de Lint del Sprint 2:** advertencias corregidas, conservadas con justificación y pospuestas en [docs/lint-sprint2.md](docs/lint-sprint2.md).
-- **HU07 – Crear un álbum (Sprint 2):** contrato POST /albums acordado con el backend, componentes (Fragment → ViewModel → Repository → Service Adapter → Retrofit), diagrama de secuencia del flujo Coleccionista y pruebas en [docs/HU07-creacion.md](docs/HU07-creacion.md).
+- **HU07 – Crear un álbum (Sprint 2, en integración):** contrato POST /albums acordado con el backend, componentes (Fragment → ViewModel → Repository → Service Adapter → Retrofit), diagrama de secuencia del flujo Coleccionista y pruebas en [docs/HU07-creacion.md](docs/HU07-creacion.md).
 
 ### Diseño UX/UI (Figma)
 

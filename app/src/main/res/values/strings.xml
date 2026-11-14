@@ -65,4 +65,11 @@
     <string name="collector_favorite_accessibility">Artista o banda favorita: %1$s</string>
     <string name="collector_favorite_image">Imagen de %1$s</string>
     <plurals name="collector_count"><item quantity="one">%d coleccionista</item><item quantity="other">%d coleccionistas</item></plurals>
+    <string name="track_form_title">Agregar canción</string>
+    <string name="track_name_label">Nombre de la canción</string>
+    <string name="track_name_error">Escribe el nombre de la canción</string>
+    <string name="track_duration_label">Duración</string>
+    <string name="track_duration_hint">Ejemplo: 3:45</string>
+    <string name="track_duration_error">Ingresa la duración en minutos y segundos, por ejemplo 3:45</string>
+    <string name="track_save">Guardar canción</string>
 </resources>

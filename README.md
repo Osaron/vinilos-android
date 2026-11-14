@@ -26,6 +26,16 @@ La app replica la funcionalidad de la versión web de Vinilos (catálogo de álb
 | HU06 | Consultar la información detallada de un coleccionista | 3 |
 | HU08 | Asociar tracks con un álbum | 3 |
 
+### Historias adicionales (ampliación del MVP)
+
+Acordadas por el equipo el 14 de noviembre de 2026 para el Sprint 3. Amplían el MVP sin reemplazar sus 8 historias. Detalle, criterios y tareas en el [backlog de la wiki](https://github.com/Osaron/vinilos-android/wiki/Backlog-de-producto).
+
+| Id | Historia de usuario | Sprint | Responsable |
+|---|---|---|---|
+| HU09 | Comentar un álbum | 3 | [@Osaron](https://github.com/Osaron) |
+| HU10 | Agregar artistas favoritos | 3 | [@Osaron](https://github.com/Osaron) |
+| HU12 | Agregar músicos a una banda | 3 | [@Tibisaytarazona](https://github.com/Tibisaytarazona) |
+
 **Estado actual (Sprint 1, cerrado):** HU01 y HU02 están completas, probadas e integradas en `main`. El catálogo (`GET /albums`) tiene búsqueda y estados de carga, vacío y error; el detalle de álbum muestra intérpretes, fecha, género, sello, descripción y canciones, con navegación de regreso y compatibilidad desde Android 5.0 (API 21). El cierre está liberado como [release v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0), con APK firmado y trazabilidad al commit probado. HU03 dispone de servicio de músicos y bandas; este avance agrega su listado, búsqueda, estados y selección, con el detalle HU04 pendiente de integrar. Guía y límites en [docs/HU03-listado.md](docs/HU03-listado.md). Las demás historias conservan su estado de avance independiente. Historial del avance en [docs/HU01-avance.md](docs/HU01-avance.md).
 
 ## Tecnologías

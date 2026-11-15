@@ -47,7 +47,7 @@ La interfaz, los eventos y el renderizado comparten el hilo principal. Una opera
 - La actualización de estado será breve y se realizará desde el ViewModel.
 - Las imágenes se cargarán con Coil y un placeholder local.
 
-No se agregará `withContext(Dispatchers.IO)` alrededor de una llamada suspend de Retrofit solo por costumbre. Se usará un dispatcher explícito únicamente si aparece trabajo bloqueante o de procesamiento que lo requiera y se puede demostrar en una prueba o medición.
+La llamada suspend de Retrofit no necesita un `withContext(Dispatchers.IO)` adicional para evitar bloqueo. La validación y transformación de las respuestas de detalle se ejecutan con `withContext(Dispatchers.Default)`, para sacar ese procesamiento del hilo principal; el dispatcher se inyecta para verificar su uso. No se ha cuantificado una mejora de tiempo atribuible al cambio.
 
 ### Corrutinas y cancelación
 

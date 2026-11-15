@@ -68,4 +68,12 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(CommentService::class.java)
     ))
+
+    // HU10: artistas favoritos del coleccionista; los tests UI pueden sustituirlo antes del launch.
+    var favoriteArtistRepository: FavoriteArtistRepository = RemoteFavoriteArtistRepository(FavoriteArtistServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(FavoriteArtistService::class.java)
+    ))
 }

@@ -72,4 +72,17 @@
     <string name="track_duration_hint">Ejemplo: 3:45</string>
     <string name="track_duration_error">Ingresa la duración en minutos y segundos, por ejemplo 3:45</string>
     <string name="track_save">Guardar canción</string>
+    <!-- HU08 (#31): selección del álbum de destino. -->
+    <string name="add_track_open">Agregar canción</string>
+    <string name="add_track_album_label">Álbum</string>
+    <string name="add_track_change_album">Cambiar álbum</string>
+    <string name="add_track_choose_album">Elegir álbum</string>
+    <string name="add_track_album_dialog_title">Elige el álbum</string>
+    <string name="add_track_album_with_artist">%1$s · %2$s</string>
+    <string name="add_track_no_album_selected">Ningún álbum elegido</string>
+    <string name="add_track_loading_albums">Cargando álbumes…</string>
+    <string name="add_track_albums_error">No se pudieron cargar los álbumes.</string>
+    <string name="add_track_no_albums">No hay álbumes disponibles.</string>
+    <string name="add_track_album_missing">El álbum ya no está disponible. Elige otro.</string>
+    <string name="add_track_choose_album_first">Elige un álbum antes de guardar la canción.</string>
 </resources>

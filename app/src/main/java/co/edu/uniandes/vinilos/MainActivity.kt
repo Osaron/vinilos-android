@@ -11,6 +11,7 @@ import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
 import co.edu.uniandes.vinilos.ui.artists.ArtistDetailFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorDetailFragment
+import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private var openingArtistDetail = false
@@ -36,6 +37,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, AlbumDetailFragment.newInstance(albumId))
                 .addToBackStack("album_detail")
+                .commit()
+        }
+        supportFragmentManager.setFragmentResultListener(AlbumDetailFragment.OPEN_ADD_TRACK, this) { _, data ->
+            val albumId = data.getInt("albumId", -1)
+            if (albumId <= 0 || supportFragmentManager.findFragmentById(R.id.fragment_container) is AddTrackFragment) {
+                return@setFragmentResultListener
+            }
+            hideKeyboard()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AddTrackFragment.newInstance(albumId))
+                .addToBackStack("add_track")
                 .commit()
         }
         supportFragmentManager.setFragmentResultListener(AlbumCatalogFragment.OPEN_ARTISTS, this) { _, _ ->

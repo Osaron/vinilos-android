@@ -33,6 +33,9 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentAlbumDetailBinding.bind(view)
         binding.retryDetailButton.setOnClickListener { viewModel.refresh() }
+        binding.addTrackButton.setOnClickListener {
+            parentFragmentManager.setFragmentResult(OPEN_ADD_TRACK, bundleOf(ARG_ALBUM_ID to albumId))
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
@@ -86,6 +89,9 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
 
     companion object {
         private const val ARG_ALBUM_ID = "albumId"
+
+        /** HU08: abre el formulario con este álbum preseleccionado (clave `albumId`). */
+        const val OPEN_ADD_TRACK = "open_add_track"
         fun newInstance(albumId: Int) = AlbumDetailFragment().apply {
             arguments = bundleOf(ARG_ALBUM_ID to albumId)
         }

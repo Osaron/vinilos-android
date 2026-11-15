@@ -2,6 +2,7 @@ package co.edu.uniandes.vinilos.ui.albums
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import co.edu.uniandes.vinilos.R
 import co.edu.uniandes.vinilos.VinilosApplication
 import co.edu.uniandes.vinilos.databinding.FragmentAlbumDetailBinding
 import co.edu.uniandes.vinilos.model.AlbumDetail
+import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
 import co.edu.uniandes.vinilos.BuildConfig
 import android.util.Log
 import java.net.URI
@@ -35,6 +37,20 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
         binding.retryDetailButton.setOnClickListener { viewModel.refresh() }
         binding.addTrackButton.setOnClickListener {
             parentFragmentManager.setFragmentResult(OPEN_ADD_TRACK, bundleOf(ARG_ALBUM_ID to albumId))
+        }
+        // HU08 (#34): al volver de guardar se recargan las canciones; si se guardó en otro álbum, se abre ese.
+        parentFragmentManager.setFragmentResultListener(AddTrackFragment.TRACK_SAVED, viewLifecycleOwner) { _, data ->
+            val savedIn = data.getInt(AddTrackFragment.ALBUM_ID, -1)
+            data.getString(AddTrackFragment.TRACK_NAME)?.let { name ->
+                Toast.makeText(requireContext(), getString(R.string.add_track_saved, name), Toast.LENGTH_SHORT).show()
+            }
+            when {
+                savedIn == albumId -> viewModel.refresh()
+                savedIn > 0 -> parentFragmentManager.beginTransaction()
+                    .replace(id, newInstance(savedIn))
+                    .addToBackStack("album_detail")
+                    .commit()
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

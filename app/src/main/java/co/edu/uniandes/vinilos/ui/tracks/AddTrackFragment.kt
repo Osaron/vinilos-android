@@ -124,7 +124,7 @@ class AddTrackFragment : Fragment(R.layout.fragment_add_track) {
         leaving = true
         val track = (sending.state.value.result as? AddTrackResult.Saved)?.track
         parentFragmentManager.setFragmentResult(TRACK_SAVED, bundleOf(ALBUM_ID to albumId, TRACK_NAME to track?.name))
-        parentFragmentManager.popBackStack()
+        if (!parentFragmentManager.isStateSaved) parentFragmentManager.popBackStack()
     }
 
     private fun FragmentAddTrackBinding.render(state: AlbumSelectionState) {

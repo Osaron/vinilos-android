@@ -160,16 +160,20 @@ class AddTrackEnvioTest {
         escribirCancion("Todos vuelven", "5:20")
         onView(withId(R.id.track_save_button)).perform(scrollTo())
 
-        repeat(3) { enHiloPrincipal { it.findViewById<Button>(R.id.track_save_button).performClick() } }
-        enHiloPrincipal { actividad ->
-            assertTrue(actividad.findViewById<View>(R.id.saving_indicator).isShown)
-            assertFalse(actividad.findViewById<Button>(R.id.track_save_button).isEnabled)
-            assertFalse(actividad.findViewById<Button>(R.id.change_album_button).isEnabled)
-            assertEquals(texto(R.string.add_track_saving), actividad.findViewById<TextView>(R.id.track_status).text.toString())
+        try {
+            repeat(3) { enHiloPrincipal { it.findViewById<Button>(R.id.track_save_button).performClick() } }
+            enHiloPrincipal { actividad ->
+                assertTrue(actividad.findViewById<View>(R.id.saving_indicator).isShown)
+                assertFalse(actividad.findViewById<Button>(R.id.track_save_button).isEnabled)
+                assertFalse(actividad.findViewById<Button>(R.id.change_album_button).isEnabled)
+                assertEquals(texto(R.string.add_track_saving), actividad.findViewById<TextView>(R.id.track_status).text.toString())
+            }
+            assertEquals(1, backend.requests.size)
+        } finally {
+            // Libera la solicitud aunque falle una verificación: así el indicador se detiene y el
+            // cierre de la actividad no queda esperando en Android 5.
+            gate.complete(Unit)
         }
-        assertEquals(1, backend.requests.size)
-
-        gate.complete(Unit)
         esperar {
             enHiloPrincipal { actividad ->
                 val canciones = actividad.findViewById<TextView>(R.id.detail_tracks)?.text?.toString().orEmpty()

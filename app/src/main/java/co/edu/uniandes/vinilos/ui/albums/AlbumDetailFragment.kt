@@ -2,7 +2,6 @@ package co.edu.uniandes.vinilos.ui.albums
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -41,8 +40,10 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
         // HU08 (#34): al volver de guardar se recargan las canciones; si se guardó en otro álbum, se abre ese.
         parentFragmentManager.setFragmentResultListener(AddTrackFragment.TRACK_SAVED, viewLifecycleOwner) { _, data ->
             val savedIn = data.getInt(AddTrackFragment.ALBUM_ID, -1)
+            // Sin Toast: en API 21 su inflado falla con el tema de la app (ver CreateAlbumFragment).
+            // La lista recargada es la confirmación visible; TalkBack la anuncia.
             data.getString(AddTrackFragment.TRACK_NAME)?.let { name ->
-                Toast.makeText(requireContext(), getString(R.string.add_track_saved, name), Toast.LENGTH_SHORT).show()
+                view.announceForAccessibility(getString(R.string.add_track_saved, name))
             }
             when {
                 savedIn == albumId -> viewModel.refresh()

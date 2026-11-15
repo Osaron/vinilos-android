@@ -36,7 +36,19 @@ Acordadas por el equipo el 14 de noviembre de 2026 para el Sprint 3. Amplían el
 | HU10 | Agregar artistas favoritos | 3 | [@Osaron](https://github.com/Osaron) |
 | HU12 | Agregar músicos a una banda | 3 | [@Tibisaytarazona](https://github.com/Tibisaytarazona) |
 
-**Estado actual (Sprint 1, cerrado):** HU01 y HU02 están completas, probadas e integradas en `main`. El catálogo (`GET /albums`) tiene búsqueda y estados de carga, vacío y error; el detalle de álbum muestra intérpretes, fecha, género, sello, descripción y canciones, con navegación de regreso y compatibilidad desde Android 5.0 (API 21). El cierre está liberado como [release v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0), con APK firmado y trazabilidad al commit probado. HU03 dispone de servicio de músicos y bandas; este avance agrega su listado, búsqueda, estados y selección, con el detalle HU04 pendiente de integrar. Guía y límites en [docs/HU03-listado.md](docs/HU03-listado.md). Las demás historias conservan su estado de avance independiente. Historial del avance en [docs/HU01-avance.md](docs/HU01-avance.md).
+**Estado actual (Iteración 2 · W6):** HU01 a HU05 y HU07 están integradas en `main`. HU06 tiene un adelanto del detalle de coleccionista. De HU08 ya están el diseño, la selección del álbum que conserva su ID al rotar, el formulario con validaciones y el servicio `POST /albums/{albumId}/tracks`, verificado contra BackVynils. Faltan el envío desde la pantalla y sus estados (#34) y las pruebas del recorrido completo (#35). HU09 y HU10 tienen su servicio. Compatibilidad desde Android 5.0 (API 21). Historial en [docs/](docs/).
+
+## Descargar el APK
+
+| Versión | Contenido | APK |
+|---|---|---|
+| **[v0.3.0-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.0-w6)** (vigente) | Cierre de la Iteración 2 | [vinilos-v0.3.0-w6-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.0-w6/vinilos-v0.3.0-w6-debug.apk) |
+| [v0.2.1-w5](https://github.com/Osaron/vinilos-android/releases/tag/v0.2.1-w5) | Avance de la Iteración 2 | [vinilos-v0.2.1-w5-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.2.1-w5/vinilos-v0.2.1-w5-debug.apk) |
+| [v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0) | Cierre de la Iteración 1 | [Assets de la release](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0) |
+
+Cada release publica el SHA-256 del APK y el enlace a la ejecución de CI que lo generó. Para comprobar la descarga: `sha256sum vinilos-v0.3.0-w6-debug.apk` (en Windows: `certutil -hashfile vinilos-v0.3.0-w6-debug.apk SHA256`).
+
+Para instalarlo, abre el archivo en el teléfono y permite "instalar apps de origen desconocido", o ejecuta `adb install -r vinilos-v0.3.0-w6-debug.apk`. Requiere Android 5.0 (API 21) o superior. El APK apunta a `http://10.0.2.2:3000/`, que es BackVynils en el computador visto desde el emulador. En un teléfono físico, compila con `-PVINILOS_API_BASE_URL=http://<IP-del-computador>:3000/` (ver el paso 5).
 
 ## Tecnologías
 
@@ -120,7 +132,7 @@ El APK queda en `app/build/outputs/apk/debug/app-debug.apk`. Para instalarlo en 
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los [releases del repositorio](https://github.com/Osaron/vinilos-android/releases); el cierre de esta iteración es [v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0).
+También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los [releases del repositorio](https://github.com/Osaron/vinilos-android/releases). La vigente es [v0.3.0-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.0-w6) (ver [Descargar el APK](#descargar-el-apk)).
 
 ### 8. Ejecutar las pruebas
 

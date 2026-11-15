@@ -65,3 +65,9 @@ El log registra `cycles=20`, mediana de apertura para cada bloque de diez, PSS a
 - No se cambió código de producción por una sospecha sin medición atribuible.
 - Falta repetir la medición de memoria y respuesta en un teléfono físico y perfilar con Android Studio si el equipo observa crecimiento o jank.
 - La pantalla de detalle de coleccionista no existe en el alcance actual; este documento cubre navegación de artistas en HU04 y las pantallas de catálogo existentes.
+
+## Ajuste de contexto para el mapeo de detalles
+
+En respuesta a la retroalimentación W5, `ArtistDetailServiceAdapter` y `CollectorDetailServiceAdapter` ejecutan explícitamente en `Dispatchers.Default` la validación y transformación de las respuestas de detalle. Las llamadas Retrofit siguen siendo `suspend`: esta decisión desplaza el trabajo de adaptación de datos, no afirma que Retrofit necesitara un hilo bloqueante. El dispatcher se inyecta para pruebas y `withContext` conserva la cancelación estructurada.
+
+`DetailMappingDispatcherTest` comprueba que ambos adaptadores usan el dispatcher inyectado; las pruebas de servicio existentes comprueban datos, errores e identidad. La evaluación de navegación y rendimiento con repositorios simulados no mide el coste real de este mapeo, por lo que **no hay una mejora cuantificada atribuible al cambio**. Tampoco se afirma que todos los flujos de la aplicación usen un dispatcher explícito.

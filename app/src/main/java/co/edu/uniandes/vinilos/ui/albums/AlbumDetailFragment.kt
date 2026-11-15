@@ -13,6 +13,7 @@ import co.edu.uniandes.vinilos.R
 import co.edu.uniandes.vinilos.VinilosApplication
 import co.edu.uniandes.vinilos.databinding.FragmentAlbumDetailBinding
 import co.edu.uniandes.vinilos.model.AlbumDetail
+import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
 import co.edu.uniandes.vinilos.BuildConfig
 import android.util.Log
 import java.net.URI
@@ -35,6 +36,22 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
         binding.retryDetailButton.setOnClickListener { viewModel.refresh() }
         binding.addTrackButton.setOnClickListener {
             parentFragmentManager.setFragmentResult(OPEN_ADD_TRACK, bundleOf(ARG_ALBUM_ID to albumId))
+        }
+        // HU08 (#34): al volver de guardar se recargan las canciones; si se guardó en otro álbum, se abre ese.
+        parentFragmentManager.setFragmentResultListener(AddTrackFragment.TRACK_SAVED, viewLifecycleOwner) { _, data ->
+            val savedIn = data.getInt(AddTrackFragment.ALBUM_ID, -1)
+            // Sin Toast: en API 21 su inflado falla con el tema de la app (ver CreateAlbumFragment).
+            // La lista recargada es la confirmación visible; TalkBack la anuncia.
+            data.getString(AddTrackFragment.TRACK_NAME)?.let { name ->
+                view.announceForAccessibility(getString(R.string.add_track_saved, name))
+            }
+            when {
+                savedIn == albumId -> viewModel.refresh()
+                savedIn > 0 -> parentFragmentManager.beginTransaction()
+                    .replace(id, newInstance(savedIn))
+                    .addToBackStack("album_detail")
+                    .commit()
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

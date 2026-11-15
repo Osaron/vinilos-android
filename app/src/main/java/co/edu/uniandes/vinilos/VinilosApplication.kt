@@ -60,4 +60,28 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(AlbumCreationService::class.java)
     ))
+
+    // HU09: comentarios de un álbum; los tests UI pueden sustituirlo antes del launch.
+    var commentRepository: CommentRepository = RemoteCommentRepository(CommentServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(CommentService::class.java)
+    ))
+
+    // HU10: artistas favoritos del coleccionista; los tests UI pueden sustituirlo antes del launch.
+    var favoriteArtistRepository: FavoriteArtistRepository = RemoteFavoriteArtistRepository(FavoriteArtistServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(FavoriteArtistService::class.java)
+    ))
+
+    // HU08 (#33): sin reintentos automáticos de OkHttp para no duplicar canciones.
+    var trackAssociationRepository: TrackAssociationRepository = RemoteTrackAssociationRepository(TrackServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(TrackService::class.java)
+    ))
 }

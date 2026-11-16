@@ -42,14 +42,15 @@ Acordadas por el equipo el 14 de noviembre de 2026 para el Sprint 3. Amplían el
 
 | Versión | Contenido | APK |
 |---|---|---|
-| **[v0.3.1-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6)** (vigente) | Cierre de la Iteración 2 | [vinilos-v0.3.1-w6-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.1-w6/vinilos-v0.3.1-w6-debug.apk) |
+| **[v0.3.1-w6-dispatchers](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6-dispatchers)** (vigente) | Cierre de la Iteración 2 y corrutinas de detalles | [vinilos-v0.3.1-w6-dispatchers-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.1-w6-dispatchers/vinilos-v0.3.1-w6-dispatchers-debug.apk) |
+| [v0.3.1-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6) | Cierre anterior de la Iteración 2 | [vinilos-v0.3.1-w6-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.1-w6/vinilos-v0.3.1-w6-debug.apk) |
 | [v0.3.0-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.0-w6) | Corte inicial W6 con HU08 parcial | [vinilos-v0.3.0-w6-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.0-w6/vinilos-v0.3.0-w6-debug.apk) |
 | [v0.2.1-w5](https://github.com/Osaron/vinilos-android/releases/tag/v0.2.1-w5) | Avance de la Iteración 2 | [vinilos-v0.2.1-w5-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.2.1-w5/vinilos-v0.2.1-w5-debug.apk) |
 | [v0.1.0](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0) | Cierre de la Iteración 1 | [Assets de la release](https://github.com/Osaron/vinilos-android/releases/tag/v0.1.0) |
 
-Cada release publica el SHA-256 del APK y el enlace a la ejecución de CI que lo generó. Para comprobar la descarga: `sha256sum vinilos-v0.3.1-w6-debug.apk` (en Windows: `certutil -hashfile vinilos-v0.3.1-w6-debug.apk SHA256`).
+Cada release publica el SHA-256 del APK y los detalles de las verificaciones y de la ejecución de CI asociada. Para comprobar la descarga: `sha256sum vinilos-v0.3.1-w6-dispatchers-debug.apk` (en Windows: `certutil -hashfile vinilos-v0.3.1-w6-dispatchers-debug.apk SHA256`).
 
-Para instalarlo, abre el archivo en el teléfono y permite "instalar apps de origen desconocido", o ejecuta `adb install -r vinilos-v0.3.1-w6-debug.apk`. Requiere Android 5.0 (API 21) o superior. El APK apunta a `http://10.0.2.2:3000/`, que es BackVynils en el computador visto desde el emulador. En un teléfono físico, compila con `-PVINILOS_API_BASE_URL=http://<IP-del-computador>:3000/` (ver el paso 5).
+Para instalarlo, abre el archivo en el teléfono y permite "instalar apps de origen desconocido", o ejecuta `adb install -r vinilos-v0.3.1-w6-dispatchers-debug.apk`. Requiere Android 5.0 (API 21) o superior. El APK apunta a `http://10.0.2.2:3000/`, que es BackVynils en el computador visto desde el emulador. En un teléfono físico, compila con `-PVINILOS_API_BASE_URL=http://<IP-del-computador>:3000/` (ver el paso 5).
 
 ## Tecnologías
 
@@ -133,7 +134,7 @@ El APK queda en `app/build/outputs/apk/debug/app-debug.apk`. Para instalarlo en 
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los [releases del repositorio](https://github.com/Osaron/vinilos-android/releases). La vigente es [v0.3.1-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6) (ver [Descargar el APK](#descargar-el-apk)).
+También puedes copiar el APK al teléfono e instalarlo permitiendo "instalar apps de origen desconocido". El APK de cada entrega se publica en los [releases del repositorio](https://github.com/Osaron/vinilos-android/releases). La vigente es [v0.3.1-w6-dispatchers](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6-dispatchers) (ver [Descargar el APK](#descargar-el-apk)).
 
 ### 8. Ejecutar las pruebas
 

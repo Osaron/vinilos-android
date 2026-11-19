@@ -3,6 +3,8 @@ package co.edu.uniandes.vinilos.ui.bands
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -35,11 +37,23 @@ class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection)
         val binding = FragmentMusicianSelectionBinding.bind(view)
         binding.musicianSelectionCancel.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.musicianSelectionRetry.setOnClickListener { model.load() }
-        binding.musicianSelectionConfirm.setOnClickListener { model.submit() }
+        binding.musicianSelectionConfirm.setOnClickListener {
+            val musician = model.state.value.selected ?: return@setOnClickListener
+            val app = requireActivity().application as VinilosApplication
+            if (app.activeCollectorStore.active.value == null) return@setOnClickListener
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.hu12_confirm_title)
+                .setMessage(getString(R.string.hu12_confirm_message, musician.name))
+                .setNegativeButton(R.string.hu12_cancel, null)
+                .setPositiveButton(R.string.hu12_choose) { _, _ ->
+                    if (app.activeCollectorStore.active.value != null) model.submit()
+                }.show()
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.state.collect { state ->
                     if (state.saved) {
+                        Toast.makeText(requireContext(), R.string.hu12_saved, Toast.LENGTH_SHORT).show()
                         parentFragmentManager.setFragmentResult(
                             RESULT, bundleOf(ARG_BAND_ID to bandId, "musicianId" to state.selectedId),
                         )

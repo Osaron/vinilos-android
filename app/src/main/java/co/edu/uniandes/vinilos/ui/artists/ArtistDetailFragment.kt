@@ -18,6 +18,7 @@ import co.edu.uniandes.vinilos.databinding.FragmentArtistDetailBinding
 import co.edu.uniandes.vinilos.model.ArtistAlbum
 import co.edu.uniandes.vinilos.model.ArtistDetail
 import co.edu.uniandes.vinilos.model.ArtistType
+import co.edu.uniandes.vinilos.ui.bands.MusicianSelectionFragment
 import coil.load
 import coil.transform.CircleCropTransformation
 import kotlinx.coroutines.launch
@@ -32,20 +33,45 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
             artistId,
             artistType,
             (requireActivity().application as VinilosApplication).artistDetailRepository,
+            (requireActivity().application as VinilosApplication).bandMusicianRepository,
         )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentArtistDetailBinding.bind(view)
+        val app = requireActivity().application as VinilosApplication
+        parentFragmentManager.setFragmentResultListener(MusicianSelectionFragment.RESULT, viewLifecycleOwner) { _, data ->
+            if (data.getInt(MusicianSelectionFragment.ARG_BAND_ID) == artistId) viewModel.refresh()
+        }
+        binding.addBandMusician.setOnClickListener {
+            if (artistType == ArtistType.BAND && app.activeCollectorStore.active.value != null &&
+                parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, MusicianSelectionFragment.newInstance(artistId))
+                    .addToBackStack("hu12_musician").commit()
+                parentFragmentManager.executePendingTransactions()
+            }
+        }
         binding.retryArtistDetail.setOnClickListener { viewModel.refresh() }
         binding.backArtistDetail.setOnClickListener { parentFragmentManager.popBackStack() }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    app.activeCollectorStore.active.collect { collector ->
+                        binding.addBandMusician.isVisible = artistType == ArtistType.BAND && collector != null
+                    }
+                }
                 viewModel.state.collect { state ->
                     binding.artistDetailLoading.isVisible = state.loading
                     binding.artistDetailContent.isVisible = !state.loading && state.detail != null
                     binding.artistDetailError.isVisible = !state.loading && state.failed
                     state.detail?.let { detail -> binding.render(detail) }
+                    binding.bandMembersSection.isVisible = artistType == ArtistType.BAND
+                    binding.bandMembers.text = when {
+                        state.membersFailed -> getString(R.string.hu12_members_failed)
+                        state.members.isEmpty() -> getString(R.string.hu12_no_members)
+                        else -> state.members.joinToString("\n") { it.name }
+                    }
                 }
             }
         }

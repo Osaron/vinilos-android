@@ -41,7 +41,10 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
         val binding = FragmentArtistDetailBinding.bind(view)
         val app = requireActivity().application as VinilosApplication
         parentFragmentManager.setFragmentResultListener(MusicianSelectionFragment.RESULT, viewLifecycleOwner) { _, data ->
-            if (data.getInt(MusicianSelectionFragment.ARG_BAND_ID) == artistId) viewModel.refresh()
+            if (data.getInt(MusicianSelectionFragment.ARG_BAND_ID) == artistId) {
+                binding.bandAssociationStatus.isVisible = true
+                viewModel.refresh()
+            }
         }
         binding.addBandMusician.setOnClickListener {
             if (artistType == ArtistType.BAND && app.activeCollectorStore.active.value != null &&

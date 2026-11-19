@@ -7,7 +7,7 @@
         <Button android:id="@+id/musician_selection_cancel"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/back" />
-        <TextView android:fontFamily="sans-serif" android:layout_width="match_parent" android:layout_height="wrap_content"
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/hu12_choose_musician" android:textSize="24sp"
             android:textColor="#222222" android:paddingTop="16dp" />
         <ProgressBar android:id="@+id/musician_selection_loading"
@@ -16,14 +16,14 @@
         <Button android:id="@+id/musician_selection_retry"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:visibility="gone" android:text="@string/hu12_retry" />
-        <TextView android:fontFamily="sans-serif" android:id="@+id/musician_selection_empty"
+        <TextView android:id="@+id/musician_selection_empty"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:visibility="gone" android:text="@string/hu12_empty" />
         <RadioGroup android:id="@+id/musician_selection_options"
             android:layout_width="match_parent" android:layout_height="wrap_content" />
-        <TextView android:fontFamily="sans-serif" android:id="@+id/musician_selection_status"
+        <TextView android:id="@+id/musician_selection_status"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/hu12_save_failed" android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            android:accessibilityLiveRegion="polite" android:visibility="gone" />
         <Button android:id="@+id/musician_selection_confirm"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:enabled="false" android:text="@string/hu12_choose" />

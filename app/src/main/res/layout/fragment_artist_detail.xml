@@ -91,6 +91,10 @@
                 <TextView android:id="@+id/band_members"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:paddingTop="8dp" android:accessibilityLiveRegion="polite" />
+                <TextView android:id="@+id/band_association_status"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/hu12_saved" android:visibility="gone"
+                    android:accessibilityLiveRegion="polite" />
                 <Button android:id="@+id/add_band_musician"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:visibility="gone" android:text="@string/hu12_choose" />

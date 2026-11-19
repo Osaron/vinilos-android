@@ -20,8 +20,8 @@ Comando para ejecutarlas:
 
 ## Selector de músico
 
-MusicianSelectionFragment recibe bandId y devuelve el resultado hu12MusicianSelected con bandId y musicianId. Volver cancela la selección. Elegir músico confirma el ID para el flujo de guardado, sin enviar la asociación.
+MusicianSelectionFragment recibe bandId y devuelve el resultado hu12MusicianSelected con bandId y musicianId. Volver cancela la selección antes del envío. Agregar músico consulta los integrantes y guarda la asociación si aún no existe. Una respuesta confirmada devuelve el resultado con bandId y musicianId al detalle.
 
 MusicianSelectionViewModel combina el catálogo de HU03 con los integrantes de la banda. Excluye bandas e integrantes existentes, distingue músicos por ID y conserva la selección en SavedStateHandle. Si una recarga descubre que el músico elegido ya pertenece a la banda, limpia esa selección.
 
-La entrada desde el detalle requiere integrarse con el rol Coleccionista del PR #111. El guardado y sus estados se siguen en #94. La prueba instrumentada del recorrido integrado se sigue en #95.
+La entrada desde el detalle requiere integrarse con el rol Coleccionista del PR #111. El guardado de #94 desactiva los controles durante la solicitud, conserva la selección ante un fallo y verifica los integrantes tras un error de transporte antes de ofrecer un reintento. La prueba instrumentada del recorrido integrado se sigue en #95.

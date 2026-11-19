@@ -18,7 +18,7 @@ import co.edu.uniandes.vinilos.VinilosApplication
 import co.edu.uniandes.vinilos.databinding.FragmentMusicianSelectionBinding
 import kotlinx.coroutines.launch
 
-/** Selector de HU12. Publica la elección al flujo de guardado mediante FragmentResult. */
+/** Selector y guardado de HU12. Publica la asociación confirmada mediante FragmentResult. */
 class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection) {
     private val bandId: Int by lazy { requireArguments().getInt(ARG_BAND_ID).also { require(it > 0) } }
     private val model: MusicianSelectionViewModel by viewModels {
@@ -35,24 +35,31 @@ class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection)
         val binding = FragmentMusicianSelectionBinding.bind(view)
         binding.musicianSelectionCancel.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.musicianSelectionRetry.setOnClickListener { model.load() }
-        binding.musicianSelectionConfirm.setOnClickListener {
-            val state = model.state.value
-            if (!state.loading && !state.failed) state.selected?.let { musician ->
-                parentFragmentManager.setFragmentResult(
-                    RESULT, bundleOf(ARG_BAND_ID to bandId, "musicianId" to musician.id),
-                )
-                parentFragmentManager.popBackStack()
-            }
-        }
+        binding.musicianSelectionConfirm.setOnClickListener { model.submit() }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.state.collect { state ->
+                    if (state.saved) {
+                        parentFragmentManager.setFragmentResult(
+                            RESULT, bundleOf(ARG_BAND_ID to bandId, "musicianId" to state.selectedId),
+                        )
+                        parentFragmentManager.popBackStack()
+                        return@collect
+                    }
+                    binding.musicianSelectionCancel.isEnabled = !state.submitting
+                    binding.musicianSelectionStatus.isVisible =
+                        state.submitting || state.submitFailed || state.unconfirmed
+                    binding.musicianSelectionStatus.setText(when {
+                        state.submitting -> R.string.hu12_saving
+                        state.unconfirmed -> R.string.hu12_unconfirmed
+                        else -> R.string.hu12_save_failed
+                    })
                     binding.musicianSelectionLoading.isVisible = state.loading
                     binding.musicianSelectionRetry.isVisible = state.failed
                     binding.musicianSelectionEmpty.isVisible =
                         !state.loading && !state.failed && state.musicians.isEmpty()
                     binding.musicianSelectionConfirm.isEnabled =
-                        !state.loading && !state.failed && state.selected != null
+                        !state.loading && !state.failed && !state.submitting && state.selected != null
                     binding.musicianSelectionOptions.isVisible = !state.loading && !state.failed
                     binding.musicianSelectionOptions.setOnCheckedChangeListener(null)
                     binding.musicianSelectionOptions.removeAllViews()
@@ -63,6 +70,7 @@ class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection)
                             contentDescription = getString(R.string.hu12_select_musician, musician.name)
                             minHeight = (48 * resources.displayMetrics.density).toInt()
                             isChecked = musician.id == state.selectedId
+                            isEnabled = !state.submitting
                             setOnClickListener { model.select(musician.id) }
                         })
                     }

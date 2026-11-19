@@ -22,13 +22,22 @@ class MusicianSelectionViewModelTest {
     private class Bands : BandMusicianRepository {
         var members = listOf(1)
         var failed = false
+        var saves = 0
+        var saveFailed = false
+        var lostResponse = false
         override suspend fun getMembers(bandId: Int): List<Artist> {
             check(bandId == 20)
             if (failed) throw IOException("sin red")
             return members.map { Artist(it, ArtistType.MUSICIAN, "Integrante", "", "") }
         }
-        override suspend fun addMusician(bandId: Int, musicianId: Int): Artist =
-            error("Seleccionar no debe asociar")
+        override suspend fun addMusician(bandId: Int, musicianId: Int): Artist {
+            check(bandId == 20)
+            saves++
+            if (saveFailed) throw IllegalStateException("rechazado")
+            members = members + musicianId
+            if (lostResponse) throw IOException("respuesta perdida")
+            return Artist(musicianId, ArtistType.MUSICIAN, "Integrante", "", "")
+        }
     }
 
     private fun scenario(block: suspend TestScope.() -> Unit) = runTest {
@@ -93,4 +102,55 @@ class MusicianSelectionViewModelTest {
         assertFalse(model.state.value.loading)
         assertTrue(model.state.value.musicians.isEmpty())
     }
+    @Test fun guardaUnaVezAunqueSePulseVariasVeces() = scenario {
+        val bands = Bands()
+        val model = MusicianSelectionViewModel(20, ArtistRepository { catalog }, bands, SavedStateHandle())
+        advanceUntilIdle()
+        model.select(2)
+        model.submit()
+        model.submit()
+        advanceUntilIdle()
+        model.submit()
+        assertTrue(model.state.value.saved)
+        assertEquals(1, bands.saves)
+    }
+
+    @Test fun conservaLaSeleccionAnteErrorYPermiteReintentar() = scenario {
+        val bands = Bands().apply { saveFailed = true }
+        val model = MusicianSelectionViewModel(20, ArtistRepository { catalog }, bands, SavedStateHandle())
+        advanceUntilIdle()
+        model.select(2)
+        model.submit()
+        advanceUntilIdle()
+        assertTrue(model.state.value.submitFailed)
+        assertEquals(2, model.state.value.selectedId)
+        bands.saveFailed = false
+        model.submit()
+        advanceUntilIdle()
+        assertTrue(model.state.value.saved)
+    }
+
+    @Test fun verificaElServidorSiSePierdeLaRespuesta() = scenario {
+        val bands = Bands().apply { lostResponse = true }
+        val model = MusicianSelectionViewModel(20, ArtistRepository { catalog }, bands, SavedStateHandle())
+        advanceUntilIdle()
+        model.select(2)
+        model.submit()
+        advanceUntilIdle()
+        assertTrue(model.state.value.saved)
+        assertEquals(1, bands.saves)
+    }
+
+    @Test fun noReenviaSiYaSeAsocioDesdeOtroCliente() = scenario {
+        val bands = Bands()
+        val model = MusicianSelectionViewModel(20, ArtistRepository { catalog }, bands, SavedStateHandle())
+        advanceUntilIdle()
+        model.select(2)
+        bands.members = listOf(1, 2)
+        model.submit()
+        advanceUntilIdle()
+        assertTrue(model.state.value.saved)
+        assertEquals(0, bands.saves)
+    }
+
 }

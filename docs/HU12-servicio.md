@@ -17,3 +17,11 @@ Comando para ejecutarlas:
 ```bash
 ./gradlew testDebugUnitTest --tests '*BandMusicianServiceAdapterTest'
 ```
+
+## Selector de músico
+
+MusicianSelectionFragment recibe bandId y devuelve el resultado hu12MusicianSelected con bandId y musicianId. Volver cancela la selección. Elegir músico confirma el ID para el flujo de guardado, sin enviar la asociación.
+
+MusicianSelectionViewModel combina el catálogo de HU03 con los integrantes de la banda. Excluye bandas e integrantes existentes, distingue músicos por ID y conserva la selección en SavedStateHandle. Si una recarga descubre que el músico elegido ya pertenece a la banda, limpia esa selección.
+
+La entrada desde el detalle requiere integrarse con el rol Coleccionista del PR #111. El guardado y sus estados se siguen en #94. La prueba instrumentada del recorrido integrado se sigue en #95.

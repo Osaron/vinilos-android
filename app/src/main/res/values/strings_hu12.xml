@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hu12_choose_musician">Elegir músico para la banda</string>
+    <string name="hu12_loading">Cargando músicos disponibles</string>
+    <string name="hu12_retry">No se pudo cargar. Reintentar</string>
+    <string name="hu12_empty">No hay músicos disponibles para agregar.</string>
+    <string name="hu12_choose">Elegir músico</string>
+    <string name="hu12_select_musician">Seleccionar músico %1$s</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FAFAFA" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <Button android:id="@+id/musician_selection_cancel"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/back" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/hu12_choose_musician" android:textSize="24sp"
+            android:textColor="#222222" android:paddingTop="16dp" />
+        <ProgressBar android:id="@+id/musician_selection_loading"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:contentDescription="@string/hu12_loading" />
+        <Button android:id="@+id/musician_selection_retry"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:visibility="gone" android:text="@string/hu12_retry" />
+        <TextView android:id="@+id/musician_selection_empty"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:visibility="gone" android:text="@string/hu12_empty" />
+        <RadioGroup android:id="@+id/musician_selection_options"
+            android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <Button android:id="@+id/musician_selection_confirm"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:enabled="false" android:text="@string/hu12_choose" />
+    </LinearLayout>
+</ScrollView>

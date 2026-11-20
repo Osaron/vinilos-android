@@ -87,6 +87,14 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .create(FavoriteArtistService::class.java)
     ))
 
+    // HU12: dependencia sustituible por un doble en las pruebas del flujo.
+    var bandMusicianRepository: BandMusicianRepository = RemoteBandMusicianRepository(BandMusicianServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(BandMusicianService::class.java)
+    ))
+
     // HU08 (#33): sin reintentos automáticos de OkHttp para no duplicar canciones.
     var trackAssociationRepository: TrackAssociationRepository = RemoteTrackAssociationRepository(TrackServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)

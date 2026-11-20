@@ -91,9 +91,13 @@ class BandMusicianTalkBackTest {
                 val add = checkNotNull(node(id("add_band_musician")))
                 add.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id)
                 SystemClock.sleep(500)
-                // Coloca el foco inicial. La activación y navegación siguientes usan gestos táctiles.
-                checkNotNull(node(id("add_band_musician"))).performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS)
-                SystemClock.sleep(500)
+                // Explora el botón con entrada del dispositivo táctil, sin forzar el foco por API.
+                val initialBounds = Rect()
+                checkNotNull(node(id("add_band_musician"))).getBoundsInScreen(initialBounds)
+                kernelGesture(listOf(down(initialBounds.exactCenterX(), initialBounds.exactCenterY()), up), ".35")
+                await("Foco táctil inicial") {
+                    automation.rootInActiveWindow?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)?.viewIdResourceName == id("add_band_musician")
+                }
                 capture("01-banda-foco")
                 doubleTap()
                 await("Selector abierto con doble toque") { node(id("musician_selection_band")) != null }
@@ -175,13 +179,16 @@ class BandMusicianTalkBackTest {
         return listOf(Triple(3, 53, (x * touchDevice.maxX / metrics.widthPixels).toInt()),
             Triple(3, 54, (y * touchDevice.maxY / metrics.heightPixels).toInt()), Triple(0, 0, 0))
     }
-    private fun down(x: Float, y: Float) = listOf(Triple(3, 47, 0), Triple(3, 57, 7), Triple(1, 330, 1)) + point(x, y)
+    private fun down(x: Float, y: Float) = listOf(Triple(3, 47, 0), Triple(3, 57, 7), Triple(3, 48, 15), Triple(3, 58, 80), Triple(1, 330, 1)) + point(x, y)
     private val up get() = listOf(Triple(3, 57, -1), Triple(1, 330, 0), Triple(0, 0, 0))
     private fun kernelGesture(chunks: List<List<Triple<Int, Int, Int>>>, delay: String) {
+        val nativeBits = shell("getconf LONG_BIT").trim().toIntOrNull() ?: 64
+        events.add("native_bits=$nativeBits")
         val commands = chunks.mapIndexed { index, chunk ->
-            val buffer = ByteBuffer.allocate(chunk.size * 24).order(ByteOrder.LITTLE_ENDIAN)
+            val buffer = ByteBuffer.allocate(chunk.size * (if (nativeBits == 32) 16 else 24)).order(ByteOrder.LITTLE_ENDIAN)
             chunk.forEach { (type, code, value) ->
-                buffer.putLong(0L).putLong(0L).putShort(type.toShort()).putShort(code.toShort()).putInt(value)
+                if (nativeBits == 32) buffer.putInt(0).putInt(0) else buffer.putLong(0L).putLong(0L)
+                buffer.putShort(type.toShort()).putShort(code.toShort()).putInt(value)
             }
             val file = File(context.filesDir, "kernel-touch-$index.bin")
             file.writeBytes(buffer.array())

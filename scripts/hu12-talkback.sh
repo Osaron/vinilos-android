@@ -14,8 +14,10 @@ import zipfile, io
 from pathlib import Path
 with zipfile.ZipFile('downloads/espeak.apk') as apk:
     data = apk.read('res/t8.zip')
+    version = apk.read('res/KJ')
 with zipfile.ZipFile(io.BytesIO(data)) as voices:
     voices.extractall('downloads/voices')
+Path('downloads/voices/espeak-ng-data/version').write_bytes(version)
 PYDATA
 adb shell mkdir -p /data/user_de/0/com.reecedunn.espeak/app_voices
 adb push downloads/voices/espeak-ng-data /data/user_de/0/com.reecedunn.espeak/app_voices/
@@ -39,6 +41,8 @@ adb shell settings put secure accessibility_enabled 1
 adb shell settings put secure touch_exploration_enabled 1
 adb shell setprop log.tag.SpeechController VERBOSE
 adb shell getprop > hu12-talkback-evidence/device.txt
+adb shell getevent -lp > hu12-talkback-evidence/input-devices.txt
+adb shell getconf LONG_BIT > hu12-talkback-evidence/native-bits.txt || true
 adb shell dumpsys package com.android.talkback > hu12-talkback-evidence/talkback-package.txt
 cleanup() {
   adb shell settings put secure accessibility_enabled 0 || true

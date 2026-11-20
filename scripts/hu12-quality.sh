@@ -14,7 +14,9 @@ for scale in 1.0 1.3; do
   adb shell am instrument -w -r -e class co.edu.uniandes.vinilos.BandMusicianFlowTest co.edu.uniandes.vinilos.test/androidx.test.runner.AndroidJUnitRunner | tee "hu12-evidence/instrumentation-font-$scale.txt"
   adb logcat -d > "hu12-evidence/logcat-font-$scale.txt"
   mkdir -p "hu12-evidence/font-$scale"
-  adb pull /sdcard/Android/data/co.edu.uniandes.vinilos/files/. "hu12-evidence/font-$scale/"
+  for artifact in $(adb shell run-as co.edu.uniandes.vinilos ls files | tr -d '\r' | grep '^hu12-'); do
+    adb exec-out run-as co.edu.uniandes.vinilos cat "files/$artifact" > "hu12-evidence/font-$scale/$artifact"
+  done
   if ! grep -q 'OK (8 tests)' "hu12-evidence/instrumentation-font-$scale.txt"; then
     echo 'La ejecución no completó los ocho casos de HU12.'
     exit 1

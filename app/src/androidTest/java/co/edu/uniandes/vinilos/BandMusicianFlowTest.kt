@@ -185,7 +185,7 @@ class BandMusicianFlowTest {
         val message = "api=${Build.VERSION.SDK_INT}; cycles=10; open_ms=$times; p50_ms=${(sorted[4]+sorted[5])/2}; max_ms=${sorted.last()}; pss_before_kb=$beforePss; pss_after_kb=${Debug.getPss()}; post_calls=${bands.calls}"
         Log.i("HU12_PERFORMANCE", message)
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        File(context.getExternalFilesDir(null), "hu12-performance-api-${Build.VERSION.SDK_INT}.txt").writeText(message)
+        File(context.filesDir, "hu12-performance-api-${Build.VERSION.SDK_INT}.txt").writeText(message)
         assertEquals(0, bands.calls)
     }
 
@@ -194,7 +194,7 @@ class BandMusicianFlowTest {
         val context = instrumentation.targetContext
         val scale = context.resources.configuration.fontScale.toString().replace('.', '_')
         val screenshot = checkNotNull(instrumentation.uiAutomation.takeScreenshot())
-        File(context.getExternalFilesDir(null), "hu12-$name-api-${Build.VERSION.SDK_INT}-font-$scale.png")
+        File(context.filesDir, "hu12-$name-api-${Build.VERSION.SDK_INT}-font-$scale.png")
             .outputStream().use { screenshot.compress(Bitmap.CompressFormat.PNG, 100, it) }
         screenshot.recycle()
     }

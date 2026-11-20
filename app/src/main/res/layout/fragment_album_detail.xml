@@ -108,6 +108,51 @@
                 android:paddingBottom="24dp"
                 android:textColor="#333333"
                 android:textSize="16sp" />
+
+            <!-- HU09 (#82): comentarios del álbum. Se cargan aparte del detalle y sin indicador animado. -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/album_comments"
+                android:textColor="#222222"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/add_comment_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/add_comment_open" />
+
+            <TextView
+                android:id="@+id/detail_comments_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="polite"
+                android:paddingTop="6dp"
+                android:textColor="#555555" />
+
+            <Button
+                android:id="@+id/retry_comments_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/retry"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/detail_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="6dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="24dp"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

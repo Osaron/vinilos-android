@@ -129,4 +129,18 @@ class ActiveCollectorSelectionTest {
         onView(withId(R.id.current_active_collector)).check(matches(withText(texto(R.string.active_collector_none))))
         assertNull(store.active.value)
     }
+    @Test fun listaVaciaOlvidaColeccionistaEliminado() = conSelector(
+        CollectorRepository { emptyList() }, InMemoryActiveCollectorStore(ActiveCollector(99, "Eliminado")),
+    ) { _, store ->
+        onView(withId(R.id.active_collector_status)).check(matches(withText(R.string.collectors_empty)))
+        onView(withId(R.id.current_active_collector)).check(matches(withText(texto(R.string.active_collector_none))))
+        assertNull(store.active.value)
+    }
+
+    @Test fun errorDeCargaConservaColeccionistaActivo() = conSelector(
+        CollectorRepository { throw IOException("sin red") }, InMemoryActiveCollectorStore(ActiveCollector(8, "Ana María")),
+    ) { _, store ->
+        onView(withId(R.id.active_collector_status)).check(matches(withText(R.string.collectors_error)))
+        assertEquals(ActiveCollector(8, "Ana María"), store.active.value)
+    }
 }

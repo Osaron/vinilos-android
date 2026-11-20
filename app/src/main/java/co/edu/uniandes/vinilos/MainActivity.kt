@@ -12,6 +12,7 @@ import co.edu.uniandes.vinilos.ui.artists.ArtistDetailFragment
 import co.edu.uniandes.vinilos.ui.collectors.ActiveCollectorFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorDetailFragment
+import co.edu.uniandes.vinilos.ui.comments.CommentAlbumFragment
 import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -91,6 +92,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, CollectorDetailFragment.newInstance(collectorId))
                 .addToBackStack("collector_detail")
+                .commit()
+        }
+        // HU09 (#82): formulario para comentar el álbum desde su detalle.
+        supportFragmentManager.setFragmentResultListener(CommentAlbumFragment.OPEN, this) { _, data ->
+            val albumId = data.getInt(CommentAlbumFragment.ALBUM_ID, -1)
+            if (albumId <= 0 || supportFragmentManager.findFragmentById(R.id.fragment_container) is CommentAlbumFragment) {
+                return@setFragmentResultListener
+            }
+            hideKeyboard()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, CommentAlbumFragment.newInstance(albumId, data.getString(CommentAlbumFragment.ALBUM_NAME)))
+                .addToBackStack("comment_album")
                 .commit()
         }
         // #80: HU09 y HU10 piden elegir coleccionista; al elegirlo se vuelve a la pantalla que lo pidió.

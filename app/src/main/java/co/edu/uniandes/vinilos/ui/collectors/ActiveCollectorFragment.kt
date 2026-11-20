@@ -48,7 +48,7 @@ class ActiveCollectorFragment : Fragment(R.layout.fragment_active_collector) {
                     val collectors = state.visibleCollectors
                     val ready = !state.loading && !state.failed
                     // Si el coleccionista guardado ya no existe en el backend, se olvida y se pide otro.
-                    if (ready && active != null && state.collectors.isNotEmpty() && state.collectors.none { it.id == active.id }) {
+                    if (ready && active != null && state.collectors.none { it.id == active.id }) {
                         store.clear()
                     }
                     binding.currentActiveCollector.text = active?.let { getString(R.string.active_collector_current, it.name) }

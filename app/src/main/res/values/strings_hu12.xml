@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hu12_choose_musician">Elegir músico para la banda</string>
+    <string name="hu12_loading">Cargando músicos disponibles</string>
+    <string name="hu12_retry">No se pudo cargar. Reintentar</string>
+    <string name="hu12_empty">No hay músicos disponibles para agregar.</string>
+    <string name="hu12_choose">Agregar músico</string>
+    <string name="hu12_select_musician">Seleccionar músico %1$s</string>
+    <string name="hu12_saving">Agregando músico…</string>
+    <string name="hu12_save_failed">No se pudo agregar el músico. Conservamos tu selección para reintentar.</string>
+    <string name="hu12_unconfirmed">No pudimos confirmar el resultado. Al reintentar comprobaremos primero los integrantes de la banda.</string>
+    <string name="hu12_members">Integrantes</string>
+    <string name="hu12_no_members">Sin integrantes registrados.</string>
+    <string name="hu12_members_failed">No se pudieron cargar los integrantes.</string>
+    <string name="hu12_confirm_title">Agregar músico a la banda</string>
+    <string name="hu12_confirm_message">Se agregará %1$s a esta banda. Si pertenece a otra, cambiará su asociación.</string>
+    <string name="hu12_cancel">Cancelar</string>
+    <string name="hu12_saved">Músico agregado a la banda.</string>
+</resources>

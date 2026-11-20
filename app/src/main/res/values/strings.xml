@@ -64,6 +64,11 @@
     <string name="collector_comment_with_rating">%1$s · Calificación: %2$d/5</string>
     <string name="collector_favorite_accessibility">Artista o banda favorita: %1$s</string>
     <string name="collector_favorite_image">Imagen de %1$s</string>
+    <!-- #80: coleccionista activo (HU09 y HU10). -->
+    <string name="active_collector_title">Selecciona tu coleccionista</string>
+    <string name="active_collector_help">Tus comentarios y artistas favoritos quedarán a nombre del coleccionista que elijas.</string>
+    <string name="active_collector_current">Coleccionista actual: %1$s</string>
+    <string name="active_collector_none">Todavía no has elegido un coleccionista.</string>
     <plurals name="collector_count"><item quantity="one">%d coleccionista</item><item quantity="other">%d coleccionistas</item></plurals>
     <string name="track_form_title">Agregar canción</string>
     <string name="track_name_label">Nombre de la canción</string>

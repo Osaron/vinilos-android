@@ -9,6 +9,7 @@ import co.edu.uniandes.vinilos.ui.albums.AlbumDetailFragment
 
 import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
 import co.edu.uniandes.vinilos.ui.artists.ArtistDetailFragment
+import co.edu.uniandes.vinilos.ui.collectors.ActiveCollectorFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorDetailFragment
 import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
@@ -90,6 +91,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, CollectorDetailFragment.newInstance(collectorId))
                 .addToBackStack("collector_detail")
+                .commit()
+        }
+        // #80: HU09 y HU10 piden elegir coleccionista; al elegirlo se vuelve a la pantalla que lo pidió.
+        supportFragmentManager.setFragmentResultListener(ActiveCollectorFragment.REQUEST, this) { _, _ ->
+            if (supportFragmentManager.findFragmentById(R.id.fragment_container) is ActiveCollectorFragment) {
+                return@setFragmentResultListener
+            }
+            hideKeyboard()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ActiveCollectorFragment())
+                .addToBackStack("active_collector")
                 .commit()
         }
         if (savedInstanceState == null) supportFragmentManager.beginTransaction()

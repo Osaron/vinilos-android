@@ -17,3 +17,27 @@ Comando para ejecutarlas:
 ```bash
 ./gradlew testDebugUnitTest --tests '*BandMusicianServiceAdapterTest'
 ```
+
+## Selector de músico
+
+MusicianSelectionFragment recibe bandId y devuelve el resultado hu12MusicianSelected con bandId y musicianId. Volver cancela la selección antes del envío. Agregar músico consulta los integrantes y guarda la asociación si aún no existe. Una respuesta confirmada devuelve el resultado con bandId y musicianId al detalle.
+
+MusicianSelectionViewModel combina el catálogo de HU03 con los integrantes de la banda. Excluye bandas e integrantes existentes, distingue músicos por ID y conserva la selección en SavedStateHandle. Si una recarga descubre que el músico elegido ya pertenece a la banda, limpia esa selección.
+
+La rama integra la selección de Coleccionista del PR #111. En el detalle de banda, la acción se muestra cuando hay un coleccionista activo y publica el resultado al regresar para actualizar los integrantes. El guardado de #94 desactiva los controles durante la solicitud, conserva la selección ante un fallo y verifica los integrantes tras un error de transporte antes de ofrecer un reintento. BandMusicianFlowTest cubre la acción oculta para Visitante, selección conservada al recrear, asociación a la banda correcta, refresco del detalle, exclusión posterior del integrante y cancelación sin enviar. El diálogo de confirmación advierte sobre el cambio de banda anterior.
+
+## Prueba con BackVynils real
+
+BandMusicianBackendRealTest crea bandas y músicos identificables con el prefijo HU12 en el servidor local indicado por HU12_REAL_URL. Ejecución del 19 de noviembre de 2026, 18:57 hora Colombia, sobre http://127.0.0.1:3000/: cuatro pruebas aprobadas, cero omitidas, cero fallos.
+
+- Asociación y consulta HTTP 200: músico 8 en banda 6 y ausente de banda 7 (corrida dc714913).
+- Cambio de asociación HTTP 200: músico 3 pasó de banda 1 a banda 2 y dejó de aparecer en la anterior (corrida 00863b94).
+- Banda inexistente y músico inexistente: HTTP 404.
+
+Para repetir con datos de prueba:
+
+```bash
+HU12_REAL_URL=http://127.0.0.1:3000/ ./gradlew testDebugUnitTest --tests '*BandMusicianBackendRealTest'
+```
+
+El comando crea datos nuevos y conserva los registros de prueba. Sin HU12_REAL_URL estas pruebas se omiten.

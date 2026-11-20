@@ -134,6 +134,9 @@ class BandMusicianFlowTest {
         onView(withId(R.id.add_band_musician)).perform(scrollTo(), click())
         onView(withText("Músico disponible")).perform(click())
         scenario.onActivity { activity ->
+            InstrumentationRegistry.getArguments().getString("hu12FontScale")?.toFloat()?.let { expected ->
+                assertEquals("Android no aplicó la escala solicitada", expected, activity.resources.configuration.fontScale, 0.01f)
+            }
             val options = activity.findViewById<android.widget.RadioGroup>(R.id.musician_selection_options)
             val radio = options.getChildAt(0) as RadioButton
             assertTrue(radio.contentDescription.toString().contains("Músico disponible"))

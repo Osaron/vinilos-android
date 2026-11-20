@@ -41,6 +41,12 @@ class BandMusicianFlowTest {
         val oldArtists = app.artistRepository
         val oldDetail = app.artistDetailRepository
         val oldBands = app.bandMusicianRepository
+        val oldFavorites = app.favoriteArtistRepository
+        app.favoriteArtistRepository = object : FavoriteArtistRepository {
+            override suspend fun getFavorites(collectorId: Int): List<FavoritePerformer> = emptyList()
+            override suspend fun addFavorite(collectorId: Int, artistId: Int, type: ArtistType): FavoritePerformer =
+                error("HU12 no debe enviar favoritos")
+        }
         val oldCollector = app.activeCollectorStore
         val bands = Bands()
         app.artistRepository = ArtistRepository { listOf(musician) }
@@ -64,6 +70,7 @@ class BandMusicianFlowTest {
             app.artistRepository = oldArtists
             app.artistDetailRepository = oldDetail
             app.bandMusicianRepository = oldBands
+            app.favoriteArtistRepository = oldFavorites
             app.activeCollectorStore = oldCollector
         }
     }

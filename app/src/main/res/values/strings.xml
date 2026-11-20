@@ -102,6 +102,21 @@
     <string name="comment_possibly_saved">No recibimos confirmación, pero el álbum ya tiene este comentario. Revisa el álbum antes de volver a publicar.</string>
     <string name="comment_unconfirmed">No pudimos confirmar si el comentario se publicó. Revisa el álbum antes de volver a intentarlo.</string>
     <string name="comment_view_album">Ver álbum</string>
+    <!-- HU10 (#87, #88, #89): artistas favoritos del coleccionista activo. -->
+    <string name="favorite_add">+ Agregar a favoritos</string>
+    <string name="favorite_already">✓ En tus favoritos</string>
+    <string name="favorite_no_collector">Elige tu coleccionista para guardar favoritos.</string>
+    <string name="favorite_collector">Coleccionista: %1$s</string>
+    <string name="favorite_checking">Revisando los favoritos de %1$s…</string>
+    <string name="favorite_is_favorite">Está en los favoritos de %1$s.</string>
+    <string name="favorite_adding">Agregando a favoritos…</string>
+    <string name="favorite_added">Se agregó a los favoritos de %1$s.</string>
+    <string name="favorite_error">No se pudo agregar a favoritos. Inténtalo de nuevo.</string>
+    <string name="favorite_not_found">No encontramos este artista o tu coleccionista. Elige de nuevo tu coleccionista.</string>
+    <string name="favorite_unconfirmed">No pudimos confirmar si se agregó. Revisa tus favoritos antes de intentarlo de nuevo.</string>
+    <string name="favorite_change_collector">Cambiar coleccionista</string>
+    <string name="favorite_choose_collector">Elegir coleccionista</string>
+    <string name="favorite_view_mine">Ver mis favoritos</string>
     <!-- #80: coleccionista activo (HU09 y HU10). -->
     <string name="active_collector_title">Selecciona tu coleccionista</string>
     <string name="active_collector_help">Tus comentarios y artistas favoritos quedarán a nombre del coleccionista que elijas.</string>

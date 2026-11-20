@@ -49,12 +49,16 @@ for scale in 1.0 1.3; do
   adb shell settings put system font_scale "$scale"
   adb shell am force-stop co.edu.uniandes.vinilos
   adb logcat -c
-  adb shell am instrument -w -r -e hu12TalkBack true -e hu12FontScale "$scale" -e class co.edu.uniandes.vinilos.BandMusicianTalkBackTest co.edu.uniandes.vinilos.test/androidx.test.runner.AndroidJUnitRunner | tee "hu12-talkback-evidence/instrumentation-font-$scale.txt"
+  set +e
+  timeout 180s adb shell am instrument -w -r -e hu12TalkBack true -e hu12FontScale "$scale" -e class co.edu.uniandes.vinilos.BandMusicianTalkBackTest co.edu.uniandes.vinilos.test/androidx.test.runner.AndroidJUnitRunner | tee "hu12-talkback-evidence/instrumentation-font-$scale.txt"
+  instrument_status=${PIPESTATUS[0]}
+  set -e
   adb logcat -d > "hu12-talkback-evidence/logcat-font-$scale.txt"
   adb shell dumpsys accessibility > "hu12-talkback-evidence/accessibility-font-$scale.txt"
   mkdir -p "hu12-talkback-evidence/font-$scale"
   for artifact in $(adb shell run-as co.edu.uniandes.vinilos ls files | tr -d '\r' | grep '^hu12-talkback-'); do
     adb exec-out run-as co.edu.uniandes.vinilos cat "files/$artifact" > "hu12-talkback-evidence/font-$scale/$artifact"
   done
+  [ "$instrument_status" = "0" ]
   grep -q 'OK (1 test)' "hu12-talkback-evidence/instrumentation-font-$scale.txt"
 done

@@ -187,7 +187,9 @@ class BandMusicianTalkBackTest {
             file.writeBytes(buffer.array())
             "cat '${file.absolutePath}' > ${touchDevice.path}"
         }
-        val result = shell(commands.joinToString("; sleep $delay; "))
+        val script = File(context.filesDir, "kernel-gesture.sh")
+        script.writeText("exec 2>&1\nset -e\n" + commands.joinToString("; sleep $delay; ") + "\n")
+        val result = shell("sh " + script.absolutePath)
         check(result.isBlank()) { "No se pudo inyectar gesto táctil: $result" }
     }
     private fun doubleTap() {

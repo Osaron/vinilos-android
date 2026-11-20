@@ -212,9 +212,9 @@ class BandMusicianTalkBackTest {
         val metrics = realMetrics
         val y = metrics.heightPixels * .65f
         val chunks = mutableListOf(down(metrics.widthPixels * .25f, y))
-        for (i in 1..10) chunks.add(point(metrics.widthPixels * (.25f + .05f * i), y))
+        for (i in 1..4) chunks.add(point(metrics.widthPixels * (.25f + .125f * i), y))
         chunks.add(up)
-        kernelGesture(chunks, ".015")
+        kernelGesture(chunks, ".001")
     }
     private fun capture(name: String) {
         val screenshot = checkNotNull(automation.takeScreenshot())

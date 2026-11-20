@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <long name="keycombo_shortcut_other_read_from_next_item" value="0" />
+    <long name="keycombo_shortcut_other_local_context_menu" value="12884901928" />
+    <long name="keycombo_shortcut_other_global_context_menu" value="12884901923" />
+    <string name="pref_select_keymap">classic_keymap</string>
+    <long name="keycombo_shortcut_granularity_increase" value="12884901958" />
+    <long name="keycombo_shortcut_granularity_decrease" value="12884901957" />
+    <long name="keycombo_shortcut_global_back" value="12884901955" />
+    <long name="keycombo_shortcut_navigate_next" value="12884901910" />
+    <long name="keycombo_shortcut_other_read_from_top" value="0" />
+    <boolean name="first_time_user" value="false" />
+    <int name="app_version" value="50007000" />
+    <long name="keycombo_shortcut_global_suspend" value="12884901942" />
+    <long name="keycombo_shortcut_perform_click" value="12884901954" />
+    <long name="keycombo_shortcut_navigate_first" value="12884901907" />
+    <long name="keycombo_shortcut_global_recents" value="12884901934" />
+    <long name="keycombo_shortcut_global_notifications" value="12884901930" />
+    <long name="keycombo_shortcut_other_toggle_search" value="12884901964" />
+    <long name="keycombo_shortcut_navigate_previous" value="12884901909" />
+    <long name="keycombo_shortcut_navigate_last" value="12884901908" />
+    <long name="keycombo_shortcut_global_home" value="12884901924" />
+    <boolean name="pref_tts_overlay" value="true" />
+    <string name="pref_log_level">2</string>
+</map>

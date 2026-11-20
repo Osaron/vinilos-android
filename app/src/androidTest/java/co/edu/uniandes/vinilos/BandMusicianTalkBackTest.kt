@@ -3,9 +3,13 @@ package co.edu.uniandes.vinilos
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.UiAutomation
 import android.graphics.Bitmap
+import android.os.ParcelFileDescriptor
 import android.os.SystemClock
-import android.view.InputDevice
-import android.view.MotionEvent
+import android.util.DisplayMetrics
+import android.view.WindowManager
+import android.graphics.Rect
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
@@ -146,33 +150,62 @@ class BandMusicianTalkBackTest {
         capture("failure-foco")
         throw AssertionError("TalkBack no alcanzó $text, id=$viewId mediante deslizamientos")
     }
-    private fun doubleTap() {
-        val metrics = context.resources.displayMetrics
-        val x = metrics.widthPixels * .5f; val y = metrics.heightPixels * .6f
-        repeat(2) {
-            val start = SystemClock.uptimeMillis()
-            touch(MotionEvent.ACTION_DOWN, x, y, start)
-            SystemClock.sleep(50)
-            touch(MotionEvent.ACTION_UP, x, y, start)
-            SystemClock.sleep(80)
+    private fun shell(command: String): String =
+        ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command))
+            .bufferedReader().use { it.readText() }
+
+    private data class TouchDevice(val path: String, val maxX: Int, val maxY: Int)
+    private val touchDevice by lazy {
+        val listing = shell("getevent -lp")
+        val block = listing.split(Regex("(?=add device )")).firstOrNull {
+            it.contains("ABS_MT_POSITION_X") && it.contains("ABS_MT_POSITION_Y") && it.contains("ABS_MT_TRACKING_ID")
+        } ?: error("No se encontró pantalla multitáctil: $listing")
+        fun maximum(label: String) = Regex(label + ".*?max ([0-9]+)").find(block)?.groupValues?.get(1)?.toInt()
+            ?: error("No se obtuvo rango de $label: $block")
+        val path = checkNotNull(Regex("/dev/input/event[0-9]+").find(block)).value
+        TouchDevice(path, maximum("ABS_MT_POSITION_X"), maximum("ABS_MT_POSITION_Y")).also {
+            events.add("kernel_touch_device=$it")
         }
-        SystemClock.sleep(700)
+    }
+    private val realMetrics get() = DisplayMetrics().also {
+        context.getSystemService(WindowManager::class.java).defaultDisplay.getRealMetrics(it)
+    }
+    private fun point(x: Float, y: Float): List<Triple<Int, Int, Int>> {
+        val metrics = realMetrics
+        return listOf(Triple(3, 53, (x * touchDevice.maxX / metrics.widthPixels).toInt()),
+            Triple(3, 54, (y * touchDevice.maxY / metrics.heightPixels).toInt()), Triple(0, 0, 0))
+    }
+    private fun down(x: Float, y: Float) = listOf(Triple(3, 47, 0), Triple(3, 57, 7), Triple(1, 330, 1)) + point(x, y)
+    private val up get() = listOf(Triple(3, 57, -1), Triple(1, 330, 0), Triple(0, 0, 0))
+    private fun kernelGesture(chunks: List<List<Triple<Int, Int, Int>>>, delay: String) {
+        val commands = chunks.mapIndexed { index, chunk ->
+            val buffer = ByteBuffer.allocate(chunk.size * 24).order(ByteOrder.LITTLE_ENDIAN)
+            chunk.forEach { (type, code, value) ->
+                buffer.putLong(0L).putLong(0L).putShort(type.toShort()).putShort(code.toShort()).putInt(value)
+            }
+            val file = File(context.filesDir, "kernel-touch-$index.bin")
+            file.writeBytes(buffer.array())
+            "cat '${file.absolutePath}' > ${touchDevice.path}"
+        }
+        val result = shell(commands.joinToString("; sleep $delay; "))
+        check(result.isBlank()) { "No se pudo inyectar gesto táctil: $result" }
+    }
+    private fun doubleTap() {
+        val bounds = Rect()
+        automation.rootInActiveWindow?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)?.getBoundsInScreen(bounds)
+        val metrics = realMetrics
+        val x = if (bounds.isEmpty) metrics.widthPixels * .5f else bounds.exactCenterX()
+        val y = if (bounds.isEmpty) metrics.heightPixels * .6f else bounds.exactCenterY()
+        kernelGesture(listOf(down(x,y), up, down(x,y), up), ".07")
+        SystemClock.sleep(900)
     }
     private fun swipeRight() {
-        val metrics = context.resources.displayMetrics
+        val metrics = realMetrics
         val y = metrics.heightPixels * .65f
-        val start = SystemClock.uptimeMillis()
-        touch(MotionEvent.ACTION_DOWN, metrics.widthPixels * .25f, y, start)
-        for (i in 1..10) {
-            SystemClock.sleep(15)
-            touch(MotionEvent.ACTION_MOVE, metrics.widthPixels * (.25f + .05f * i), y, start)
-        }
-        touch(MotionEvent.ACTION_UP, metrics.widthPixels * .75f, y, start)
-    }
-    private fun touch(action: Int, x: Float, y: Float, start: Long) {
-        val event = MotionEvent.obtain(start, SystemClock.uptimeMillis(), action, x, y, 0)
-        event.source = InputDevice.SOURCE_TOUCHSCREEN
-        try { assertTrue(automation.injectInputEvent(event, true)) } finally { event.recycle() }
+        val chunks = mutableListOf(down(metrics.widthPixels * .25f, y))
+        for (i in 1..10) chunks.add(point(metrics.widthPixels * (.25f + .05f * i), y))
+        chunks.add(up)
+        kernelGesture(chunks, ".015")
     }
     private fun capture(name: String) {
         val screenshot = checkNotNull(automation.takeScreenshot())

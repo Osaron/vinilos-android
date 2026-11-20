@@ -9,6 +9,20 @@ adb root
 adb wait-for-device
 adb install -r downloads/talkback.apk
 adb install -r downloads/espeak.apk
+python3 - <<'PYDATA'
+import zipfile, io
+from pathlib import Path
+with zipfile.ZipFile('downloads/espeak.apk') as apk:
+    data = apk.read('res/t8.zip')
+with zipfile.ZipFile(io.BytesIO(data)) as voices:
+    voices.extractall('downloads/voices')
+PYDATA
+adb shell mkdir -p /data/user_de/0/com.reecedunn.espeak/app_voices
+adb push downloads/voices/espeak-ng-data /data/user_de/0/com.reecedunn.espeak/app_voices/
+engine_uid=$(adb shell cmd package list packages -U com.reecedunn.espeak | tr -d '\r' | sed -nE 's/.*uid:([0-9]+).*/\1/p')
+[ -n "$engine_uid" ]
+adb shell chown -R "$engine_uid:$engine_uid" /data/user_de/0/com.reecedunn.espeak/app_voices
+adb shell restorecon -R /data/user_de/0/com.reecedunn.espeak/app_voices
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 adb shell settings put secure tts_default_synth com.reecedunn.espeak

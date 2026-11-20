@@ -10,6 +10,9 @@
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/hu12_choose_musician" android:textSize="24sp"
             android:textColor="#222222" android:paddingTop="16dp" />
+        <TextView android:id="@+id/musician_selection_band"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="#333333" android:paddingTop="8dp" />
         <ProgressBar android:id="@+id/musician_selection_loading"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:contentDescription="@string/hu12_loading" />

@@ -26,11 +26,13 @@ class BandMusicianFlowTest {
     private class Bands : BandMusicianRepository {
         val members = mutableListOf<Artist>()
         var calls = 0
+        var rejected = false
         override suspend fun getMembers(bandId: Int): List<Artist> = members.toList()
         override suspend fun addMusician(bandId: Int, musicianId: Int): Artist {
             assertEquals(200, bandId)
             assertEquals(101, musicianId)
             calls++
+            if (rejected) throw IllegalStateException("rechazo controlado")
             return Artist(101, ArtistType.MUSICIAN, "Músico disponible", "", "").also { members.add(it) }
         }
     }
@@ -75,6 +77,7 @@ class BandMusicianFlowTest {
     @Test fun seleccionRotacionGuardadoYRefresco() = withBand { scenario, bands ->
         onView(withId(R.id.add_band_musician)).perform(scrollTo(), click())
         onView(withText("Músico disponible")).perform(click())
+        onView(withId(R.id.musician_selection_band)).check(matches(withText("Banda de prueba · ID 200")))
         scenario.recreate()
         onView(withText("Músico disponible")).check(matches(isChecked()))
         onView(withId(R.id.musician_selection_confirm)).perform(scrollTo(), click())
@@ -92,4 +95,28 @@ class BandMusicianFlowTest {
         onView(withId(R.id.artist_detail_title)).check(matches(withText("Banda de prueba")))
         assertEquals(0, bands.calls)
     }
+    @Test fun errorConservaSeleccionYReintentoGuarda() = withBand { _, bands ->
+        bands.rejected = true
+        onView(withId(R.id.add_band_musician)).perform(scrollTo(), click())
+        onView(withText("Músico disponible")).perform(click())
+        onView(withId(R.id.musician_selection_confirm)).perform(scrollTo(), click())
+        onView(withText(R.string.hu12_choose)).inRoot(isDialog()).perform(click())
+        onView(withId(R.id.musician_selection_status)).check(matches(withText(R.string.hu12_save_failed)))
+        onView(withText("Músico disponible")).check(matches(isChecked()))
+        bands.rejected = false
+        onView(withId(R.id.musician_selection_confirm)).perform(scrollTo(), click())
+        onView(withText(R.string.hu12_choose)).inRoot(isDialog()).perform(click())
+        onView(withId(R.id.band_members)).check(matches(withText("Músico disponible")))
+        assertEquals(2, bands.calls)
+    }
+
+    @Test fun cancelarConfirmacionConservaSeleccionSinEnviar() = withBand { _, bands ->
+        onView(withId(R.id.add_band_musician)).perform(scrollTo(), click())
+        onView(withText("Músico disponible")).perform(click())
+        onView(withId(R.id.musician_selection_confirm)).perform(scrollTo(), click())
+        onView(withText(R.string.hu12_cancel)).inRoot(isDialog()).perform(click())
+        onView(withText("Músico disponible")).check(matches(isChecked()))
+        assertEquals(0, bands.calls)
+    }
+
 }

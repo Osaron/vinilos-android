@@ -34,6 +34,12 @@ class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentMusicianSelectionBinding.bind(view)
+        val bandName = requireArguments().getString(ARG_BAND_NAME).orEmpty()
+        binding.musicianSelectionBand.text = if (bandName.isBlank()) {
+            getString(R.string.hu12_band_id, bandId)
+        } else {
+            getString(R.string.hu12_band_context, bandName, bandId)
+        }
         binding.musicianSelectionCancel.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.musicianSelectionRetry.setOnClickListener { model.load() }
         binding.musicianSelectionConfirm.setOnClickListener {
@@ -94,8 +100,9 @@ class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection)
     companion object {
         const val RESULT = "hu12MusicianSelected"
         const val ARG_BAND_ID = "bandId"
-        fun newInstance(bandId: Int) = MusicianSelectionFragment().apply {
-            arguments = bundleOf(ARG_BAND_ID to bandId)
+        private const val ARG_BAND_NAME = "bandName"
+        fun newInstance(bandId: Int, bandName: String = "") = MusicianSelectionFragment().apply {
+            arguments = bundleOf(ARG_BAND_ID to bandId, ARG_BAND_NAME to bandName)
         }
     }
 }

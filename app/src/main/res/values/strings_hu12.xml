@@ -16,4 +16,6 @@
     <string name="hu12_confirm_message">Se agregará %1$s a esta banda. Si pertenece a otra, cambiará su asociación.</string>
     <string name="hu12_cancel">Cancelar</string>
     <string name="hu12_saved">Músico agregado a la banda.</string>
+    <string name="hu12_band_context">%1$s · ID %2$d</string>
+    <string name="hu12_band_id">Banda ID %1$d</string>
 </resources>

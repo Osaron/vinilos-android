@@ -50,7 +50,7 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
             if (artistType == ArtistType.BAND && app.activeCollectorStore.active.value != null &&
                 parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MusicianSelectionFragment.newInstance(artistId))
+                    .replace(R.id.fragment_container, MusicianSelectionFragment.newInstance(artistId, viewModel.state.value.detail?.name.orEmpty()))
                     .addToBackStack("hu12_musician").commit()
                 parentFragmentManager.executePendingTransactions()
             }

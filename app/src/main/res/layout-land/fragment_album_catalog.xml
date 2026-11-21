@@ -1,0 +1,45 @@
+<!-- Variante horizontal: en pantallas bajas (320dp) el botón Agregar álbum quedaba recortado al final.
+     Aquí va en la fila del título de la lista y el encabezado usa menos alto. Mismos IDs que la vertical. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:ignore="Overdraw"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
+    android:padding="16dp" android:background="#FAFAFA" android:focusable="true" android:focusableInTouchMode="true">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/app_name" android:textSize="24sp" android:textColor="#222222"
+        android:paddingTop="0dp" android:paddingBottom="8dp" android:accessibilityHeading="true" tools:targetApi="p" />
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:fillViewport="true">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+            <Button android:id="@+id/open_artists" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:minHeight="48dp" android:text="@string/view_artists" />
+            <Button android:id="@+id/open_collectors" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:minHeight="48dp" android:text="@string/view_collectors" />
+        </LinearLayout>
+    </HorizontalScrollView>
+    <EditText android:id="@+id/search_albums" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="48dp" android:background="@drawable/search_background" android:paddingStart="20dp"
+        android:paddingEnd="20dp" android:hint="@string/search_albums"
+        android:inputType="text" android:imeOptions="actionSearch" android:maxLines="1" android:autofillHints="" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="4dp" android:paddingBottom="4dp">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/albums" android:textSize="18sp" android:textStyle="bold" android:textColor="#222222" />
+        <TextView android:id="@+id/album_count" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="#555555" />
+        <Button android:id="@+id/add_album" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginStart="12dp" android:minHeight="48dp" android:text="@string/add_album" />
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/album_list"
+            android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" />
+        <ProgressBar android:id="@+id/loading_indicator" android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_gravity="center" android:contentDescription="@string/loading" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_gravity="center" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/status_message" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center" android:padding="16dp" android:textColor="#333333"
+                android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            <Button android:id="@+id/retry_button" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:minHeight="48dp" android:text="@string/retry" android:visibility="gone" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

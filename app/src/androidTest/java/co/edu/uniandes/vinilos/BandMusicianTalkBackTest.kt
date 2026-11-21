@@ -105,7 +105,16 @@ class BandMusicianTalkBackTest {
                 capture("02-musico-foco")
                 doubleTap()
                 await("Músico seleccionado") { allNodes().any { it.isCheckable && it.isChecked && label(it).contains("Músico de prueba TalkBack") } }
+                val selectedFocus = automation.rootInActiveWindow?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+                assertTrue("La selección perdió el foco de TalkBack", selectedFocus != null && selectedFocus.isChecked &&
+                    label(selectedFocus).contains("Músico de prueba TalkBack"))
+                events.add("focus_retained=true; musician=101; checked=true")
                 capture("03-seleccionado")
+                swipeRight()
+                await("Un deslizamiento debe alcanzar confirmar") {
+                    automation.rootInActiveWindow?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)?.viewIdResourceName == id("musician_selection_confirm")
+                }
+                events.add("one_swipe_reaches_confirm=true")
                 focusBySwiping("Agregar músico", id("musician_selection_confirm"))
                 capture("04-confirmar-foco")
                 doubleTap()

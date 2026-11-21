@@ -79,18 +79,28 @@ class MusicianSelectionFragment : Fragment(R.layout.fragment_musician_selection)
                     binding.musicianSelectionConfirm.isEnabled =
                         !state.loading && !state.failed && !state.submitting && state.selected != null
                     binding.musicianSelectionOptions.isVisible = !state.loading && !state.failed
-                    binding.musicianSelectionOptions.setOnCheckedChangeListener(null)
-                    binding.musicianSelectionOptions.removeAllViews()
-                    state.musicians.forEach { musician ->
-                        binding.musicianSelectionOptions.addView(RadioButton(requireContext()).apply {
-                            id = View.generateViewId()
+                    val options = binding.musicianSelectionOptions
+                    val currentIds = (0 until options.childCount).map { options.getChildAt(it).tag }
+                    val incomingIds = state.musicians.map { it.id }
+                    // Conservar las vistas evita perder el foco de TalkBack al seleccionar.
+                    if (currentIds != incomingIds) {
+                        options.removeAllViews()
+                        state.musicians.forEach { musician ->
+                            options.addView(RadioButton(requireContext()).apply {
+                                id = View.generateViewId()
+                                tag = musician.id
+                                minHeight = (48 * resources.displayMetrics.density).toInt()
+                                setOnClickListener { model.select(musician.id) }
+                            })
+                        }
+                    }
+                    state.musicians.forEachIndexed { index, musician ->
+                        (options.getChildAt(index) as RadioButton).apply {
                             text = musician.name
                             contentDescription = getString(R.string.hu12_select_musician, musician.name)
-                            minHeight = (48 * resources.displayMetrics.density).toInt()
                             isChecked = musician.id == state.selectedId
                             isEnabled = !state.submitting
-                            setOnClickListener { model.select(musician.id) }
-                        })
+                        }
                     }
                 }
             }

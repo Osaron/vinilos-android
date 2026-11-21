@@ -45,8 +45,7 @@
         <TextView android:id="@+id/comment_rating_label" style="@style/Vinilos.FormLabel"
             android:text="@string/comment_rating_label" />
         <RadioGroup android:id="@+id/rating_group" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="horizontal"
-            android:contentDescription="@string/comment_rating_label">
+            android:layout_height="wrap_content" android:orientation="horizontal">
             <RadioButton android:id="@+id/rating_1" android:layout_width="0dp" android:layout_weight="1"
                 android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/rating_1"
                 android:contentDescription="@string/rating_1_description" />

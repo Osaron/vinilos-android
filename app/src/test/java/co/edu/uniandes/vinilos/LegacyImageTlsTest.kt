@@ -38,8 +38,12 @@ class LegacyImageTlsTest {
             server.enqueue(MockResponse().setBody("image"))
             server.start()
             val client = root.certificatePem().byteInputStream().use { LegacyImageTls.client(it) }
+            // MockWebServer nombra el host según la resolución inversa de 127.0.0.1, que con
+            // Docker Desktop es kubernetes.docker.internal. Se fija localhost para que la
+            // verificación del nombre no dependa del archivo hosts de cada computador.
+            val url = server.url("/cover.png").newBuilder().host("localhost").build()
             try {
-                client.newCall(Request.Builder().url(server.url("/cover.png")).build()).execute().use {
+                client.newCall(Request.Builder().url(url).build()).execute().use {
                     if (!succeeds) fail("Debe rechazar el certificado inválido")
                     assertEquals(200, it.code)
                     assertEquals("image", it.body!!.string())

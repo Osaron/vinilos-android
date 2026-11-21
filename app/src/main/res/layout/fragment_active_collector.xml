@@ -13,7 +13,7 @@
         android:textColor="#333333" android:textStyle="bold" android:paddingBottom="12dp" android:accessibilityLiveRegion="polite" />
     <EditText android:id="@+id/search_active_collector" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:minHeight="48dp" android:background="@drawable/search_background" android:paddingStart="20dp" android:paddingEnd="20dp"
-        android:hint="@string/search_collectors" android:textColorHint="#666666" android:inputType="text" android:imeOptions="actionSearch" android:maxLines="1" android:autofillHints="" />
+        android:hint="@string/search_collectors" android:inputType="text" android:imeOptions="actionSearch" android:maxLines="1" android:autofillHints="" />
     <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:paddingTop="12dp">
         <androidx.recyclerview.widget.RecyclerView android:id="@+id/active_collector_list" android:layout_width="match_parent" android:layout_height="match_parent" />
         <ProgressBar android:id="@+id/loading_active_collectors" android:layout_width="48dp" android:layout_height="48dp"

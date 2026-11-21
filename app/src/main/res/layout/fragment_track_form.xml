@@ -16,7 +16,7 @@
         <TextView style="@style/Vinilos.FormLabel" android:labelFor="@+id/track_duration_input"
             android:text="@string/track_duration_label" />
         <EditText android:id="@+id/track_duration_input" style="@style/Vinilos.FormInput"
-            android:inputType="text" android:hint="@string/track_duration_hint" android:textColorHint="#666666" android:autofillHints="" />
+            android:inputType="text" android:hint="@string/track_duration_hint" android:autofillHints="" />
         <TextView android:id="@+id/track_duration_error" style="@style/Vinilos.FormError"
             android:text="@string/track_duration_error" android:accessibilityLiveRegion="polite" />
         <Button android:id="@+id/track_save_button" android:layout_width="match_parent"

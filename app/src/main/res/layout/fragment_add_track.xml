@@ -20,7 +20,6 @@
         <TextView
             style="@style/Vinilos.FormLabel"
             android:accessibilityHeading="true" tools:targetApi="p"
-            android:labelFor="@+id/change_album_button"
             android:text="@string/add_track_album_label" />
 
         <LinearLayout

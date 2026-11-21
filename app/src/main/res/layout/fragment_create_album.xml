@@ -47,14 +47,14 @@
         <TextView android:id="@+id/description_error" style="@style/Vinilos.FormError" />
 
         <!-- Género: lista cerrada del backend -->
-        <TextView android:id="@+id/genre_label" style="@style/Vinilos.FormLabel"
+        <TextView android:id="@+id/genre_label" style="@style/Vinilos.FormLabel" android:importantForAccessibility="no"
             android:text="@string/album_genre_label" />
         <Spinner android:id="@+id/genre_input" style="@style/Vinilos.FormInput"
             android:contentDescription="@string/album_genre_label" />
         <TextView android:id="@+id/genre_error" style="@style/Vinilos.FormError" />
 
         <!-- Sello: lista cerrada del backend -->
-        <TextView android:id="@+id/record_label_label" style="@style/Vinilos.FormLabel"
+        <TextView android:id="@+id/record_label_label" style="@style/Vinilos.FormLabel" android:importantForAccessibility="no"
             android:text="@string/album_record_label_label" />
         <Spinner android:id="@+id/record_label_input" style="@style/Vinilos.FormInput"
             android:contentDescription="@string/album_record_label_label" />

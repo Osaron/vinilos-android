@@ -61,6 +61,16 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .create(AlbumCreationService::class.java)
     ))
 
+    // #80: coleccionista activo de HU09 y HU10. Se crea al primer uso, cuando el contexto ya existe;
+    // los tests UI pueden sustituirlo antes del launch.
+    private val persistedActiveCollectorStore: ActiveCollectorStore by lazy {
+        PreferencesActiveCollectorStore(getSharedPreferences(PreferencesActiveCollectorStore.FILE, MODE_PRIVATE))
+    }
+    private var activeCollectorStoreOverride: ActiveCollectorStore? = null
+    var activeCollectorStore: ActiveCollectorStore
+        get() = activeCollectorStoreOverride ?: persistedActiveCollectorStore
+        set(value) { activeCollectorStoreOverride = value }
+
     // HU09: comentarios de un álbum; los tests UI pueden sustituirlo antes del launch.
     var commentRepository: CommentRepository = RemoteCommentRepository(CommentServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
@@ -75,6 +85,14 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(FavoriteArtistService::class.java)
+    ))
+
+    // HU12: dependencia sustituible por un doble en las pruebas del flujo.
+    var bandMusicianRepository: BandMusicianRepository = RemoteBandMusicianRepository(BandMusicianServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(BandMusicianService::class.java)
     ))
 
     // HU08 (#33): sin reintentos automáticos de OkHttp para no duplicar canciones.

@@ -13,6 +13,10 @@ import co.edu.uniandes.vinilos.R
 import co.edu.uniandes.vinilos.VinilosApplication
 import co.edu.uniandes.vinilos.databinding.FragmentAlbumDetailBinding
 import co.edu.uniandes.vinilos.model.AlbumDetail
+import co.edu.uniandes.vinilos.ui.collectors.ActiveCollectorFragment
+import co.edu.uniandes.vinilos.ui.comments.AlbumCommentsState
+import co.edu.uniandes.vinilos.ui.comments.AlbumCommentsViewModel
+import co.edu.uniandes.vinilos.ui.comments.CommentAlbumFragment
 import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
 import co.edu.uniandes.vinilos.BuildConfig
 import android.util.Log
@@ -31,8 +35,27 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
         )
     }
 
+    // HU09: comentarios del álbum, cargados aparte del detalle.
+    private val commentsViewModel: AlbumCommentsViewModel by viewModels {
+        AlbumCommentsViewModel.Factory(albumId, (requireActivity().application as VinilosApplication).commentRepository)
+    }
+
+    /** "+ Comentar" pidió elegir coleccionista (#80): al volver con uno se abre el formulario. */
+    private var commentPending = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        commentPending = savedInstanceState?.getBoolean(STATE_COMMENT_PENDING) ?: false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(STATE_COMMENT_PENDING, commentPending)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentAlbumDetailBinding.bind(view)
+        bindComments(binding)
         binding.retryDetailButton.setOnClickListener { viewModel.refresh() }
         binding.addTrackButton.setOnClickListener {
             parentFragmentManager.setFragmentResult(OPEN_ADD_TRACK, bundleOf(ARG_ALBUM_ID to albumId))
@@ -62,6 +85,57 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
                     state.album?.let { binding.render(it) }
                 }
             }
+        }
+    }
+
+    /** HU09 (#82, #83): sección de comentarios y acción "+ Comentar" con el coleccionista activo. */
+    private fun bindComments(binding: FragmentAlbumDetailBinding) {
+        binding.retryCommentsButton.setOnClickListener { commentsViewModel.refresh() }
+        binding.addCommentButton.setOnClickListener {
+            if ((requireActivity().application as VinilosApplication).activeCollectorStore.active.value != null) {
+                openCommentForm()
+            } else {
+                commentPending = true
+                parentFragmentManager.setFragmentResult(ActiveCollectorFragment.REQUEST, Bundle())
+            }
+        }
+        parentFragmentManager.setFragmentResultListener(ActiveCollectorFragment.CHOSEN, viewLifecycleOwner) { _, _ ->
+            if (commentPending) {
+                commentPending = false
+                openCommentForm()
+            }
+        }
+        parentFragmentManager.setFragmentResultListener(CommentAlbumFragment.SAVED, viewLifecycleOwner) { _, data ->
+            if (data.getInt(CommentAlbumFragment.ALBUM_ID, -1) != albumId) return@setFragmentResultListener
+            commentsViewModel.refresh()
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentsViewModel.state.collect { binding.renderComments(it) }
+            }
+        }
+    }
+
+    private fun openCommentForm() {
+        parentFragmentManager.setFragmentResult(CommentAlbumFragment.OPEN, bundleOf(
+            CommentAlbumFragment.ALBUM_ID to albumId,
+            CommentAlbumFragment.ALBUM_NAME to viewModel.state.value.album?.name,
+        ))
+    }
+
+    private fun FragmentAlbumDetailBinding.renderComments(state: AlbumCommentsState) {
+        val status = when {
+            state.loading && state.comments.isEmpty() -> getString(R.string.album_comments_loading)
+            state.failed -> getString(R.string.album_comments_error)
+            !state.loading && state.comments.isEmpty() -> getString(R.string.album_comments_empty)
+            else -> null
+        }
+        detailCommentsStatus.isVisible = status != null
+        detailCommentsStatus.text = status
+        retryCommentsButton.isVisible = state.failed
+        detailComments.isVisible = state.comments.isNotEmpty()
+        detailComments.text = state.comments.joinToString("\n") {
+            getString(R.string.album_comment_item, it.description, it.rating)
         }
     }
 
@@ -106,6 +180,7 @@ class AlbumDetailFragment : Fragment(R.layout.fragment_album_detail) {
 
     companion object {
         private const val ARG_ALBUM_ID = "albumId"
+        private const val STATE_COMMENT_PENDING = "commentPending"
 
         /** HU08: abre el formulario con este álbum preseleccionado (clave `albumId`). */
         const val OPEN_ADD_TRACK = "open_add_track"

@@ -63,6 +63,49 @@
                 android:paddingTop="4dp"
                 android:textColor="#555555" />
 
+            <!-- HU10 (#87, #89): agregar a los favoritos del coleccionista activo. Estado en texto, sin indicador animado. -->
+            <Button
+                android:id="@+id/add_favorite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                android:text="@string/favorite_add" />
+
+            <TextView
+                android:id="@+id/favorite_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="polite"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:textColor="#333333" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/change_favorite_collector"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/favorite_change_collector" />
+
+                <Button
+                    android:id="@+id/view_my_favorites_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/favorite_view_mine"
+                    android:visibility="gone" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,6 +124,24 @@
                 android:paddingTop="8dp"
                 android:textColor="#555555"
                 android:textSize="16sp" />
+
+            <LinearLayout android:id="@+id/band_members_section"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/hu12_members" android:textStyle="bold"
+                    android:textSize="18sp" android:paddingTop="16dp" />
+                <TextView android:id="@+id/band_members"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:paddingTop="8dp" android:accessibilityLiveRegion="polite" />
+                <TextView android:id="@+id/band_association_status"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/hu12_saved" android:visibility="gone"
+                    android:accessibilityLiveRegion="polite" />
+                <Button android:id="@+id/add_band_musician"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:visibility="gone" android:text="@string/hu12_choose" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

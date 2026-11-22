@@ -193,11 +193,16 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
         parent,
         false,
     ).apply {
-        findViewById<TextView>(R.id.artist_detail_album_name).text = album.name
-        findViewById<TextView>(R.id.artist_detail_album_metadata).text = listOfNotNull(
+        val metadata = listOfNotNull(
             album.releaseDate?.take(10)?.takeIf(String::isNotBlank),
             album.recordLabel?.takeIf(String::isNotBlank),
         ).joinToString(" · ").ifBlank { getString(R.string.not_available) }
+        findViewById<TextView>(R.id.artist_detail_album_name).text = album.name
+        findViewById<TextView>(R.id.artist_detail_album_metadata).text = metadata
+        // TalkBack lee la fila completa ("Buscando América, 1984-08-01 · Elektra"): por separado, dos álbumes
+        // con la misma fecha y sello se anunciaban igual y sin decir de cuál se trataba.
+        isFocusable = true
+        contentDescription = getString(R.string.artist_album_row, album.name, metadata)
         findViewById<ImageView>(R.id.artist_detail_album_cover).apply {
             contentDescription = getString(R.string.album_cover, album.name)
             load(album.cover) {

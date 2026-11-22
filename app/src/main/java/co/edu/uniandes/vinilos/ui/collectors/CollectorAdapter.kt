@@ -17,7 +17,8 @@ class CollectorAdapter(private val selected: (Collector) -> Unit) : ListAdapter<
         fun bind(collector: Collector) = with(binding) {
             collectorName.text = collector.name
             collectorSubtitle.text = collector.email.ifBlank { root.context.getString(R.string.collector_member) }
-            root.contentDescription = root.context.getString(R.string.select_collector, collector.name)
+            // La descripción reemplaza el texto de la fila: incluye también el correo para que TalkBack lo lea.
+            root.contentDescription = root.context.getString(R.string.select_collector, collector.name, collectorSubtitle.text)
             root.setOnClickListener { selected(collector) }
         }
     }

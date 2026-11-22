@@ -75,12 +75,12 @@ class CreateAlbumFragment : Fragment(R.layout.fragment_create_album) {
     }
 
     private fun FragmentCreateAlbumBinding.render(state: CreateAlbumState) {
-        showError(nameError, state.errors[AlbumField.NAME])
-        showError(coverError, state.errors[AlbumField.COVER])
-        showError(releaseDateError, state.errors[AlbumField.RELEASE_DATE])
-        showError(descriptionError, state.errors[AlbumField.DESCRIPTION])
-        showError(genreError, state.errors[AlbumField.GENRE])
-        showError(recordLabelError, state.errors[AlbumField.RECORD_LABEL])
+        showError(nameError, state.errors[AlbumField.NAME], R.string.album_name_label)
+        showError(coverError, state.errors[AlbumField.COVER], R.string.album_cover_label)
+        showError(releaseDateError, state.errors[AlbumField.RELEASE_DATE], R.string.album_release_date_label)
+        showError(descriptionError, state.errors[AlbumField.DESCRIPTION], R.string.album_description_label)
+        showError(genreError, state.errors[AlbumField.GENRE], R.string.album_genre_label)
+        showError(recordLabelError, state.errors[AlbumField.RECORD_LABEL], R.string.album_record_label_label)
 
         // Mientras se envía no se puede editar: el ViewModel ignora cambios y pulsaciones.
         val editable = state.canSubmit
@@ -129,9 +129,13 @@ class CreateAlbumFragment : Fragment(R.layout.fragment_create_album) {
     private fun selectedOption(spinner: Spinner, options: List<String>): String =
         options.getOrNull(spinner.selectedItemPosition - 1).orEmpty()
 
-    private fun showError(target: TextView, error: AlbumFieldError?) {
+    private fun showError(target: TextView, error: AlbumFieldError?, @StringRes field: Int) {
         target.isVisible = error != null
-        if (error != null) target.setText(messageFor(error))
+        if (error != null) {
+            target.setText(messageFor(error))
+            // TalkBack anuncia a qué campo pertenece el error: varios campos pueden mostrar el mismo mensaje.
+            target.contentDescription = getString(R.string.field_error, getString(field), target.text)
+        }
     }
 
     @StringRes private fun messageFor(error: AlbumFieldError): Int = when (error) {

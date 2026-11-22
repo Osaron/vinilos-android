@@ -75,7 +75,11 @@ class CollectorDetailFragment : Fragment(R.layout.fragment_collector_detail) {
         return LinearLayout(requireContext()).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.CENTER_VERTICAL
-            contentDescription = getString(R.string.collector_favorite_accessibility, performer.name)
+            // Incluye la fecha y la descripción: la descripción de la fila reemplaza el texto que se ve.
+            contentDescription = listOf(
+                getString(R.string.collector_favorite_accessibility, performer.name),
+                listOfNotNull(performer.date?.take(10), performer.description.takeIf(String::isNotBlank)).joinToString(" · "),
+            ).filter(String::isNotBlank).joinToString(". ")
             setPadding(0, spacing / 2, 0, spacing / 2)
             val image = ImageView(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(spacing * 3, spacing * 3)

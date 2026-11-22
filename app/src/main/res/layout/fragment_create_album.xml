@@ -72,11 +72,12 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="horizontal" android:paddingTop="16dp">
-            <Button android:id="@+id/cancel_button" style="?android:attr/buttonBarButtonStyle"
+            <Button android:id="@+id/cancel_button" style="@style/Vinilos.SecondaryButton"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:minHeight="48dp" android:text="@string/cancel" />
-            <Button android:id="@+id/save_button" style="?android:attr/buttonBarButtonStyle"
+            <Button android:id="@+id/save_button"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginStart="8dp"
                 android:minHeight="48dp" android:text="@string/save_album" />
         </LinearLayout>
     </LinearLayout>

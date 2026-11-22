@@ -61,7 +61,7 @@
 
             <Button
                 android:id="@+id/change_album_button"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Vinilos.SecondaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
@@ -70,7 +70,7 @@
 
             <Button
                 android:id="@+id/retry_albums_button"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Vinilos.SecondaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
@@ -109,7 +109,7 @@
 
         <Button
             android:id="@+id/view_album_button"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/Vinilos.SecondaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"

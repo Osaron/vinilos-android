@@ -157,7 +157,7 @@ class AddTrackFragment : Fragment(R.layout.fragment_add_track) {
                 sending.dismissResult()
                 shown.dismiss()
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 

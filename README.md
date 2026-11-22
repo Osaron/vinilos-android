@@ -42,6 +42,7 @@ Acordadas por el equipo el 14 de noviembre de 2026 para el Sprint 3. Amplían el
 
 | Versión | Contenido | APK |
 |---|---|---|
+| [v0.4.1-w7](https://github.com/Osaron/vinilos-android/releases/tag/v0.4.1-w7) · Avance | Accesibilidad, nuevas pruebas de calidad e ícono de la app | [APK de avance](https://github.com/Osaron/vinilos-android/releases/download/v0.4.1-w7/vinilos-v0.4.1-w7-debug.apk) |
 | **[v0.4.0-w8](https://github.com/Osaron/vinilos-android/releases/tag/v0.4.0-w8)** (vigente) | Cierre de la Iteración 3 | [vinilos-v0.4.0-w8-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.4.0-w8/vinilos-v0.4.0-w8-debug.apk) |
 | [v0.3.1-w6-dispatchers](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6-dispatchers) | Cierre de la Iteración 2 y corrutinas de detalles | [vinilos-v0.3.1-w6-dispatchers-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.1-w6-dispatchers/vinilos-v0.3.1-w6-dispatchers-debug.apk) |
 | [v0.3.1-w6](https://github.com/Osaron/vinilos-android/releases/tag/v0.3.1-w6) | Cierre anterior de la Iteración 2 | [vinilos-v0.3.1-w6-debug.apk](https://github.com/Osaron/vinilos-android/releases/download/v0.3.1-w6/vinilos-v0.3.1-w6-debug.apk) |

@@ -64,7 +64,7 @@ class AddTrackAlbumSelectionTest {
 
         // Cancelar el selector mantiene el álbum anterior.
         onView(withId(R.id.change_album_button)).perform(click())
-        onView(withText(android.R.string.cancel)).inRoot(isDialog()).perform(click())
+        onView(withText(R.string.cancel)).inRoot(isDialog()).perform(click())
         onView(withId(R.id.selected_album)).check(matches(withText("Poeta del pueblo · Rubén Blades")))
 
         // Rotación: el ID elegido y el borrador sobreviven a la recreación.

@@ -10,6 +10,7 @@
 
     <ImageView
         android:id="@+id/artist_detail_album_cover"
+        android:importantForAccessibility="no"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="#E5E5E5"
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_weight="1"
+        android:importantForAccessibility="noHideDescendants"
         android:orientation="vertical">
 
         <TextView

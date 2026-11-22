@@ -28,4 +28,14 @@
         <item name="android:accessibilityLiveRegion">polite</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <!-- Botón secundario de toda la app (reemplaza borderlessButtonStyle). Borde #555555: 7:1 sobre el fondo. -->
+    <style name="Vinilos.SecondaryButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/button_secondary</item>
+        <item name="android:textColor">@color/button_secondary_text</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
 </resources>

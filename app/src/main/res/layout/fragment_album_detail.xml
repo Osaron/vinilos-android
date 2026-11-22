@@ -93,7 +93,7 @@
 
             <Button
                 android:id="@+id/add_track_button"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Vinilos.SecondaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
@@ -120,7 +120,7 @@
 
             <Button
                 android:id="@+id/add_comment_button"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Vinilos.SecondaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
@@ -136,7 +136,7 @@
 
             <Button
                 android:id="@+id/retry_comments_button"
-                style="?android:attr/borderlessButtonStyle"
+                style="@style/Vinilos.SecondaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"

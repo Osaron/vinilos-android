@@ -25,7 +25,7 @@
             <TextView android:id="@+id/comment_collector" android:layout_width="0dp"
                 android:layout_height="wrap_content" android:layout_weight="1"
                 android:textColor="#333333" android:accessibilityLiveRegion="polite" />
-            <Button android:id="@+id/change_comment_collector" style="?android:attr/borderlessButtonStyle"
+            <Button android:id="@+id/change_comment_collector" style="@style/Vinilos.SecondaryButton"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:minHeight="48dp" android:text="@string/comment_change_collector" />
         </LinearLayout>
@@ -69,14 +69,14 @@
         <TextView android:id="@+id/comment_status" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:paddingTop="16dp"
             android:accessibilityLiveRegion="polite" android:visibility="gone" />
-        <Button android:id="@+id/view_commented_album_button" style="?android:attr/borderlessButtonStyle"
+        <Button android:id="@+id/view_commented_album_button" style="@style/Vinilos.SecondaryButton"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:minHeight="48dp" android:text="@string/comment_view_album" android:visibility="gone" />
 
         <Button android:id="@+id/publish_comment_button" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_marginTop="16dp"
             android:minHeight="48dp" android:text="@string/comment_publish" />
-        <Button android:id="@+id/cancel_comment_button" style="?android:attr/borderlessButtonStyle"
+        <Button android:id="@+id/cancel_comment_button" style="@style/Vinilos.SecondaryButton"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:minHeight="48dp" android:text="@string/comment_cancel" />
     </LinearLayout>

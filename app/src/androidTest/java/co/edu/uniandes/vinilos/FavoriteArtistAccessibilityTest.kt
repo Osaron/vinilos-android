@@ -159,7 +159,7 @@ class FavoriteArtistAccessibilityTest {
         scenario.onActivity { activity ->
             val list = activity.findViewById<RecyclerView>(R.id.active_collector_list)
             val row = checkNotNull(list.findViewHolderForAdapterPosition(0)).itemView
-            assertEquals(activity.getString(R.string.select_collector, "José Pérez"), row.contentDescription)
+            assertEquals(activity.getString(R.string.select_collector, "José Pérez", "jose@example.org"), row.contentDescription)
         }
     }
 

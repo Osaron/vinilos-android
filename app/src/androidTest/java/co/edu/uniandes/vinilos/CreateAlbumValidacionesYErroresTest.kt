@@ -79,7 +79,8 @@ class CreateAlbumValidacionesYErroresTest {
                 R.id.name_error, R.id.cover_error, R.id.release_date_error,
                 R.id.description_error, R.id.genre_error, R.id.record_label_error,
             ).forEach { Formulario.muestraError(it, R.string.error_required) }
-            onView(withId(R.id.create_album_title)).check(matches(isDisplayed()))
+            // Sigue en el formulario: el título existe y está visible, aunque Guardar haya desplazado la vista (pantallas de 320dp).
+            onView(withId(R.id.create_album_title)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
         }
         assertTrue(creacion.solicitudes.isEmpty())
     }
@@ -147,7 +148,8 @@ class CreateAlbumValidacionesYErroresTest {
                 onView(withId(R.id.create_status_message))
                     .check(matches(allOf(withEffectiveVisibility(Visibility.VISIBLE), withText(R.string.create_album_error))))
             }
-            onView(withId(R.id.create_album_title)).check(matches(isDisplayed()))
+            // Sigue en el formulario: el título existe y está visible, aunque Guardar haya desplazado la vista (pantallas de 320dp).
+            onView(withId(R.id.create_album_title)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
             onView(withId(R.id.name_input)).check(matches(withText(valido.name)))
             onView(withId(R.id.description_input)).check(matches(withText(valido.description)))
 

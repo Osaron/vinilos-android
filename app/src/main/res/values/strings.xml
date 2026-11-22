@@ -52,7 +52,7 @@
     <string name="collectors_empty">Todavía no hay coleccionistas disponibles.</string>
     <string name="collectors_no_results">No encontramos coleccionistas con esa búsqueda.</string>
     <string name="collector_member">Miembro de la comunidad Vinilos</string>
-    <string name="select_collector">Seleccionar coleccionista %1$s</string>
+    <string name="select_collector">Seleccionar coleccionista %1$s, %2$s</string>
     <string name="collector_selected">Coleccionista seleccionado: %1$s</string>
     <string name="view_collector_detail">Ver detalle</string>
     <string name="loading_collector_detail">Cargando detalle del coleccionista</string>
@@ -63,6 +63,8 @@
     <string name="collector_no_comments">Este coleccionista no tiene comentarios registrados.</string>
     <string name="collector_comment_with_rating">%1$s · Calificación: %2$d/5</string>
     <string name="collector_favorite_accessibility">Artista o banda favorita: %1$s</string>
+    <string name="artist_album_row">%1$s, %2$s</string>
+    <string name="field_error">%1$s: %2$s</string>
     <string name="collector_favorite_image">Imagen de %1$s</string>
     <!-- HU09 (#82, #83): comentar un álbum. -->
     <string name="album_comments">Comentarios</string>

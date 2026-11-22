@@ -1,0 +1,7 @@
+<resources>
+    <!-- Texto de ayuda de los campos con contraste 5,5:1 sobre el fondo (el gris de AppCompat queda en 2,7:1).
+         Solo desde API 22: en Android 5.0 (API 21) textColorHint hace fallar la creacion de los campos de texto. -->
+    <style name="Theme.Vinilos" parent="Base.Theme.Vinilos">
+        <item name="android:textColorHint">#666666</item>
+    </style>
+</resources>

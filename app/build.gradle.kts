@@ -12,8 +12,8 @@ android {
         applicationId = "co.edu.uniandes.vinilos"
         minSdk = 21
         targetSdk = 34
-        versionCode = 5
-        versionName = "0.4.0"
+        versionCode = 6
+        versionName = "0.4.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"${apiUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
     }
@@ -52,4 +52,6 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.6.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.6.1")
+    // HU10: revisión automática de accesibilidad (Accessibility Test Framework) en pruebas instrumentadas.
+    androidTestImplementation("androidx.test.espresso:espresso-accessibility:3.6.1")
 }

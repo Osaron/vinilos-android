@@ -29,6 +29,7 @@ import co.edu.uniandes.vinilos.model.FavoritePerformer
 import co.edu.uniandes.vinilos.ui.artists.ArtistCatalogFragment
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.startsWith
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -175,7 +176,7 @@ class FavoriteArtistTest {
         onView(withId(R.id.view_my_favorites_button)).perform(scrollTo(), click())
 
         onView(withId(R.id.collector_detail_title)).check(matches(withText("Ana María")))
-        onView(withContentDescription(app.getString(R.string.collector_favorite_accessibility, "Queen")))
+        onView(withContentDescription(startsWith(app.getString(R.string.collector_favorite_accessibility, "Queen"))))
             .perform(scrollTo()).check(matches(isDisplayed()))
     }
 }

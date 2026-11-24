@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Selector de álbumes compartido (HU15, HU11) -->
+    <string name="album_picker_search_label">Buscar álbum por nombre o intérprete</string>
+    <string name="album_picker_loading">Cargando álbumes disponibles</string>
+    <string name="album_picker_retry">No se pudo cargar. Reintentar</string>
+    <string name="album_picker_no_results">Ningún álbum coincide con la búsqueda.</string>
+    <string name="album_picker_option">Seleccionar álbum %1$s</string>
+    <string name="album_picker_option_performers">Seleccionar álbum %1$s, de %2$s</string>
+
+    <!-- HU15: agregar un álbum a la discografía de un artista -->
+    <string name="hu15_open">+ Agregar álbum</string>
+    <string name="hu15_title">Agregar álbum a la discografía</string>
+    <string name="hu15_context">%1$s · %2$s</string>
+    <string name="hu15_empty">Todos los álbumes del catálogo ya están en esta discografía.</string>
+    <string name="hu15_selected">Álbum elegido: %1$s</string>
+    <string name="hu15_add">Agregar álbum</string>
+    <string name="hu15_confirm_title">Agregar álbum a la discografía</string>
+    <string name="hu15_confirm_message">Se agregará «%1$s» a la discografía de %2$s.</string>
+    <string name="hu15_saving">Agregando álbum…</string>
+    <string name="hu15_save_failed">No se pudo agregar el álbum. Conservamos tu selección para reintentar.</string>
+    <string name="hu15_unconfirmed">No pudimos confirmar el resultado. Al reintentar comprobaremos primero la discografía.</string>
+    <string name="hu15_saved">Álbum agregado a la discografía.</string>
+</resources>

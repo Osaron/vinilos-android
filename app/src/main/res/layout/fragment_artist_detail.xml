@@ -170,6 +170,15 @@
                     android:textColor="#333333" />
             </LinearLayout>
 
+            <!-- HU15: agregar un álbum del catálogo a la discografía (requiere coleccionista activo) -->
+            <TextView android:id="@+id/artist_detail_album_status"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:paddingTop="8dp" android:textColor="#333333" android:text="@string/hu15_saved"
+                android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            <Button android:id="@+id/add_artist_album" style="@style/Vinilos.SecondaryButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" android:text="@string/hu15_open" android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/artist_detail_albums"
                 android:layout_width="match_parent"

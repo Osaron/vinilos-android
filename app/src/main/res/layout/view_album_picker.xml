@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Selector de álbumes compartido (HU15; reutilizable en HU11): búsqueda, estados y opciones. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView style="@style/Vinilos.FormLabel" android:labelFor="@+id/album_picker_search"
+        android:text="@string/album_picker_search_label" />
+    <EditText android:id="@+id/album_picker_search" style="@style/Vinilos.FormInput"
+        android:inputType="text"
+        android:imeOptions="actionSearch" android:maxLines="1" android:autofillHints="" />
+    <ProgressBar android:id="@+id/album_picker_loading"
+        android:layout_width="48dp" android:layout_height="48dp"
+        android:layout_marginTop="12dp" android:contentDescription="@string/album_picker_loading" />
+    <Button android:id="@+id/album_picker_retry" style="@style/Vinilos.SecondaryButton"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:text="@string/album_picker_retry" android:visibility="gone" />
+    <TextView android:id="@+id/album_picker_empty"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingTop="12dp" android:textColor="#333333"
+        android:accessibilityLiveRegion="polite" android:visibility="gone" />
+    <RadioGroup android:id="@+id/album_picker_options"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingTop="8dp" />
+</LinearLayout>

@@ -95,6 +95,14 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .create(BandMusicianService::class.java)
     ))
 
+    // HU15: discografía de músicos y bandas; sin reintentos automáticos para no duplicar asociaciones.
+    var artistAlbumRepository: ArtistAlbumRepository = RemoteArtistAlbumRepository(ArtistAlbumServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(ArtistAlbumService::class.java)
+    ))
+
     // HU08 (#33): sin reintentos automáticos de OkHttp para no duplicar canciones.
     var trackAssociationRepository: TrackAssociationRepository = RemoteTrackAssociationRepository(TrackServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)

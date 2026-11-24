@@ -70,6 +70,22 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
                 viewModel.refresh()
             }
         }
+        // HU15: al volver con un álbum agregado se informa y se recarga la discografía.
+        parentFragmentManager.setFragmentResultListener(ArtistAlbumFragment.RESULT, viewLifecycleOwner) { _, data ->
+            if (data.getInt(ArtistAlbumFragment.ARG_ARTIST_ID) == artistId) {
+                binding.artistDetailAlbumStatus.isVisible = true
+                viewModel.refresh()
+            }
+        }
+        binding.addArtistAlbum.setOnClickListener {
+            if (app.activeCollectorStore.active.value != null &&
+                parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, ArtistAlbumFragment.newInstance(artistId, artistType.name, viewModel.state.value.detail?.name.orEmpty()))
+                    .addToBackStack("hu15_album").commit()
+                parentFragmentManager.executePendingTransactions()
+            }
+        }
         binding.addBandMusician.setOnClickListener {
             if (artistType == ArtistType.BAND && app.activeCollectorStore.active.value != null &&
                 parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
@@ -87,6 +103,7 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
                 launch {
                     app.activeCollectorStore.active.collect { collector ->
                         binding.addBandMusician.isVisible = artistType == ArtistType.BAND && collector != null
+                        binding.addArtistAlbum.isVisible = collector != null
                     }
                 }
                 viewModel.state.collect { state ->

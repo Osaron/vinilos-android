@@ -66,7 +66,7 @@ class PrizeCreationFlowTest {
             val root = it.findViewById<View>(R.id.fragment_container)
             val image = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
             root.draw(Canvas(image))
-            val directory = File(it.getExternalFilesDir(null), "hu13-fase2").apply { mkdirs() }
+            val directory = File(it.getExternalFilesDir(null) ?: it.filesDir, "hu13-fase2").apply { mkdirs() }
             File(directory, "$name.png").outputStream().use { out -> image.compress(Bitmap.CompressFormat.PNG, 100, out) }
             image.recycle()
         }
@@ -92,11 +92,13 @@ class PrizeCreationFlowTest {
     @Test fun uncertainResponseCanReviewCatalogAndReturnWithoutResend() = scenario { activity, repo ->
         repo.uncertain = true
         onView(withId(R.id.prize_create)).perform(click()); fill()
+        // El aviso incierto puede dejar el botón fuera del viewport en pantallas pequeñas.
+        activity.onActivity { it.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
         onView(withId(R.id.prize_save)).perform(scrollTo(), click())
-        onView(withId(R.id.prize_review_catalog)).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.prize_review_catalog)).perform(scrollTo()).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.prize_back_draft)).perform(click())
         onView(withId(R.id.prize_name_input)).check(matches(withText("Premio Fase 2")))
-        onView(withId(R.id.prize_review_catalog)).check(matches(isDisplayed()))
+        onView(withId(R.id.prize_review_catalog)).perform(scrollTo()).check(matches(isDisplayed()))
         assertEquals(1, repo.calls); screenshot(activity, "05-incierto-borrador")
     }
     @Test fun choosingCollectorReturnsToCreationWithoutReentrantTransaction() = scenario(active = false) { _, repo ->

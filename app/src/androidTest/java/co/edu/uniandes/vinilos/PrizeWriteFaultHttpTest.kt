@@ -49,7 +49,7 @@ class PrizeWriteFaultHttpTest {
         val root = it.findViewById<View>(R.id.fragment_container)
         val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
         root.draw(Canvas(bitmap))
-        File(it.getExternalFilesDir(null), "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
+        File(it.getExternalFilesDir(null) ?: it.filesDir, "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
             .use { out -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, out) }
         bitmap.recycle()
     }
@@ -125,7 +125,7 @@ class PrizeWriteFaultHttpTest {
                     .put("backendBaseUrl", realUrl).put("name", unique).put("savedId", saved.id)
                     .put("clientPostRequests", postRequests.get()).put("successfulBackendWrites", backendWrites.get())
                     .put("draftKept", true)
-                File(app.getExternalFilesDir(null), "hu13-fase3/$mode.json").writeText(proof.toString(2))
+                File(app.getExternalFilesDir(null) ?: app.filesDir, "hu13-fase3/$mode.json").apply { parentFile?.mkdirs() }.writeText(proof.toString(2))
             }
         } finally { app.prizeRepository = oldPrize; app.activeCollectorStore = oldCollector; proxy.shutdown() }
     }

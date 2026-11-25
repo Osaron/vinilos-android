@@ -32,7 +32,7 @@ class PrizeScannerTest {
     private lateinit var automation: UiAutomation
     private fun shell(command: String) = ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command))
         .bufferedReader().use { it.readText() }
-    private val directory get() = File(app.getExternalFilesDir(null), "hu13-fase3").apply { mkdirs() }
+    private val directory get() = File(app.getExternalFilesDir(null) ?: app.filesDir, "hu13-fase3").apply { mkdirs() }
     private fun capture(name: String) {
         val image = checkNotNull(automation.takeScreenshot())
         directory.resolve("$name.png").outputStream().use { image.compress(Bitmap.CompressFormat.PNG, 100, it) }

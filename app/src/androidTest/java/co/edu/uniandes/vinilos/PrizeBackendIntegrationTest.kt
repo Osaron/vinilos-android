@@ -56,7 +56,7 @@ class PrizeBackendIntegrationTest {
         val view = it.findViewById<View>(R.id.fragment_container)
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         view.draw(Canvas(bitmap))
-        File(it.getExternalFilesDir(null), "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
+        File(it.getExternalFilesDir(null) ?: it.filesDir, "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
             .use { out -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, out) }
         bitmap.recycle()
     }
@@ -166,7 +166,7 @@ class PrizeBackendIntegrationTest {
                 val report = JSONObject().put("baseUrl", url).put("prizeId", createdId).put("uniqueName", unique)
                     .put("postCreateCount", createAttempts).put("backendPostCount", requests.count { it.getString("method") == "POST" && it.getString("path") == "/prizes" })
                     .put("otherArtistsUnchanged", true).put("targetsVerified", targets.size).put("requests", JSONArray(requests.toList()))
-                File(app.getExternalFilesDir(null), "hu13-fase3/REAL_HTTP.json").writeText(report.toString(2))
+                File(app.getExternalFilesDir(null) ?: app.filesDir, "hu13-fase3/REAL_HTTP.json").apply { parentFile?.mkdirs() }.writeText(report.toString(2))
             }
         } finally {
             gate.complete(Unit)

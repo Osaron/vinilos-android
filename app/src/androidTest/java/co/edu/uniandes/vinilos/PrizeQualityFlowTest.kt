@@ -59,7 +59,7 @@ class PrizeQualityFlowTest {
         val root = it.findViewById<View>(R.id.fragment_container)
         val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
         root.draw(Canvas(bitmap))
-        File(it.getExternalFilesDir(null), "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
+        File(it.getExternalFilesDir(null) ?: it.filesDir, "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
             .use { output -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, output) }
         bitmap.recycle()
     }
@@ -165,6 +165,21 @@ class PrizeQualityFlowTest {
                     assertTrue(ready)
                 }
                 fun check(state: String) {
+                    // ListAdapter publica el diff después del estado del ViewModel. Revisar una
+                    // lista todavía sin hijos no representa el catálogo presentado al usuario.
+                    val deadline = SystemClock.elapsedRealtime() + 10_000
+                    var settled = false
+                    while (!settled && SystemClock.elapsedRealtime() < deadline) {
+                        scenario.onActivity { activity ->
+                            val root = activity.findViewById<View>(R.id.fragment_container)
+                            val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.prize_list)
+                            settled = root.isLaidOut && !root.isLayoutRequested &&
+                                (state !in setOf("catalogo", "creado") ||
+                                    (list != null && (list.adapter?.itemCount ?: 0) > 0 && list.childCount > 0 && !list.isComputingLayout))
+                        }
+                        if (!settled) SystemClock.sleep(50)
+                    }
+                    assertTrue("No terminó de presentar $state", settled)
                     scenario.onActivity { activity ->
                         assertEquals(scale, activity.resources.configuration.fontScale, 0.02f)
                         val result = validator.checkAndReturnResults(activity.findViewById(R.id.fragment_container))
@@ -193,7 +208,7 @@ class PrizeQualityFlowTest {
             }
         } finally {
             shell("settings put system font_scale $previous")
-            File(app.getExternalFilesDir(null), "hu13-fase3").apply { mkdirs() }.resolve("$tag.json").writeText(report.toString(2))
+            File(app.getExternalFilesDir(null) ?: app.filesDir, "hu13-fase3").apply { mkdirs() }.resolve("$tag.json").writeText(report.toString(2))
         }
     }
     @Test fun accessibilityNormalText() = accessibleFlow(1f, false)

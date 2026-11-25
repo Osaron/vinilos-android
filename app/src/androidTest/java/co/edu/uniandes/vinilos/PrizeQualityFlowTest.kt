@@ -34,13 +34,14 @@ class PrizeQualityFlowTest {
     private val app get() = ApplicationProvider.getApplicationContext<VinilosApplication>()
     private class Repo : PrizeRepository {
         var empty = false; var offline = false; var writes = 0
+        var gate: kotlinx.coroutines.CompletableDeferred<Unit>? = null
         val records = mutableListOf(Prize(100, "Grammy Award", "NARAS", "Excelencia musical"))
         override suspend fun getPrizes(): List<Prize> {
             if (offline) throw IOException("fallo controlado de lectura")
             return if (empty) emptyList() else records.toList()
         }
         override suspend fun createPrize(prize: NewPrize): Prize {
-            writes++; return Prize(200, prize.name, prize.organization, prize.description).also { records += it }
+            writes++; gate?.await(); return Prize(200, prize.name, prize.organization, prize.description).also { records += it }
         }
     }
     private fun exercise(repo: Repo = Repo(), block: (ActivityScenario<MainActivity>, Repo) -> Unit) {
@@ -103,6 +104,45 @@ class PrizeQualityFlowTest {
         onView(withText(R.string.hu13_discard)).inRoot(isDialog()).perform(click())
         onView(withId(R.id.prize_create)).check(matches(isDisplayed()))
         assertEquals(0, repo.writes)
+    }
+    @Test fun actualRotationKeepsPartialCompleteAndInFlightDraftWithoutResend() = exercise { scenario, repo ->
+        fun await(reason: String, condition: (MainActivity) -> Boolean) {
+            val deadline = SystemClock.elapsedRealtime() + 10_000
+            while (true) {
+                var ready = false
+                scenario.onActivity { ready = condition(it) }
+                if (ready) return
+                check(SystemClock.elapsedRealtime() < deadline) { reason }
+                SystemClock.sleep(100)
+            }
+        }
+        fun rotate(orientation: Int, expected: Int) {
+            scenario.onActivity { it.requestedOrientation = orientation }
+            await("No terminó la rotación") { it.resources.configuration.orientation == expected }
+        }
+        onView(withId(R.id.prize_create)).perform(click())
+        onView(withId(R.id.prize_name_input)).perform(replaceText("Borrador rotado"), closeSoftKeyboard())
+        rotate(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_LANDSCAPE)
+        onView(withId(R.id.prize_name_input)).check(matches(withText("Borrador rotado")))
+        onView(withId(R.id.prize_description_input)).check(matches(withText("")))
+        scenario.onActivity {
+            it.findViewById<android.widget.EditText>(R.id.prize_description_input).setText("Descripción conservada")
+            it.findViewById<android.widget.EditText>(R.id.prize_organization_input).setText("Organización conservada")
+        }
+        rotate(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, Configuration.ORIENTATION_PORTRAIT)
+        onView(withId(R.id.prize_description_input)).check(matches(withText("Descripción conservada")))
+        onView(withId(R.id.prize_organization_input)).check(matches(withText("Organización conservada")))
+        capture(scenario, "quality-03-borrador-rotado")
+        repo.gate = kotlinx.coroutines.CompletableDeferred()
+        scenario.onActivity { it.findViewById<View>(R.id.prize_save).performClick() }
+        await("No empezó el envío") { repo.writes == 1 }
+        rotate(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_LANDSCAPE)
+        await("No restauró guardado") { it.findViewById<View>(R.id.prize_saving)?.visibility == View.VISIBLE }
+        assertEquals(1, repo.writes)
+        capture(scenario, "quality-04-rotacion-guardando")
+        repo.gate!!.complete(Unit)
+        await("No volvió al catálogo") { it.findViewById<View>(R.id.prize_create) != null }
+        assertEquals(1, repo.writes)
     }
     private fun accessibleFlow(scale: Float, landscape: Boolean) {
         val previous = shell("settings get system font_scale").trim().toFloatOrNull() ?: 1f

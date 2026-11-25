@@ -9,6 +9,12 @@ import android.os.Process
  */
 object PrizeLegacyFontScale {
     @JvmStatic fun main(args: Array<String>) {
+        try { applyScale(args) } catch (failure: Throwable) {
+            failure.printStackTrace(System.out)
+            kotlin.system.exitProcess(1)
+        }
+    }
+    private fun applyScale(args: Array<String>) {
         check(Process.myUid() == 2000 || Process.myUid() == 0) { "Solo shell del emulador de pruebas" }
         val scale = args.single().toFloat()
         check(scale in 0.85f..2.0f)

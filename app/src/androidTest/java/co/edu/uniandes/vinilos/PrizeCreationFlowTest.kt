@@ -9,6 +9,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import co.edu.uniandes.vinilos.data.*
 import co.edu.uniandes.vinilos.model.Prize
@@ -44,7 +45,7 @@ class PrizeCreationFlowTest {
         app.collectorRepository = CollectorRepository { listOf(Collector(7, "Coleccionista HU13", "", "")) }
         try {
             ActivityScenario.launch(MainActivity::class.java).use { activity ->
-                activity.onActivity {
+                onMain {
                     it.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, PrizeCatalogFragment())
                         .addToBackStack("test_prize_catalog").commit()
                     it.supportFragmentManager.executePendingTransactions()
@@ -59,11 +60,33 @@ class PrizeCreationFlowTest {
             app.collectorRepository = oldCollectors
         }
     }
+    // ActivityScenario.onActivity espera idle y puede atascarse con el spinner de API21.
+    private fun onMain(block: (MainActivity) -> Unit) {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val deadline = android.os.SystemClock.elapsedRealtime() + 10_000
+        while (true) {
+            var executed = false
+            var failure: Throwable? = null
+            instrumentation.runOnMainSync {
+                val current = androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance()
+                    .getActivitiesInStage(androidx.test.runner.lifecycle.Stage.RESUMED)
+                    .filterIsInstance<MainActivity>().firstOrNull()
+                if (current != null) {
+                    executed = true
+                    try { block(current) } catch (error: Throwable) { failure = error }
+                }
+            }
+            failure?.let { throw it }
+            if (executed) return
+            check(android.os.SystemClock.elapsedRealtime() < deadline) { "MainActivity no está reanudada" }
+            android.os.SystemClock.sleep(50)
+        }
+    }
     private fun awaitUi(scenario: ActivityScenario<MainActivity>, reason: String, condition: (MainActivity) -> Boolean) {
         val deadline = android.os.SystemClock.elapsedRealtime() + 10_000
         while (true) {
             var ready = false
-            scenario.onActivity { ready = condition(it) }
+            onMain { ready = condition(it) }
             if (ready) return
             check(android.os.SystemClock.elapsedRealtime() < deadline) { reason }
             android.os.SystemClock.sleep(50)
@@ -71,7 +94,7 @@ class PrizeCreationFlowTest {
     }
     private fun submitWithoutEspressoWaitingOnSpinner(scenario: ActivityScenario<MainActivity>) {
         onView(withId(R.id.prize_save)).perform(scrollTo())
-        scenario.onActivity { it.findViewById<View>(R.id.prize_save).performClick() }
+        onMain { it.findViewById<View>(R.id.prize_save).performClick() }
     }
     private fun fill() {
         onView(withId(R.id.prize_name_input)).perform(replaceText("Premio Fase 2"))
@@ -79,7 +102,7 @@ class PrizeCreationFlowTest {
         onView(withId(R.id.prize_organization_input)).perform(replaceText("Vinilos"), closeSoftKeyboard())
     }
     private fun screenshot(activity: ActivityScenario<MainActivity>, name: String) {
-        activity.onActivity {
+        onMain {
             val root = it.findViewById<View>(R.id.fragment_container)
             val image = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
             root.draw(Canvas(image))
@@ -115,11 +138,11 @@ class PrizeCreationFlowTest {
         repo.uncertain = true
         onView(withId(R.id.prize_create)).perform(click()); fill()
         // El aviso incierto puede dejar el botón fuera del viewport en pantallas pequeñas.
-        activity.onActivity { it.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
+        onMain { it.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
         submitWithoutEspressoWaitingOnSpinner(activity)
         awaitUi(activity, "No presentó respuesta incierta") { it.findViewById<View>(R.id.prize_review_catalog)?.visibility == View.VISIBLE }
         onView(withId(R.id.prize_review_catalog)).perform(scrollTo()).check(matches(isDisplayed()))
-        activity.onActivity { it.findViewById<View>(R.id.prize_review_catalog).performClick() }
+        onMain { it.findViewById<View>(R.id.prize_review_catalog).performClick() }
         awaitUi(activity, "No terminó catálogo de revisión") {
             it.findViewById<View>(R.id.prize_back_draft)?.visibility == View.VISIBLE &&
                 it.findViewById<View>(R.id.prize_loading)?.visibility == View.GONE

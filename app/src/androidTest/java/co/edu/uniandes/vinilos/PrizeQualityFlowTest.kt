@@ -50,7 +50,7 @@ class PrizeQualityFlowTest {
         app.activeCollectorStore = InMemoryActiveCollectorStore(ActiveCollector(7, "Prueba"))
         try {
             ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-                scenario.onActivity { it.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, PrizeCatalogFragment()).addToBackStack("quality_catalog").commit() }
+                onMain { it.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, PrizeCatalogFragment()).addToBackStack("quality_catalog").commit() }
                 awaitUi(scenario, "No terminó carga inicial") {
                     it.findViewById<View>(R.id.prize_loading)?.visibility == View.GONE
                 }
@@ -58,11 +58,33 @@ class PrizeQualityFlowTest {
             }
         } finally { app.prizeRepository = old; app.albumRepository = albums; app.activeCollectorStore = active }
     }
+    // ActivityScenario.onActivity espera idle y puede atascarse con el spinner de API21.
+    private fun onMain(block: (MainActivity) -> Unit) {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val deadline = android.os.SystemClock.elapsedRealtime() + 10_000
+        while (true) {
+            var executed = false
+            var failure: Throwable? = null
+            instrumentation.runOnMainSync {
+                val current = androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry.getInstance()
+                    .getActivitiesInStage(androidx.test.runner.lifecycle.Stage.RESUMED)
+                    .filterIsInstance<MainActivity>().firstOrNull()
+                if (current != null) {
+                    executed = true
+                    try { block(current) } catch (error: Throwable) { failure = error }
+                }
+            }
+            failure?.let { throw it }
+            if (executed) return
+            check(android.os.SystemClock.elapsedRealtime() < deadline) { "MainActivity no está reanudada" }
+            android.os.SystemClock.sleep(50)
+        }
+    }
     private fun awaitUi(scenario: ActivityScenario<MainActivity>, reason: String, condition: (MainActivity) -> Boolean) {
         val deadline = android.os.SystemClock.elapsedRealtime() + 10_000
         while (true) {
             var ready = false
-            scenario.onActivity { ready = condition(it) }
+            onMain { ready = condition(it) }
             if (ready) return
             check(android.os.SystemClock.elapsedRealtime() < deadline) { reason }
             android.os.SystemClock.sleep(50)
@@ -70,9 +92,9 @@ class PrizeQualityFlowTest {
     }
     private fun submitWithoutEspressoWaitingOnSpinner(scenario: ActivityScenario<MainActivity>) {
         onView(withId(R.id.prize_save)).perform(scrollTo())
-        scenario.onActivity { it.findViewById<View>(R.id.prize_save).performClick() }
+        onMain { it.findViewById<View>(R.id.prize_save).performClick() }
     }
-    private fun capture(scenario: ActivityScenario<MainActivity>, name: String) = scenario.onActivity {
+    private fun capture(scenario: ActivityScenario<MainActivity>, name: String) = onMain {
         val root = it.findViewById<View>(R.id.fragment_container)
         val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
         root.draw(Canvas(bitmap))
@@ -94,7 +116,7 @@ class PrizeQualityFlowTest {
             capture(scenario, "quality-02-error-carga")
             repo.offline = false
             onView(withId(R.id.prize_retry)).check(matches(isDisplayed()))
-            scenario.onActivity { it.findViewById<View>(R.id.prize_retry).performClick() }
+            onMain { it.findViewById<View>(R.id.prize_retry).performClick() }
             awaitUi(scenario, "No terminó reintento") {
                 it.findViewById<View>(R.id.prize_loading)?.visibility == View.GONE &&
                     (it.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.prize_list)?.adapter?.itemCount ?: 0) > 0
@@ -133,14 +155,14 @@ class PrizeQualityFlowTest {
             val deadline = SystemClock.elapsedRealtime() + 10_000
             while (true) {
                 var ready = false
-                scenario.onActivity { ready = condition(it) }
+                onMain { ready = condition(it) }
                 if (ready) return
                 check(SystemClock.elapsedRealtime() < deadline) { reason }
                 SystemClock.sleep(100)
             }
         }
         fun rotate(orientation: Int, expected: Int) {
-            scenario.onActivity { it.requestedOrientation = orientation }
+            onMain { it.requestedOrientation = orientation }
             await("No terminó la rotación") { it.resources.configuration.orientation == expected }
         }
         onView(withId(R.id.prize_create)).perform(click())
@@ -148,7 +170,7 @@ class PrizeQualityFlowTest {
         rotate(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_LANDSCAPE)
         onView(withId(R.id.prize_name_input)).check(matches(withText("Borrador rotado")))
         onView(withId(R.id.prize_description_input)).check(matches(withText("")))
-        scenario.onActivity {
+        onMain {
             it.findViewById<android.widget.EditText>(R.id.prize_description_input).setText("Descripción conservada")
             it.findViewById<android.widget.EditText>(R.id.prize_organization_input).setText("Organización conservada")
         }
@@ -157,7 +179,7 @@ class PrizeQualityFlowTest {
         onView(withId(R.id.prize_organization_input)).check(matches(withText("Organización conservada")))
         capture(scenario, "quality-03-borrador-rotado")
         repo.gate = kotlinx.coroutines.CompletableDeferred()
-        scenario.onActivity { it.findViewById<View>(R.id.prize_save).performClick() }
+        onMain { it.findViewById<View>(R.id.prize_save).performClick() }
         await("No empezó el envío") { repo.writes == 1 }
         rotate(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_LANDSCAPE)
         await("No restauró guardado") { it.findViewById<View>(R.id.prize_saving)?.visibility == View.VISIBLE }
@@ -168,10 +190,11 @@ class PrizeQualityFlowTest {
         assertEquals(1, repo.writes)
     }
     private fun setFontScale(scale: Float) {
+        if (kotlin.math.abs(app.resources.configuration.fontScale - scale) < 0.01f) return
         if (android.os.Build.VERSION.SDK_INT <= 25) {
             val targetApk = app.applicationInfo.sourceDir
             val testApk = InstrumentationRegistry.getInstrumentation().context.applicationInfo.sourceDir
-            val result = shell("sh -c 'CLASSPATH=$targetApk:$testApk app_process /system/bin co.edu.uniandes.vinilos.PrizeLegacyFontScale $scale'")
+            val result = shell("app_process -Djava.class.path=$targetApk:$testApk /system/bin co.edu.uniandes.vinilos.PrizeLegacyFontScale $scale")
             check(result.contains("HU13_FONT_SCALE=$scale")) { "No aplicó fuente AOSP5: $result" }
         } else shell("settings put system font_scale $scale")
         val deadline = SystemClock.elapsedRealtime() + 10_000
@@ -195,11 +218,11 @@ class PrizeQualityFlowTest {
             setFontScale(scale)
             exercise { scenario, _ ->
                 if (landscape) {
-                    scenario.onActivity { it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
+                    onMain { it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
                     val limit = SystemClock.elapsedRealtime() + 5000
                     var ready = false
                     while (!ready && SystemClock.elapsedRealtime() < limit) {
-                        scenario.onActivity { ready = it.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE }
+                        onMain { ready = it.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE }
                         SystemClock.sleep(50)
                     }
                     assertTrue(ready)
@@ -210,7 +233,7 @@ class PrizeQualityFlowTest {
                     val deadline = SystemClock.elapsedRealtime() + 10_000
                     var settled = false
                     while (!settled && SystemClock.elapsedRealtime() < deadline) {
-                        scenario.onActivity { activity ->
+                        onMain { activity ->
                             val root = activity.findViewById<View>(R.id.fragment_container)
                             val list = activity.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.prize_list)
                             settled = root.isLaidOut && !root.isLayoutRequested &&
@@ -220,7 +243,7 @@ class PrizeQualityFlowTest {
                         if (!settled) SystemClock.sleep(50)
                     }
                     assertTrue("No terminó de presentar $state", settled)
-                    scenario.onActivity { activity ->
+                    onMain { activity ->
                         assertEquals(scale, activity.resources.configuration.fontScale, 0.02f)
                         val result = validator.checkAndReturnResults(activity.findViewById(R.id.fragment_container))
                         val counts = result.groupingBy { it.type.name }.eachCount()

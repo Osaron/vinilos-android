@@ -49,12 +49,29 @@ class PrizeCreationFlowTest {
                         .addToBackStack("test_prize_catalog").commit()
                     it.supportFragmentManager.executePendingTransactions()
                 }
+                awaitUi(activity, "No terminó carga inicial") {
+                    it.findViewById<View>(R.id.prize_loading)?.visibility == View.GONE
+                }
                 block(activity, repo)
             }
         } finally {
             app.prizeRepository = oldPrize; app.albumRepository = oldAlbums; app.activeCollectorStore = oldCollector
             app.collectorRepository = oldCollectors
         }
+    }
+    private fun awaitUi(scenario: ActivityScenario<MainActivity>, reason: String, condition: (MainActivity) -> Boolean) {
+        val deadline = android.os.SystemClock.elapsedRealtime() + 10_000
+        while (true) {
+            var ready = false
+            scenario.onActivity { ready = condition(it) }
+            if (ready) return
+            check(android.os.SystemClock.elapsedRealtime() < deadline) { reason }
+            android.os.SystemClock.sleep(50)
+        }
+    }
+    private fun submitWithoutEspressoWaitingOnSpinner(scenario: ActivityScenario<MainActivity>) {
+        onView(withId(R.id.prize_save)).perform(scrollTo())
+        scenario.onActivity { it.findViewById<View>(R.id.prize_save).performClick() }
     }
     private fun fill() {
         onView(withId(R.id.prize_name_input)).perform(replaceText("Premio Fase 2"))
@@ -71,10 +88,11 @@ class PrizeCreationFlowTest {
             image.recycle()
         }
     }
-    @Test fun invalidFieldsDoNotSendAndDraftSurvivesRotation() = scenario { activity, repo ->
+    @Test(timeout = 90_000) fun invalidFieldsDoNotSendAndDraftSurvivesRotation() = scenario { activity, repo ->
         screenshot(activity, "01-catalogo")
         onView(withId(R.id.prize_create)).perform(click())
-        onView(withId(R.id.prize_save)).perform(scrollTo(), click())
+        submitWithoutEspressoWaitingOnSpinner(activity)
+        awaitUi(activity, "No presentó validación") { it.findViewById<View>(R.id.prize_name_error)?.visibility == View.VISIBLE }
         onView(withId(R.id.prize_name_error)).check(matches(isDisplayed()))
         assertEquals(0, repo.calls); screenshot(activity, "02-validacion")
         fill(); activity.recreate()
@@ -82,26 +100,36 @@ class PrizeCreationFlowTest {
         onView(withId(R.id.prize_organization_input)).check(matches(withText("Vinilos")))
         screenshot(activity, "03-borrador-rotado")
     }
-    @Test fun confirmedCreationReturnsToRefreshedCatalog() = scenario { activity, repo ->
+    @Test(timeout = 90_000) fun confirmedCreationReturnsToRefreshedCatalog() = scenario { activity, repo ->
         onView(withId(R.id.prize_create)).perform(click()); fill()
-        onView(withId(R.id.prize_save)).perform(scrollTo(), click())
+        submitWithoutEspressoWaitingOnSpinner(activity)
+        awaitUi(activity, "No confirmó creación") {
+            it.findViewById<android.widget.TextView>(R.id.prize_catalog_notice)?.text?.contains("Premio Fase 2") == true &&
+                it.findViewById<View>(R.id.prize_loading)?.visibility == View.GONE
+        }
         onView(withText("Premio Fase 2")).check(matches(isDisplayed()))
         onView(withId(R.id.prize_catalog_notice)).check(matches(withText("Premio creado: Premio Fase 2.")))
         assertEquals(1, repo.calls); screenshot(activity, "04-creado")
     }
-    @Test fun uncertainResponseCanReviewCatalogAndReturnWithoutResend() = scenario { activity, repo ->
+    @Test(timeout = 90_000) fun uncertainResponseCanReviewCatalogAndReturnWithoutResend() = scenario { activity, repo ->
         repo.uncertain = true
         onView(withId(R.id.prize_create)).perform(click()); fill()
         // El aviso incierto puede dejar el botón fuera del viewport en pantallas pequeñas.
         activity.onActivity { it.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
-        onView(withId(R.id.prize_save)).perform(scrollTo(), click())
-        onView(withId(R.id.prize_review_catalog)).perform(scrollTo()).check(matches(isDisplayed())).perform(click())
+        submitWithoutEspressoWaitingOnSpinner(activity)
+        awaitUi(activity, "No presentó respuesta incierta") { it.findViewById<View>(R.id.prize_review_catalog)?.visibility == View.VISIBLE }
+        onView(withId(R.id.prize_review_catalog)).perform(scrollTo()).check(matches(isDisplayed()))
+        activity.onActivity { it.findViewById<View>(R.id.prize_review_catalog).performClick() }
+        awaitUi(activity, "No terminó catálogo de revisión") {
+            it.findViewById<View>(R.id.prize_back_draft)?.visibility == View.VISIBLE &&
+                it.findViewById<View>(R.id.prize_loading)?.visibility == View.GONE
+        }
         onView(withId(R.id.prize_back_draft)).perform(click())
         onView(withId(R.id.prize_name_input)).check(matches(withText("Premio Fase 2")))
         onView(withId(R.id.prize_review_catalog)).perform(scrollTo()).check(matches(isDisplayed()))
         assertEquals(1, repo.calls); screenshot(activity, "05-incierto-borrador")
     }
-    @Test fun choosingCollectorReturnsToCreationWithoutReentrantTransaction() = scenario(active = false) { _, repo ->
+    @Test(timeout = 90_000) fun choosingCollectorReturnsToCreationWithoutReentrantTransaction() = scenario(active = false) { _, repo ->
         onView(withId(R.id.prize_create)).perform(click())
         onView(withText("Coleccionista HU13")).perform(click())
         onView(withId(R.id.prize_name_input)).check(matches(isDisplayed()))

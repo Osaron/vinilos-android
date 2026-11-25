@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- HU14: premios en el detalle del artista -->
+    <string name="hu14_prizes">Premios</string>
+    <string name="hu14_prizes_loading">Cargando premios…</string>
+    <string name="hu14_prizes_failed">No se pudieron cargar los premios.</string>
+    <string name="hu14_no_prizes">Aún no tiene premios registrados.</string>
+    <string name="hu14_prize_row">%1$s · %2$s</string>
+    <string name="hu14_prize_row_organization">%1$s · %2$s · %3$s</string>
+    <string name="hu14_prize_row_description">%1$s, recibido el %2$s</string>
+    <string name="hu14_prize_row_organization_description">%1$s, de %2$s, recibido el %3$s</string>
+    <string name="hu14_open">+ Agregar premio</string>
+    <string name="hu14_saved">Premio asignado.</string>
+
+    <!-- HU14: asignar un premio a un músico o una banda -->
+    <string name="hu14_title">Asignar premio</string>
+    <string name="hu14_context">%1$s · %2$s</string>
+    <string name="hu14_prize_label">Premio</string>
+    <string name="hu14_loading">Cargando premios disponibles</string>
+    <string name="hu14_retry">No se pudo cargar. Reintentar</string>
+    <string name="hu14_empty">Todavía no hay premios registrados. Crea uno primero.</string>
+    <string name="hu14_option">Seleccionar premio %1$s</string>
+    <string name="hu14_option_organization">Seleccionar premio %1$s, de %2$s</string>
+    <string name="hu14_date_label">Fecha de entrega</string>
+    <string name="hu14_date_none">Sin fecha elegida.</string>
+    <string name="hu14_date_value">Fecha de entrega: %1$s</string>
+    <string name="hu14_date_choose">Elegir fecha</string>
+    <string name="hu14_date_change">Cambiar fecha</string>
+    <string name="hu14_date_accept">Aceptar</string>
+    <string name="hu14_assign">Asignar premio</string>
+    <string name="hu14_hint">Elige un premio y la fecha de entrega para continuar.</string>
+    <string name="hu14_future_date">La fecha de entrega no puede ser futura.</string>
+    <string name="hu14_duplicate">Este artista ya tiene ese premio con esa fecha. Elige otro premio u otra fecha.</string>
+    <string name="hu14_saving">Asignando premio…</string>
+    <string name="hu14_save_failed">No se pudo asignar el premio. Conservamos el premio y la fecha para reintentar.</string>
+    <string name="hu14_unconfirmed">No pudimos confirmar el resultado. Al reintentar comprobaremos primero los premios del artista.</string>
+</resources>

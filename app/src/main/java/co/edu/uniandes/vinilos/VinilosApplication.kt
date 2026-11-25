@@ -103,6 +103,14 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .create(ArtistAlbumService::class.java)
     ))
 
+    // HU14: premios de músicos y bandas; sin reintentos automáticos porque el backend no evita repetidos.
+    var artistPrizeRepository: ArtistPrizeRepository = RemoteArtistPrizeRepository(ArtistPrizeServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(ArtistPrizeService::class.java)
+    ))
+
     // HU08 (#33): sin reintentos automáticos de OkHttp para no duplicar canciones.
     var trackAssociationRepository: TrackAssociationRepository = RemoteTrackAssociationRepository(TrackServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)

@@ -10,6 +10,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -22,7 +23,10 @@ import androidx.test.runner.lifecycle.Stage
 import androidx.recyclerview.widget.RecyclerView
 import co.edu.uniandes.vinilos.data.AlbumRepository
 import co.edu.uniandes.vinilos.data.ArtistDetailRepository
+import co.edu.uniandes.vinilos.data.ArtistPrizeRepository
 import co.edu.uniandes.vinilos.data.ArtistRepository
+import co.edu.uniandes.vinilos.model.ArtistPrize
+import co.edu.uniandes.vinilos.model.Prize
 import co.edu.uniandes.vinilos.model.Album
 import co.edu.uniandes.vinilos.model.Artist
 import co.edu.uniandes.vinilos.model.ArtistAlbum
@@ -56,7 +60,8 @@ class ArtistDetailNavigationTest {
             onView(withId(R.id.search_artists)).perform(replaceText("ruben"), closeSoftKeyboard())
             tocarArtista(0)
             esperarTexto(R.id.artist_detail_title, "Rubén Blades")
-            onView(withText("Buscando América")).check(matches(isDisplayed()))
+            // La sección Premios (HU14) queda antes de los álbumes y puede dejarlos fuera de pantalla.
+            onView(withText("Buscando América")).perform(scrollTo()).check(matches(isDisplayed()))
             pressBack()
             onView(withId(R.id.search_artists)).check(matches(withText("ruben")))
             onView(withText("Rubén Blades")).check(matches(isDisplayed()))
@@ -172,6 +177,13 @@ class ArtistDetailNavigationTest {
         val oldAlbums = app.albumRepository
         val oldArtists = app.artistRepository
         val oldDetails = app.artistDetailRepository
+        val oldPrizes = app.artistPrizeRepository
+        // Sin red: la sección Premios del detalle no debe depender del backend en estas pruebas.
+        app.artistPrizeRepository = object : ArtistPrizeRepository {
+            override suspend fun getPrizes(): List<Prize> = emptyList()
+            override suspend fun getArtistPrizes(type: ArtistType, artistId: Int): List<ArtistPrize> = emptyList()
+            override suspend fun assignPrize(type: ArtistType, artistId: Int, prizeId: Int, date: String) = Unit
+        }
         app.albumRepository = object : AlbumRepository { override suspend fun getAlbums(): List<Album> = emptyList() }
         app.artistRepository = ArtistRepository { artists }
         app.artistDetailRepository = ArtistDetailRepository(detail)
@@ -180,6 +192,7 @@ class ArtistDetailNavigationTest {
             app.albumRepository = oldAlbums
             app.artistRepository = oldArtists
             app.artistDetailRepository = oldDetails
+            app.artistPrizeRepository = oldPrizes
         }
     }
 

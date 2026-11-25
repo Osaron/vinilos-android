@@ -1,0 +1,18 @@
+<resources>
+    <style name="Vinilos.PrizePrimary" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">48dp</item><item name="android:background">@drawable/hu13_primary</item>
+        <item name="backgroundTint">@null</item><item name="android:textColor">#FFFFFF</item>
+        <item name="android:textAllCaps">false</item><item name="android:textSize">14sp</item>
+    </style>
+    <style name="Vinilos.PrizeInput" parent="Vinilos.FormInput">
+        <item name="android:minHeight">56dp</item><item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@drawable/hu13_field</item><item name="android:backgroundTint">@null</item>
+        <item name="android:textColor">#242424</item><item name="android:textSize">16sp</item>
+    </style>
+    <style name="Vinilos.PrizeLabel" parent="">
+        <item name="android:layout_width">wrap_content</item><item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item><item name="android:paddingStart">4dp</item><item name="android:paddingEnd">4dp</item>
+        <item name="android:background">#FAFAFA</item><item name="android:textColor">#606060</item><item name="android:textSize">12sp</item>
+    </style>
+</resources>

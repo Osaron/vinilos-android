@@ -1,0 +1,16 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="Overdraw" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#FAFAFA" android:padding="16dp"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="64dp" android:gravity="center_vertical" android:orientation="horizontal">
+<Button android:id="@+id/prize_back" style="@style/Vinilos.SecondaryButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/hu13_back"/>
+<TextView android:id="@+id/hu13_heading" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/hu13_title" android:textSize="22sp" android:textColor="#242424" android:accessibilityHeading="true" tools:targetApi="p"/>
+</LinearLayout>
+<TextView android:id="@+id/prize_catalog_notice" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp" android:background="@drawable/hu13_card" android:textColor="#242424" android:accessibilityLiveRegion="polite" android:visibility="gone"/>
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:layout_marginBottom="16dp" android:text="@string/hu13_registered" android:textColor="#242424" android:textSize="16sp" android:textStyle="bold"/>
+<FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+<androidx.recyclerview.widget.RecyclerView android:id="@+id/prize_list" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false"/>
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:orientation="vertical" android:gravity="center">
+<ProgressBar android:id="@+id/prize_loading" android:layout_width="48dp" android:layout_height="48dp" android:importantForAccessibility="no"/>
+<TextView android:id="@+id/prize_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp" android:gravity="center" android:textColor="#242424" android:accessibilityLiveRegion="polite"/>
+<Button android:id="@+id/prize_retry" style="@style/Vinilos.SecondaryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/retry" android:visibility="gone"/>
+</LinearLayout></FrameLayout>
+<Button android:id="@+id/prize_create" style="@style/Vinilos.PrizePrimary" android:layout_marginTop="16dp" android:text="@string/hu13_create"/>
+<Button android:id="@+id/prize_back_draft" style="@style/Vinilos.SecondaryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/hu13_back_draft" android:visibility="gone"/>
+</LinearLayout>

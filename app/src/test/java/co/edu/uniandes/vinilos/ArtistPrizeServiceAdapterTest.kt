@@ -60,8 +60,8 @@ class ArtistPrizeServiceAdapterTest {
         assertEquals(
             listOf(
                 Prize(103, "Billboard", ""),
-                Prize(100, "Grammy Award", "National Academy of Recording Arts &amp; Sciences"),
-                Prize(101, "Premios lo Nuestro", "Univisión"),
+                Prize(100, "Grammy Award", "National Academy of Recording Arts &amp; Sciences", "x"),
+                Prize(101, "Premios lo Nuestro", "Univisión", "x"),
             ),
             prizes,
         )

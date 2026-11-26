@@ -118,4 +118,12 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(TrackService::class.java)
     ))
+    // HU13 comparte Prize/PrizeDto con HU14, con creación sin reintentos de escritura.
+    var prizeRepository: PrizeRepository = RemotePrizeRepository(PrizeServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(PrizeService::class.java)
+    ))
+
 }

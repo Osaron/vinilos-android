@@ -6,7 +6,7 @@ import java.util.Calendar
 import java.util.Locale
 
 /** Premio del catálogo de BackVynils (HU13 los crea, HU14 los asigna). */
-data class Prize(val id: Int, val name: String, val organization: String)
+data class Prize(val id: Int, val name: String, val organization: String, val description: String = "")
 
 /** Premio ya entregado a un artista. [date] siempre es `yyyy-MM-dd`. */
 data class ArtistPrize(

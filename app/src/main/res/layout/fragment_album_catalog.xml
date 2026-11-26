@@ -11,6 +11,8 @@
                 android:minHeight="48dp" android:text="@string/view_artists" />
             <Button android:id="@+id/open_collectors" android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:minHeight="48dp" android:text="@string/view_collectors" />
+            <Button android:id="@+id/open_prizes" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:minHeight="48dp" android:text="@string/hu13_open" />
         </LinearLayout>
     </HorizontalScrollView>
     <EditText android:id="@+id/search_albums" android:layout_width="match_parent" android:layout_height="wrap_content"

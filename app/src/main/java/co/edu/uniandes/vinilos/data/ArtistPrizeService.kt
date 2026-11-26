@@ -113,6 +113,9 @@ class ArtistPrizeServiceAdapter(private val service: ArtistPrizeService) {
         }
         require(response.prize?.id == prizeId) { "La confirmación no corresponde al premio solicitado" }
         require(response.performer?.id == artistId) { "La confirmación no corresponde al artista solicitado" }
+        require(PrizeDate.fromBackend(response.premiationDate) == date) {
+            "La confirmación no corresponde a la fecha solicitada"
+        }
     }
 
     private fun toPrize(dto: PrizeDto): Prize? {

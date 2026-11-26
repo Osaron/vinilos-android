@@ -1,6 +1,6 @@
 # Cierre W8 — borrador para wiki y reunión
 
-Corte: 26 de noviembre de 2026. No constituye acta de una reunión realizada ni certifica la rúbrica oficial.
+Corte: 26 de noviembre de 2026. Registra la reunión del lunes según confirmación de Tibisay; no certifica la rúbrica oficial.
 
 ## Conciliación de integración
 
@@ -13,9 +13,11 @@ Corte: 26 de noviembre de 2026. No constituye acta de una reunión realizada ni 
 
 ## Borrador de acta W8
 
-Fecha, hora, asistentes y captura: pendientes de confirmar tras reunión real.
+Reunión realizada: lunes 23 de noviembre de 2026, de 8:00 a 10:00 p. m. (horario asumido por la franja habitual del equipo; confirmar). Según confirmación de Tibisay, se realizó la distribución de trabajo: Tibisay HU11 y acta/wiki; Hernán HU13 y perfilamiento/accesibilidad; Donaldo HU14 y coordinación CI/publicación APK; Óscar HU15 y exploración/pruebas del APK. Asistentes individuales y captura: pendientes de confirmar.
+
+Reunión de seguimiento prevista: jueves 26 de noviembre de 2026, hora por confirmar.
 Agenda propuesta: revisar integración HU11/13/14/15, corrección HU14, defecto TalkBack #121, pruebas de regresión, perfilamiento, APK y entrega.
-Acuerdos, decisiones, responsables de compromisos nuevos y fecha de seguimiento: completar durante la reunión. No registrar asistencia ni acuerdos anticipados.
+Los acuerdos adicionales, asistentes y evidencias de la reunión del jueves se completarán después de realizarla.
 
 ## Lista de cierre provisional
 
@@ -26,7 +28,7 @@ Acuerdos, decisiones, responsables de compromisos nuevos y fecha de seguimiento:
 - [ ] Consolidar perfilamiento, exploración sistemática y aleatoria.
 - [ ] Integrar PR pendientes tras revisión independiente y checks.
 - [ ] Publicar APK desde rama de release acordada; registrar versión, SHA-256 y prueba de instalación.
-- [ ] Confirmar acta y captura de reunión real.
+- [ ] Confirmar asistentes y captura del lunes; completar acta y evidencia del jueves.
 - [ ] Verificar enlaces accesibles y entrega.
 
 ## CI

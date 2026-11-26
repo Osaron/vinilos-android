@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -19,6 +20,8 @@ import co.edu.uniandes.vinilos.databinding.FragmentCollectorDetailBinding
 import co.edu.uniandes.vinilos.model.CollectorDetail
 import co.edu.uniandes.vinilos.model.FavoritePerformer
 import coil.load
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class CollectorDetailFragment : Fragment(R.layout.fragment_collector_detail) {
@@ -32,6 +35,41 @@ class CollectorDetailFragment : Fragment(R.layout.fragment_collector_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentCollectorDetailBinding.bind(view)
+        val app = requireActivity().application as VinilosApplication
+        binding.addCollectorAlbum.setOnClickListener {
+            val detail = viewModel.state.value.detail ?: return@setOnClickListener
+            if (app.activeCollectorStore.active.value?.id != collectorId) return@setOnClickListener
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, CollectorAlbumFragment.newInstance(collectorId, detail.name))
+                .addToBackStack("hu11_album")
+                .commit()
+        }
+        parentFragmentManager.setFragmentResultListener(CollectorAlbumFragment.RESULT, viewLifecycleOwner) { _, data ->
+            if (data.getInt(CollectorAlbumFragment.COLLECTOR_ID) == collectorId) {
+                Toast.makeText(requireContext(), R.string.hu11_saved, Toast.LENGTH_SHORT).show()
+                viewModel.refresh()
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                app.activeCollectorStore.active.collectLatest { active ->
+                    binding.addCollectorAlbum.isVisible = active?.id == collectorId
+                    binding.collectorAlbumList.isVisible = false
+                    if (active?.id == collectorId) {
+                        binding.collectorAlbumList.text = try {
+                            val names = app.collectorAlbumRepository.getAlbumNames(collectorId)
+                            val albums = names.joinToString("\n").ifEmpty { getString(R.string.hu11_no_albums) }
+                            getString(R.string.hu11_collection, albums)
+                        } catch (cancelled: CancellationException) {
+                            throw cancelled
+                        } catch (_: Exception) {
+                            getString(R.string.hu11_collection_failed)
+                        }
+                        binding.collectorAlbumList.isVisible = app.activeCollectorStore.active.value?.id == collectorId
+                    }
+                }
+            }
+        }
         binding.backCollectorDetail.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.retryCollectorDetail.setOnClickListener { viewModel.refresh() }
         viewLifecycleOwner.lifecycleScope.launch {

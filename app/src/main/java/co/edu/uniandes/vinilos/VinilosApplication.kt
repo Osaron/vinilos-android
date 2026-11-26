@@ -33,6 +33,12 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(CollectorService::class.java)
     ))
+    var collectorAlbumRepository = CollectorAlbumRepository(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(CollectorAlbumService::class.java)
+    )
     var artistRepository: ArtistRepository = RemoteArtistRepository(ArtistServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
             .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).build())

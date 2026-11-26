@@ -24,7 +24,7 @@ data class CollectorAlbumDto(
     val collector: CollectorAlbumReferenceDto? = null,
 )
 
-data class CollectorAlbumReferenceDto(val id: Int? = null)
+data class CollectorAlbumReferenceDto(val id: Int? = null, val name: String? = null)
 
 enum class CollectorAlbumStatus(val apiValue: String) {
     ACTIVE("Active"),
@@ -39,6 +39,11 @@ class CollectorAlbumRepository(private val service: CollectorAlbumService) {
             require(albumId != null && albumId > 0) { "Relación sin álbum válido" }
             albumId
         }
+    }
+
+    suspend fun getAlbumNames(collectorId: Int): List<String> {
+        require(collectorId > 0) { "Identificador de coleccionista inválido" }
+        return service.getAlbums(collectorId).mapNotNull { it.album?.name?.takeIf(String::isNotBlank) }
     }
 
     suspend fun addAlbum(collectorId: Int, albumId: Int, price: Int, status: CollectorAlbumStatus) {

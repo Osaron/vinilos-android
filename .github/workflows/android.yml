@@ -4,6 +4,9 @@ on:
     branches: [develop, main]
   push:
     branches: ['feature/**']
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:

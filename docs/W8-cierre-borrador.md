@@ -13,7 +13,7 @@ Corte: 26 de noviembre de 2026. Registra la reunión del lunes según confirmaci
 
 ## Borrador de acta W8
 
-Reunión realizada: lunes 23 de noviembre de 2026, de 8:00 a 10:00 p. m. (horario asumido por la franja habitual del equipo; confirmar). Según confirmación de Tibisay, se realizó la distribución de trabajo: Tibisay HU11 y acta/wiki; Hernán HU13 y perfilamiento/accesibilidad; Donaldo HU14 y coordinación CI/publicación APK; Óscar HU15 y exploración/pruebas del APK. Asistentes individuales y captura: pendientes de confirmar.
+Reunión realizada: lunes 23 de noviembre de 2026, de 8:00 a 10:00 p. m. (horario informado por Tibisay). Según confirmación de Tibisay, se realizó la distribución de trabajo: Tibisay HU11 y acta/wiki; Hernán HU13 y perfilamiento/accesibilidad; Donaldo HU14 y coordinación CI/publicación APK; Óscar HU15 y exploración/pruebas del APK. Asistentes individuales y captura: pendientes de confirmar.
 
 Reunión de seguimiento prevista: jueves 26 de noviembre de 2026, hora por confirmar.
 Agenda propuesta: revisar integración HU11/13/14/15, corrección HU14, defecto TalkBack #121, pruebas de regresión, perfilamiento, APK y entrega.

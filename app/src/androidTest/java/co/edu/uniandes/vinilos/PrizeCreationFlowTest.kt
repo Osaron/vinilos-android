@@ -102,14 +102,29 @@ class PrizeCreationFlowTest {
         onView(withId(R.id.prize_organization_input)).perform(replaceText("Vinilos"), closeSoftKeyboard())
     }
     private fun screenshot(activity: ActivityScenario<MainActivity>, name: String) {
-        onMain {
-            val root = it.findViewById<View>(R.id.fragment_container)
-            val image = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
-            root.draw(Canvas(image))
-            val directory = File(it.getExternalFilesDir(null) ?: it.filesDir, "hu13-fase2").apply { mkdirs() }
-            File(directory, "$name.png").outputStream().use { out -> image.compress(Bitmap.CompressFormat.PNG, 100, out) }
-            image.recycle()
+        val deadline = android.os.SystemClock.elapsedRealtime() + 10_000
+        var captured = false
+        while (!captured && android.os.SystemClock.elapsedRealtime() < deadline) {
+            onMain { current ->
+                val root = current.findViewById<View>(R.id.fragment_container)
+                val content = current.supportFragmentManager.findFragmentById(R.id.fragment_container)?.view
+                if (root.width <= 0 || root.height <= 0 || !root.isLaidOut || root.isLayoutRequested ||
+                    content == null || content.width <= 0 || content.height <= 0 ||
+                    !content.isLaidOut || content.isLayoutRequested) return@onMain
+                val image = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
+                try {
+                    root.draw(Canvas(image))
+                    val directory = File(current.getExternalFilesDir(null) ?: current.filesDir, "hu13-fase2")
+                        .apply { mkdirs() }
+                    File(directory, "$name.png").outputStream().use { output ->
+                        check(image.compress(Bitmap.CompressFormat.PNG, 100, output))
+                    }
+                    captured = true
+                } finally { image.recycle() }
+            }
+            if (!captured) android.os.SystemClock.sleep(50)
         }
+        check(captured) { "No terminó de dibujarse la pantalla para capturar $name" }
     }
     @Test(timeout = 90_000) fun invalidFieldsDoNotSendAndDraftSurvivesRotation() = scenario { activity, repo ->
         screenshot(activity, "01-catalogo")

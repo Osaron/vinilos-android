@@ -94,13 +94,31 @@ class PrizeQualityFlowTest {
         onView(withId(R.id.prize_save)).perform(scrollTo())
         onMain { it.findViewById<View>(R.id.prize_save).performClick() }
     }
-    private fun capture(scenario: ActivityScenario<MainActivity>, name: String) = onMain {
-        val root = it.findViewById<View>(R.id.fragment_container)
-        val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
-        root.draw(Canvas(bitmap))
-        File(it.getExternalFilesDir(null) ?: it.filesDir, "hu13-fase3").apply { mkdirs() }.resolve("$name.png").outputStream()
-            .use { output -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, output) }
-        bitmap.recycle()
+    private fun capture(scenario: ActivityScenario<MainActivity>, name: String) {
+        val deadline = SystemClock.elapsedRealtime() + 10_000
+        var captured = false
+        while (!captured && SystemClock.elapsedRealtime() < deadline) {
+            onMain { activity ->
+                val root = activity.findViewById<View>(R.id.fragment_container)
+                val content = activity.supportFragmentManager.findFragmentById(R.id.fragment_container)?.view
+                // La recreación por fuente/orientación puede reanudar la Activity antes del layout.
+                // Comprobar y dibujar en el mismo turno de main evita medir una Activity y capturar otra.
+                if (root.width <= 0 || root.height <= 0 || !root.isLaidOut || root.isLayoutRequested ||
+                    content == null || content.width <= 0 || content.height <= 0 ||
+                    !content.isLaidOut || content.isLayoutRequested) return@onMain
+                val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
+                try {
+                    root.draw(Canvas(bitmap))
+                    File(activity.getExternalFilesDir(null) ?: activity.filesDir, "hu13-fase3").apply { mkdirs() }
+                        .resolve("$name.png").outputStream().use { output ->
+                            check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, output))
+                        }
+                    captured = true
+                } finally { bitmap.recycle() }
+            }
+            if (!captured) SystemClock.sleep(50)
+        }
+        check(captured) { "No terminó de dibujarse la pantalla para capturar $name" }
     }
     private fun shell(command: String) = ParcelFileDescriptor.AutoCloseInputStream(
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand(command)).bufferedReader().use { it.readText() }

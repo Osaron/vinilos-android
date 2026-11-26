@@ -1,0 +1,26 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="Overdraw" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#FAFAFA" android:fillViewport="true"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="64dp" android:gravity="center_vertical" android:orientation="horizontal">
+<Button android:id="@+id/create_prize_back" style="@style/Vinilos.SecondaryButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/hu13_back"/>
+<TextView android:id="@+id/hu13_heading" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/hu13_create" android:textSize="22sp" android:textColor="#242424" android:accessibilityHeading="true" tools:targetApi="p"/>
+</LinearLayout><TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:layout_marginBottom="8dp" android:text="@string/hu13_help" android:textSize="14sp" android:textColor="#606060"/><FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp">
+<EditText android:id="@+id/prize_name_input" style="@style/Vinilos.PrizeInput" android:inputType="textCapSentences" android:autofillHints="" android:maxLines="1" android:imeOptions="actionNext"/>
+<TextView android:id="@+id/prize_name_label" style="@style/Vinilos.PrizeLabel" android:labelFor="@id/prize_name_input" android:text="@string/hu13_name"/>
+</FrameLayout>
+<TextView android:id="@+id/prize_name_error" style="@style/Vinilos.FormError" android:accessibilityLiveRegion="none" android:text="@string/hu13_required_name"/>
+<FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp">
+<EditText android:id="@+id/prize_description_input" style="@style/Vinilos.PrizeInput" android:inputType="textMultiLine|textCapSentences" android:autofillHints="" android:minHeight="96dp" android:gravity="top|start"/>
+<TextView android:id="@+id/prize_description_label" style="@style/Vinilos.PrizeLabel" android:labelFor="@id/prize_description_input" android:text="@string/hu13_description"/>
+</FrameLayout>
+<TextView android:id="@+id/prize_description_error" style="@style/Vinilos.FormError" android:accessibilityLiveRegion="none" android:text="@string/hu13_required_description"/>
+<FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp">
+<EditText android:id="@+id/prize_organization_input" style="@style/Vinilos.PrizeInput" android:inputType="textCapWords" android:autofillHints="" android:maxLines="1" android:imeOptions="actionNext"/>
+<TextView android:id="@+id/prize_organization_label" style="@style/Vinilos.PrizeLabel" android:labelFor="@id/prize_organization_input" android:text="@string/hu13_organization"/>
+</FrameLayout>
+<TextView android:id="@+id/prize_organization_error" style="@style/Vinilos.FormError" android:accessibilityLiveRegion="none" android:text="@string/hu13_required_organization"/>
+<TextView android:id="@+id/prize_collector_error" style="@style/Vinilos.FormError" android:text="@string/hu13_collector_required"/>
+<Button android:id="@+id/prize_choose_collector" style="@style/Vinilos.SecondaryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/hu13_collector_required" android:visibility="gone"/>
+<ProgressBar android:id="@+id/prize_saving" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginTop="16dp" android:layout_gravity="center_horizontal" android:importantForAccessibility="no" android:visibility="gone"/>
+<TextView android:id="@+id/create_prize_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:padding="16dp" android:background="@drawable/hu13_card" android:textColor="#242424" android:accessibilityLiveRegion="polite" android:visibility="gone"/>
+<Button android:id="@+id/prize_cancel" style="@style/Vinilos.SecondaryButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/cancel"/>
+<Button android:id="@+id/prize_save" style="@style/Vinilos.PrizePrimary" android:layout_marginTop="16dp" android:text="@string/hu13_save"/>
+<Button android:id="@+id/prize_review_catalog" style="@style/Vinilos.PrizePrimary" android:layout_marginTop="16dp" android:text="@string/hu13_view_catalog" android:visibility="gone"/>
+</LinearLayout></ScrollView>

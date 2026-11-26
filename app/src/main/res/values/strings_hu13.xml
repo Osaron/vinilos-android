@@ -1,0 +1,33 @@
+<resources>
+    <string name="hu13_title">Premios</string>
+    <string name="hu13_open">Ver premios</string>
+    <string name="hu13_create">Crear premio</string>
+    <string name="hu13_save">Guardar premio</string>
+    <string name="hu13_help">Completa los 3 campos obligatorios.</string>
+    <string name="hu13_name">Nombre *</string>
+    <string name="hu13_description">Descripción *</string>
+    <string name="hu13_organization">Organización *</string>
+    <string name="hu13_required_name">Escribe el nombre del premio.</string>
+    <string name="hu13_required_description">Escribe una descripción.</string>
+    <string name="hu13_required_organization">Escribe la organización.</string>
+    <string name="hu13_loading">Cargando premios…</string>
+    <string name="hu13_saving">Guardando premio…</string>
+    <string name="hu13_registered">Premios registrados</string>
+    <string name="hu13_empty">Todavía no hay premios. Crea el primero para tenerlo disponible al reconocer a un artista.</string>
+    <string name="hu13_load_error">No pudimos cargar los premios. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="hu13_saved">Premio creado.</string>
+    <string name="hu13_created_name">Premio creado: %1$s.</string>
+    <string name="hu13_refresh_error">El premio se creó, pero no pudimos actualizar la lista.</string>
+    <string name="hu13_rejected">No pudimos guardar el premio. Revisa los datos; conservamos tu borrador.</string>
+    <string name="hu13_uncertain">No pudimos confirmar si se guardó. Revisa el catálogo antes de volver a crearlo. No lo enviaremos otra vez automáticamente.</string>
+    <string name="hu13_view_catalog">Ver catálogo</string>
+    <string name="hu13_back_draft">Volver al borrador</string>
+    <string name="hu13_draft_kept">Tu borrador sigue disponible. Revisa si el premio ya aparece antes de crearlo otra vez.</string>
+    <string name="hu13_back">Volver</string>
+    <string name="hu13_discard_title">¿Descartar el borrador?</string>
+    <string name="hu13_discard_message">Se perderán los datos que no hayas guardado.</string>
+    <string name="hu13_discard_uncertain">La creación podría haberse aplicado. Revisa el catálogo antes de crear de nuevo. Si sales, se descartará este borrador.</string>
+    <string name="hu13_discard">Descartar</string>
+    <string name="hu13_keep_editing">Seguir editando</string>
+    <string name="hu13_collector_required">Elige un coleccionista antes de guardar.</string>
+</resources>

@@ -51,6 +51,7 @@ data class PrizeDto(
     val name: String? = null,
     val organization: String? = null,
     val performerPrizes: List<PerformerPrizeRefDto>? = null,
+    val description: String? = null,
 )
 
 data class PerformerPrizeRefDto(val id: Int? = null, val premiationDate: String? = null)
@@ -118,7 +119,7 @@ class ArtistPrizeServiceAdapter(private val service: ArtistPrizeService) {
         val id = dto.id?.takeIf { it > 0 } ?: return null
         val name = dto.name?.trim().orEmpty()
         if (name.isEmpty()) return null
-        return Prize(id, name, dto.organization?.trim().orEmpty())
+        return Prize(id, name, dto.organization?.trim().orEmpty(), dto.description.orEmpty())
     }
 }
 

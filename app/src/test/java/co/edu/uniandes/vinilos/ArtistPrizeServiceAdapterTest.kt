@@ -147,6 +147,26 @@ class ArtistPrizeServiceAdapterTest {
         }
     }
 
+    @Test fun rechazaUnaConfirmacionConFechaDistintaInvalidaOAusente() = runTest {
+        val dates = listOf("\"2020-01-05T00:00:00.000Z\"", "\"no-fecha\"", "null")
+        dates.forEach { date ->
+            server.enqueue(json("""{"id":7,"prize":{"id":100},"performer":{"id":100},"premiationDate":$date}"""))
+            try {
+                repository.assignPrize(ArtistType.MUSICIAN, 100, 100, "2020-05-01")
+                fail("Debe rechazar la confirmación con fecha $date")
+            } catch (error: IllegalArgumentException) {
+                assertEquals("La confirmación no corresponde a la fecha solicitada", error.message)
+            }
+        }
+        assertEquals("Un POST por intento explícito, sin reenvíos automáticos", 3, server.requestCount)
+    }
+
+    @Test fun aceptaUnaConfirmacionConLaMismaFechaEnFormatoCompletoDelBackend() = runTest {
+        server.enqueue(json("""{"id":7,"prize":{"id":100},"performer":{"id":100},"premiationDate":"2020-05-01T00:00:00.000Z"}"""))
+        repository.assignPrize(ArtistType.MUSICIAN, 100, 100, "2020-05-01")
+        assertEquals(1, server.requestCount)
+    }
+
     @Test fun propagaElNoEncontradoDelBackend() = runTest {
         server.enqueue(json("""{"statusCode":404,"message":"The prize with the given id was not found"}""", 404))
         try {

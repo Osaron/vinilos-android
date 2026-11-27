@@ -34,7 +34,11 @@ Acordadas por el equipo el 14 de noviembre de 2026 para el Sprint 3. Amplían el
 |---|---|---|---|
 | HU09 | Comentar un álbum | 3 | [@Osaron](https://github.com/Osaron) |
 | HU10 | Agregar artistas favoritos | 3 | [@Osaron](https://github.com/Osaron) |
+| HU11 | Agregar un álbum a una colección | 3 | [@Tibisaytarazona](https://github.com/Tibisaytarazona) |
 | HU12 | Agregar músicos a una banda | 3 | [@Tibisaytarazona](https://github.com/Tibisaytarazona) |
+| HU13 | Crear premios | 3 | [@h-gordillog](https://github.com/h-gordillog) |
+| HU14 | Asignar un premio a un músico o una banda | 3 | [@gandaraco](https://github.com/gandaraco) |
+| HU15 | Agregar un álbum a la discografía | 3 | [@Osaron](https://github.com/Osaron) |
 
 **Estado actual (Iteración 3 · W8).** La versión 0.4.0 integra las ocho historias del MVP (HU01 a HU08) y las ampliaciones HU09, HU10 y HU12. Compatible con Android 5.0 (API 21) o superior. El [Sprint 3 en la wiki](https://github.com/Osaron/vinilos-android/wiki/Sprint-3) reúne el diseño y la evidencia de pruebas.
 

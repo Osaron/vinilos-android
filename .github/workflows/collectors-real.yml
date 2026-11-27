@@ -1,11 +1,12 @@
-name: HU05 Backend real
+name: HU05 y HU11 Backend real
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, main]
     paths:
       - '.github/workflows/collectors-real.yml'
       - 'scripts/test-collectors-real.sh'
       - 'app/src/androidTest/java/co/edu/uniandes/vinilos/CollectorBackendRealTest.kt'
+      - 'app/src/androidTest/java/co/edu/uniandes/vinilos/CollectorAlbumBackendRealTest.kt'
       - 'app/src/main/java/co/edu/uniandes/vinilos/ui/collectors/**'
       - 'app/src/main/java/co/edu/uniandes/vinilos/data/Collector*'
 permissions:

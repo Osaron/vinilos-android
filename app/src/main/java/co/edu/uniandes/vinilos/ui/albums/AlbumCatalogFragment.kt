@@ -39,6 +39,7 @@ class AlbumCatalogFragment : Fragment(R.layout.fragment_album_catalog) {
         binding.searchAlbums.setText(viewModel.state.value.query)
         binding.searchAlbums.doAfterTextChanged { viewModel.search(it.toString()) }
         binding.openCollectors.setOnClickListener { parentFragmentManager.setFragmentResult(OPEN_COLLECTORS, bundleOf()) }
+        binding.openPrizes.setOnClickListener { parentFragmentManager.setFragmentResult(co.edu.uniandes.vinilos.ui.prizes.PrizeCatalogFragment.OPEN, bundleOf()) }
         binding.openArtists.setOnClickListener { parentFragmentManager.setFragmentResult(OPEN_ARTISTS, bundleOf()) }
         binding.retryButton.setOnClickListener { viewModel.refresh() }
         viewLifecycleOwner.lifecycleScope.launch {

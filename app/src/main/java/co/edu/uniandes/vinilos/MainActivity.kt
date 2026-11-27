@@ -1,5 +1,7 @@
 package co.edu.uniandes.vinilos
 
+import co.edu.uniandes.vinilos.ui.prizes.PrizeCatalogFragment
+import co.edu.uniandes.vinilos.ui.prizes.CreatePrizeFragment
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,7 @@ import co.edu.uniandes.vinilos.ui.tracks.AddTrackFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private var openingArtistDetail = false
+    private var openingPrizeScreen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +119,25 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 .replace(R.id.fragment_container, ActiveCollectorFragment())
                 .addToBackStack("active_collector")
                 .commit()
+        }
+        supportFragmentManager.setFragmentResultListener(PrizeCatalogFragment.OPEN, this) { _, data ->
+            if (!openingPrizeScreen && supportFragmentManager.findFragmentById(R.id.fragment_container) !is PrizeCatalogFragment && !supportFragmentManager.isStateSaved) {
+                openingPrizeScreen = true
+                hideKeyboard()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, PrizeCatalogFragment.newInstance(data.getBoolean(PrizeCatalogFragment.REVIEW_DRAFT)))
+                    .addToBackStack("prize_catalog").commit()
+                window.decorView.post { openingPrizeScreen = false }
+            }
+        }
+        supportFragmentManager.setFragmentResultListener(CreatePrizeFragment.OPEN, this) { _, _ ->
+            if (!openingPrizeScreen && supportFragmentManager.findFragmentById(R.id.fragment_container) !is CreatePrizeFragment && !supportFragmentManager.isStateSaved) {
+                openingPrizeScreen = true
+                hideKeyboard()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, CreatePrizeFragment())
+                    .addToBackStack("create_prize").commit()
+                window.decorView.post { openingPrizeScreen = false }
+            }
         }
         if (savedInstanceState == null) supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, AlbumCatalogFragment()).commit()

@@ -27,6 +27,10 @@ import co.edu.uniandes.vinilos.data.AlbumCreationRepository
 import co.edu.uniandes.vinilos.data.AlbumRepository
 import co.edu.uniandes.vinilos.data.ArtistDetailRepository
 import co.edu.uniandes.vinilos.data.ArtistRepository
+import co.edu.uniandes.vinilos.data.ArtistAlbumRepository
+import co.edu.uniandes.vinilos.data.ArtistPrizeRepository
+import co.edu.uniandes.vinilos.model.ArtistPrize
+import co.edu.uniandes.vinilos.model.Prize
 import co.edu.uniandes.vinilos.data.BandMusicianRepository
 import co.edu.uniandes.vinilos.data.CollectorDetailRepository
 import co.edu.uniandes.vinilos.data.CollectorRepository
@@ -63,7 +67,7 @@ import java.io.IOException
 import java.util.Locale
 
 /**
- * Revisión automática de accesibilidad de todas las pantallas de Vinilos (HU01–HU10 y HU12) con
+ * Revisión automática de accesibilidad de todas las pantallas de Vinilos (HU01–HU10, HU12 y HU15) con
  * Accessibility Test Framework, el motor de Accessibility Scanner.
  *
  * Recorre cada pantalla con datos en memoria y la revisa completa (etiquetas, tamaño de toque,
@@ -175,11 +179,18 @@ class AppAccessibilityTest {
             revisar(scenario, "HU03 catálogo de artistas", condicion)
             irA(scenario, ArtistCatalogFragment.ARTIST_SELECTED, bundleOf("artistId" to 50, "artistType" to "MUSICIAN"), R.id.artist_detail_title)
             revisar(scenario, "HU04 detalle de músico + HU10 favoritos", condicion)
+            onView(withId(R.id.add_artist_album)).perform(scrollTo(), click())
+            esperar(R.id.album_picker_options)
+            revisar(scenario, "HU15 agregar álbum a la discografía", condicion)
             irA(scenario, ArtistCatalogFragment.ARTIST_SELECTED, bundleOf("artistId" to 100, "artistType" to "BAND"), R.id.artist_detail_title)
             revisar(scenario, "HU04 detalle de banda + HU10 favoritos + HU12 integrantes", condicion)
             onView(withId(R.id.add_band_musician)).perform(scrollTo(), click())
             esperar(R.id.musician_selection_band)
             revisar(scenario, "HU12 seleccionar músico", condicion)
+            irA(scenario, ArtistCatalogFragment.ARTIST_SELECTED, bundleOf("artistId" to 100, "artistType" to "BAND"), R.id.artist_detail_title)
+            onView(withId(R.id.add_artist_prize)).perform(scrollTo(), click())
+            esperar(R.id.assign_prize_options)
+            revisar(scenario, "HU14 asignar premio", condicion)
             irA(scenario, AlbumCatalogFragment.OPEN_COLLECTORS, Bundle(), R.id.collector_list)
             revisar(scenario, "HU05 catálogo de coleccionistas", condicion)
             irA(scenario, CollectorCatalogFragment.OPEN_DETAIL, bundleOf("collectorId" to 7), R.id.collector_detail_title)
@@ -303,6 +314,16 @@ class AppAccessibilityTest {
             override suspend fun addFavorite(collectorId: Int, artistId: Int, type: ArtistType): FavoritePerformer = error("La revisión no agrega")
         }
         app.trackAssociationRepository = TrackAssociationRepository { _, _ -> error("La revisión no guarda canciones") }
+        app.artistAlbumRepository = object : ArtistAlbumRepository {
+            override suspend fun getAlbumIds(type: ArtistType, artistId: Int): Set<Int> = if (type == ArtistType.MUSICIAN) setOf(100) else setOf(1)
+            override suspend fun addAlbum(type: ArtistType, artistId: Int, albumId: Int) = error("La revisión no asocia álbumes")
+        }
+        app.artistPrizeRepository = object : ArtistPrizeRepository {
+            override suspend fun getPrizes(): List<Prize> = listOf(Prize(100, "Grammy Award", "NARAS"), Prize(101, "Premios lo Nuestro", "Univisión"))
+            override suspend fun getArtistPrizes(type: ArtistType, artistId: Int): List<ArtistPrize> =
+                listOf(ArtistPrize(1, 100, "Grammy Award", "NARAS", "1978-12-10"))
+            override suspend fun assignPrize(type: ArtistType, artistId: Int, prizeId: Int, date: String) = error("La revisión no asigna premios")
+        }
         app.activeCollectorStore = InMemoryActiveCollectorStore(ActiveCollector(7, "José Pérez"))
         try {
             ActivityScenario.launch(MainActivity::class.java).use(block)
@@ -323,6 +344,8 @@ class AppAccessibilityTest {
         private val comments = app.commentRepository
         private val favorites = app.favoriteArtistRepository
         private val tracks = app.trackAssociationRepository
+        private val artistAlbums = app.artistAlbumRepository
+        private val artistPrizes = app.artistPrizeRepository
         private val active = app.activeCollectorStore
         fun restaurar(app: VinilosApplication) {
             app.albumRepository = albums
@@ -335,6 +358,8 @@ class AppAccessibilityTest {
             app.commentRepository = comments
             app.favoriteArtistRepository = favorites
             app.trackAssociationRepository = tracks
+            app.artistAlbumRepository = artistAlbums
+            app.artistPrizeRepository = artistPrizes
             app.activeCollectorStore = active
         }
     }

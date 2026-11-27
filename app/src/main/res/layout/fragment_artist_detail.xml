@@ -145,6 +145,32 @@
                     android:visibility="gone" android:text="@string/hu12_choose" />
             </LinearLayout>
 
+            <!-- HU14: premios del artista y acción para asignar uno (requiere coleccionista activo) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                tools:targetApi="p"
+                android:paddingTop="24dp"
+                android:text="@string/hu14_prizes"
+                android:textColor="#222222"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView android:id="@+id/artist_detail_prizes_message"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:paddingTop="8dp" android:textColor="#555555" android:textSize="16sp"
+                android:text="@string/hu14_prizes_loading" />
+            <LinearLayout android:id="@+id/artist_detail_prizes"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" />
+            <TextView android:id="@+id/artist_detail_prize_status"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:paddingTop="8dp" android:textColor="#333333" android:text="@string/hu14_saved"
+                android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            <Button android:id="@+id/add_artist_prize" style="@style/Vinilos.SecondaryButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" android:text="@string/hu14_open" android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -169,6 +195,15 @@
                     android:layout_height="wrap_content"
                     android:textColor="#333333" />
             </LinearLayout>
+
+            <!-- HU15: agregar un álbum del catálogo a la discografía (requiere coleccionista activo) -->
+            <TextView android:id="@+id/artist_detail_album_status"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:paddingTop="8dp" android:textColor="#333333" android:text="@string/hu15_saved"
+                android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            <Button android:id="@+id/add_artist_album" style="@style/Vinilos.SecondaryButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" android:text="@string/hu15_open" android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/artist_detail_albums"

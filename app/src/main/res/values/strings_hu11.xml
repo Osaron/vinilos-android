@@ -1,0 +1,13 @@
+<resources>
+    <string name="hu11_title">Agregar álbum a la colección</string>
+    <string name="hu11_price">Precio (entero no negativo)</string>
+    <string name="hu11_active">Marcar el álbum como activo</string>
+    <string name="hu11_add">Guardar álbum</string>
+    <string name="hu11_saving">Guardando álbum…</string>
+    <string name="hu11_saved">Álbum agregado a la colección</string>
+    <string name="hu11_failed">No se pudo confirmar el guardado. Vuelve a pulsar Guardar para comprobar la colección.</string>
+    <string name="hu11_price_invalid">Ingresa un precio entero no negativo.</string>
+    <string name="hu11_collection">Álbumes de la colección\n%1$s</string>
+    <string name="hu11_no_albums">Aún no hay álbumes en esta colección.</string>
+    <string name="hu11_collection_failed">No se pudo cargar la colección.</string>
+</resources>

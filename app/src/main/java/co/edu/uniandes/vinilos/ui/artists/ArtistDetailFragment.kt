@@ -18,6 +18,7 @@ import co.edu.uniandes.vinilos.databinding.FragmentArtistDetailBinding
 import co.edu.uniandes.vinilos.model.ArtistAlbum
 import co.edu.uniandes.vinilos.model.ArtistDetail
 import co.edu.uniandes.vinilos.model.ArtistType
+import co.edu.uniandes.vinilos.model.PrizeDate
 import co.edu.uniandes.vinilos.ui.bands.MusicianSelectionFragment
 import co.edu.uniandes.vinilos.ui.collectors.ActiveCollectorFragment
 import co.edu.uniandes.vinilos.ui.collectors.CollectorCatalogFragment
@@ -48,6 +49,11 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
         FavoriteArtistViewModel.Factory(artistId, artistType, app.favoriteArtistRepository, app.activeCollectorStore.active)
     }
 
+    // HU14: premios del artista; se cargan aparte para no retrasar el detalle.
+    private val prizesViewModel: ArtistPrizesViewModel by viewModels {
+        ArtistPrizesViewModel.Factory(artistId, artistType, (requireActivity().application as VinilosApplication).artistPrizeRepository)
+    }
+
     /** "Agregar a favoritos" pidió elegir coleccionista: al volver con uno se agrega. */
     private var favoritePending = false
 
@@ -70,6 +76,38 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
                 viewModel.refresh()
             }
         }
+        // HU15: al volver con un álbum agregado se informa y se recarga la discografía.
+        parentFragmentManager.setFragmentResultListener(ArtistAlbumFragment.RESULT, viewLifecycleOwner) { _, data ->
+            if (data.getInt(ArtistAlbumFragment.ARG_ARTIST_ID) == artistId) {
+                binding.artistDetailAlbumStatus.isVisible = true
+                viewModel.refresh()
+            }
+        }
+        binding.addArtistAlbum.setOnClickListener {
+            if (app.activeCollectorStore.active.value != null &&
+                parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, ArtistAlbumFragment.newInstance(artistId, artistType.name, viewModel.state.value.detail?.name.orEmpty()))
+                    .addToBackStack("hu15_album").commit()
+                parentFragmentManager.executePendingTransactions()
+            }
+        }
+        // HU14: al volver con un premio asignado se informa y se recargan los premios desde el backend.
+        parentFragmentManager.setFragmentResultListener(AssignPrizeFragment.RESULT, viewLifecycleOwner) { _, data ->
+            if (data.getInt(AssignPrizeFragment.ARG_ARTIST_ID) == artistId) {
+                binding.artistDetailPrizeStatus.isVisible = true
+                prizesViewModel.refresh()
+            }
+        }
+        binding.addArtistPrize.setOnClickListener {
+            if (app.activeCollectorStore.active.value != null &&
+                parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, AssignPrizeFragment.newInstance(artistId, artistType.name, viewModel.state.value.detail?.name.orEmpty()))
+                    .addToBackStack("hu14_prize").commit()
+                parentFragmentManager.executePendingTransactions()
+            }
+        }
         binding.addBandMusician.setOnClickListener {
             if (artistType == ArtistType.BAND && app.activeCollectorStore.active.value != null &&
                 parentFragmentManager.findFragmentById(R.id.fragment_container) is ArtistDetailFragment) {
@@ -87,8 +125,11 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
                 launch {
                     app.activeCollectorStore.active.collect { collector ->
                         binding.addBandMusician.isVisible = artistType == ArtistType.BAND && collector != null
+                        binding.addArtistAlbum.isVisible = collector != null
+                        binding.addArtistPrize.isVisible = collector != null
                     }
                 }
+                launch { prizesViewModel.state.collect { binding.renderPrizes(it) } }
                 viewModel.state.collect { state ->
                     binding.artistDetailLoading.isVisible = state.loading
                     binding.artistDetailContent.isVisible = !state.loading && state.detail != null
@@ -154,6 +195,33 @@ class ArtistDetailFragment : Fragment(R.layout.fragment_artist_detail) {
             }
         }
         viewMyFavoritesButton.isVisible = name != null && (state.isFavorite == true || state.result == FavoriteResult.Unconfirmed)
+    }
+
+    /** HU14: un renglón por premio; TalkBack lee nombre, organización y fecha en una sola frase. */
+    private fun FragmentArtistDetailBinding.renderPrizes(state: ArtistPrizesState) {
+        val message = when {
+            state.loading -> R.string.hu14_prizes_loading
+            state.failed -> R.string.hu14_prizes_failed
+            state.prizes.isEmpty() -> R.string.hu14_no_prizes
+            else -> null
+        }
+        artistDetailPrizesMessage.isVisible = message != null
+        message?.let(artistDetailPrizesMessage::setText)
+        artistDetailPrizes.removeAllViews()
+        if (state.loading || state.failed) return
+        state.prizes.forEach { prize ->
+            val date = PrizeDate.display(prize.date)
+            artistDetailPrizes.addView(TextView(requireContext()).apply {
+                text = if (prize.organization.isEmpty()) getString(R.string.hu14_prize_row, prize.name, date)
+                else getString(R.string.hu14_prize_row_organization, prize.name, prize.organization, date)
+                contentDescription = if (prize.organization.isEmpty()) getString(R.string.hu14_prize_row_description, prize.name, date)
+                else getString(R.string.hu14_prize_row_organization_description, prize.name, prize.organization, date)
+                textSize = 16f
+                setTextColor(0xFF333333.toInt())
+                setPadding(0, resources.getDimensionPixelSize(R.dimen.detail_album_spacing), 0, 0)
+                isFocusable = true
+            })
+        }
     }
 
     private fun FragmentArtistDetailBinding.render(detail: ArtistDetail) {

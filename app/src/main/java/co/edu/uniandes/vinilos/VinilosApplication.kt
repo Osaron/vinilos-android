@@ -33,6 +33,16 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(CollectorService::class.java)
     ))
+    var collectorAlbumRepository = CollectorAlbumRepository(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            // BackVynils puede cerrar conexiones inactivas. Abrir una conexión para cada
+            // operación evita reutilizarlas sin reenviar automáticamente el POST.
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS)
+                .connectionPool(okhttp3.ConnectionPool(0, 1, TimeUnit.SECONDS))
+                .retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(CollectorAlbumService::class.java)
+    )
     var artistRepository: ArtistRepository = RemoteArtistRepository(ArtistServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
             .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).build())
@@ -95,6 +105,22 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .create(BandMusicianService::class.java)
     ))
 
+    // HU15: discografía de músicos y bandas; sin reintentos automáticos para no duplicar asociaciones.
+    var artistAlbumRepository: ArtistAlbumRepository = RemoteArtistAlbumRepository(ArtistAlbumServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(ArtistAlbumService::class.java)
+    ))
+
+    // HU14: premios de músicos y bandas; sin reintentos automáticos porque el backend no evita repetidos.
+    var artistPrizeRepository: ArtistPrizeRepository = RemoteArtistPrizeRepository(ArtistPrizeServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(ArtistPrizeService::class.java)
+    ))
+
     // HU08 (#33): sin reintentos automáticos de OkHttp para no duplicar canciones.
     var trackAssociationRepository: TrackAssociationRepository = RemoteTrackAssociationRepository(TrackServiceAdapter(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
@@ -102,4 +128,12 @@ class VinilosApplication : Application(), ImageLoaderFactory {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(TrackService::class.java)
     ))
+    // HU13 comparte Prize/PrizeDto con HU14, con creación sin reintentos de escritura.
+    var prizeRepository: PrizeRepository = RemotePrizeRepository(PrizeServiceAdapter(
+        Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(PrizeService::class.java)
+    ))
+
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FAFAFA" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <Button android:id="@+id/artist_album_cancel" style="@style/Vinilos.SecondaryButton"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/back" />
+        <TextView android:id="@+id/artist_album_title"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:paddingTop="16dp" android:text="@string/hu15_title"
+            android:textColor="#222222" android:textSize="24sp"
+            android:accessibilityHeading="true" tools:targetApi="p" />
+        <TextView android:id="@+id/artist_album_context"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:paddingTop="8dp" android:textColor="#333333" />
+        <include android:id="@+id/artist_album_picker" layout="@layout/view_album_picker" />
+        <TextView android:id="@+id/artist_album_selected"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:paddingTop="12dp" android:textColor="#222222" android:textStyle="bold"
+            android:accessibilityLiveRegion="polite" android:visibility="gone" />
+        <TextView android:id="@+id/artist_album_status"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:paddingTop="8dp" android:textColor="#333333"
+            android:accessibilityLiveRegion="polite" android:visibility="gone" />
+        <Button android:id="@+id/artist_album_confirm"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:minHeight="48dp"
+            android:enabled="false" android:text="@string/hu15_add" />
+    </LinearLayout>
+</ScrollView>

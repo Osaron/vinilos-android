@@ -73,6 +73,6 @@ class CommentServiceAdapter(private val service: CommentService) {
 }
 
 class RemoteCommentRepository(private val adapter: CommentServiceAdapter) : CommentRepository {
-    override suspend fun getComments(albumId: Int) = adapter.getComments(albumId)
-    override suspend fun addComment(albumId: Int, comment: NewComment) = adapter.addComment(albumId, comment)
+    override suspend fun getComments(albumId: Int) = onIo { adapter.getComments(albumId) }
+    override suspend fun addComment(albumId: Int, comment: NewComment) = onIo { adapter.addComment(albumId, comment) }
 }

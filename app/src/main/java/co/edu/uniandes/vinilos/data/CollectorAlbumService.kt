@@ -34,7 +34,7 @@ enum class CollectorAlbumStatus(val apiValue: String) {
 class CollectorAlbumRepository(private val service: CollectorAlbumService) {
     suspend fun getAlbumIds(collectorId: Int): Set<Int> {
         require(collectorId > 0) { "Identificador de coleccionista inválido" }
-        return service.getAlbums(collectorId).mapTo(mutableSetOf()) { relation ->
+        return onIo { service.getAlbums(collectorId) }.mapTo(mutableSetOf()) { relation ->
             val albumId = relation.album?.id
             require(albumId != null && albumId > 0) { "Relación sin álbum válido" }
             albumId
@@ -43,13 +43,13 @@ class CollectorAlbumRepository(private val service: CollectorAlbumService) {
 
     suspend fun getAlbumNames(collectorId: Int): List<String> {
         require(collectorId > 0) { "Identificador de coleccionista inválido" }
-        return service.getAlbums(collectorId).mapNotNull { it.album?.name?.takeIf(String::isNotBlank) }
+        return onIo { service.getAlbums(collectorId) }.mapNotNull { it.album?.name?.takeIf(String::isNotBlank) }
     }
 
     suspend fun addAlbum(collectorId: Int, albumId: Int, price: Int, status: CollectorAlbumStatus) {
         require(collectorId > 0 && albumId > 0) { "Identificadores inválidos" }
         require(price >= 0) { "El precio debe ser un entero no negativo" }
-        val relation = service.addAlbum(collectorId, albumId, AddCollectorAlbumRequest(price, status.apiValue))
+        val relation = onIo { service.addAlbum(collectorId, albumId, AddCollectorAlbumRequest(price, status.apiValue)) }
         require(relation.album?.id == albumId && relation.collector?.id == collectorId) {
             "La confirmación no corresponde a la colección y el álbum solicitados"
         }

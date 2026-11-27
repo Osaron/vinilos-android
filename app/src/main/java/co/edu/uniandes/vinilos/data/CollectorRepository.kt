@@ -26,7 +26,7 @@ class CollectorServiceAdapter(private val service: CollectorService) {
 }
 
 class RemoteCollectorRepository(private val adapter: CollectorServiceAdapter) : CollectorRepository {
-    override suspend fun getCollectors(): List<Collector> = adapter.getCollectors()
+    override suspend fun getCollectors(): List<Collector> = onIo { adapter.getCollectors() }
 }
 
 class CollectorDetailServiceAdapter(
@@ -69,5 +69,5 @@ class CollectorDetailServiceAdapter(
 }
 
 class RemoteCollectorDetailRepository(private val adapter: CollectorDetailServiceAdapter) : CollectorDetailRepository {
-    override suspend fun getCollectorDetail(id: Int): CollectorDetail = adapter.getCollectorDetail(id)
+    override suspend fun getCollectorDetail(id: Int): CollectorDetail = onIo { adapter.getCollectorDetail(id) }
 }

@@ -1,0 +1,57 @@
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2480
+WaitTime: 2485
+Complete
+Applications Memory Usage (in Kilobytes):
+Uptime: 18326319 Realtime: 18326319
+
+** MEMINFO in pid 28329 [co.edu.uniandes.vinilos] **
+                   Pss  Private  Private  SwapPss      Rss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty    Total     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------   ------
+  Native Heap    37749    37696        8       65    38964    49952    44335     1210
+  Dalvik Heap     4485     4404        8      216     5460     8363     4182     4181
+ Dalvik Other     2851     2796        8       55     2980                           
+        Stack     1404     1404        0        0     1412                           
+       Ashmem       18        0        0        0      548                           
+    Other dev       21        4       16        0      328                           
+     .so mmap     6668      380     4268       27    35748                           
+    .jar mmap     4742        0     2372        0    36772                           
+    .apk mmap      335        0      120        0     1808                           
+    .ttf mmap      217        0        0        0      924                           
+    .dex mmap       20        0        0        0      784                           
+    .oat mmap       54        0        0        0     1600                           
+    .art mmap     8061     5736     1360      153    21940                           
+   Other mmap      261        8      180        0     1736                           
+      Unknown    11715    11708        0        1    12076                           
+        TOTAL    79118    64136     8340      517   163080    58315    48517     5391
+ 
+ App Summary
+                       Pss(KB)                        Rss(KB)
+                        ------                         ------
+           Java Heap:    11500                          27400
+         Native Heap:    37696                          38964
+                Code:     7140                          77724
+               Stack:     1404                           1412
+            Graphics:        0                              0
+       Private Other:    14736
+              System:     6642
+             Unknown:                                   17580
+ 
+           TOTAL PSS:    79118            TOTAL RSS:   163080       TOTAL SWAP PSS:      517
+ 
+ Objects
+               Views:       44         ViewRootImpl:        1
+         AppContexts:        7           Activities:        1
+              Assets:       18        AssetManagers:        0
+       Local Binders:       14        Proxy Binders:       41
+       Parcel memory:        5         Parcel count:       20
+    Death Recipients:        0             WebViews:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 

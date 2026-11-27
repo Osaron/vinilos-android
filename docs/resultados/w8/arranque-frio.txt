@@ -1,0 +1,70 @@
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2504
+WaitTime: 2508
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2391
+WaitTime: 2394
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2924
+WaitTime: 2930
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2353
+WaitTime: 2354
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2453
+WaitTime: 2461
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2324
+WaitTime: 2330
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 3023
+WaitTime: 3026
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2437
+WaitTime: 2439
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 1951
+WaitTime: 1962
+Complete
+Starting: Intent { cmp=co.edu.uniandes.vinilos/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: co.edu.uniandes.vinilos/.MainActivity
+TotalTime: 2087
+WaitTime: 2091
+Complete

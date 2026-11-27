@@ -35,7 +35,11 @@ class VinilosApplication : Application(), ImageLoaderFactory {
     ))
     var collectorAlbumRepository = CollectorAlbumRepository(
         Retrofit.Builder().baseUrl(BuildConfig.API_BASE_URL)
-            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS).retryOnConnectionFailure(false).build())
+            // BackVynils puede cerrar conexiones inactivas. Abrir una conexión para cada
+            // operación evita reutilizarlas sin reenviar automáticamente el POST.
+            .client(OkHttpClient.Builder().callTimeout(20, TimeUnit.SECONDS)
+                .connectionPool(okhttp3.ConnectionPool(0, 1, TimeUnit.SECONDS))
+                .retryOnConnectionFailure(false).build())
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(CollectorAlbumService::class.java)
     )

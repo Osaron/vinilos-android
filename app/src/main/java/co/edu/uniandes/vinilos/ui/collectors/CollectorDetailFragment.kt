@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -46,7 +45,7 @@ class CollectorDetailFragment : Fragment(R.layout.fragment_collector_detail) {
         }
         parentFragmentManager.setFragmentResultListener(CollectorAlbumFragment.RESULT, viewLifecycleOwner) { _, data ->
             if (data.getInt(CollectorAlbumFragment.COLLECTOR_ID) == collectorId) {
-                Toast.makeText(requireContext(), R.string.hu11_saved, Toast.LENGTH_SHORT).show()
+                binding.collectorAlbumFeedback.isVisible = true
                 viewModel.refresh()
             }
         }

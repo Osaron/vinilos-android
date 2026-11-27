@@ -10,6 +10,17 @@
             <TextView android:id="@+id/collector_detail_title" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:accessibilityHeading="true" android:gravity="center"
                 android:paddingTop="12dp" android:textColor="#222222" android:textSize="26sp" />
+            <Button android:id="@+id/add_collector_album"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:minHeight="48dp" android:text="@string/hu11_title" android:visibility="gone" />
+            <TextView android:id="@+id/collector_album_feedback"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/hu11_saved" android:textColor="@color/text_primary"
+                android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            <TextView android:id="@+id/collector_album_list"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary" android:textSize="16sp"
+                    android:accessibilityLiveRegion="polite" android:visibility="gone" />
             <TextView android:id="@+id/collector_detail_email" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:gravity="center" android:paddingTop="8dp" android:textColor="#555555" />
             <TextView android:id="@+id/collector_detail_telephone" android:layout_width="match_parent"

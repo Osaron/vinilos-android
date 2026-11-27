@@ -72,9 +72,8 @@ Reporte completo y análisis en la wiki: [Sprint 3 ‐ Reporte de perfilamiento]
 ## 6. Velocidad del equipo
 
 ![Burndown por sprint](graficas/burndown-sprints.png)
-![Burnup del Sprint 3](graficas/burnup-sprint-3.png)
 
-Fuentes: fechas de integración de cada historia en `develop` (PR) y puntos del [backlog](https://github.com/Osaron/vinilos-android/wiki/Backlog-de-producto). Script: [`graficas/fuentes/velocidad.py`](graficas/fuentes/velocidad.py).
+Compromiso base de cada sprint: 6, 11 y 22 SP, todos aceptados. Fuentes: fecha de integración de cada historia en `develop` (PR, hora de Colombia) y puntos del [backlog](https://github.com/Osaron/vinilos-android/wiki/Backlog-de-producto). El burnup de la Iteración 3 está en la [wiki](https://github.com/Osaron/vinilos-android/wiki/Estimaci%C3%B3n-y-velocidad-de-la-Iteraci%C3%B3n-3). Script: [`graficas/fuentes/velocidad.py`](graficas/fuentes/velocidad.py).
 
 ## 7. Cómo repetir
 

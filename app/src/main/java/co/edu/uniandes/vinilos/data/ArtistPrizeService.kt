@@ -127,8 +127,8 @@ class ArtistPrizeServiceAdapter(private val service: ArtistPrizeService) {
 }
 
 class RemoteArtistPrizeRepository(private val adapter: ArtistPrizeServiceAdapter) : ArtistPrizeRepository {
-    override suspend fun getPrizes() = adapter.getPrizes()
-    override suspend fun getArtistPrizes(type: ArtistType, artistId: Int) = adapter.getArtistPrizes(type, artistId)
+    override suspend fun getPrizes() = onIo { adapter.getPrizes() }
+    override suspend fun getArtistPrizes(type: ArtistType, artistId: Int) = onIo { adapter.getArtistPrizes(type, artistId) }
     override suspend fun assignPrize(type: ArtistType, artistId: Int, prizeId: Int, date: String) =
-        adapter.assignPrize(type, artistId, prizeId, date)
+        onIo { adapter.assignPrize(type, artistId, prizeId, date) }
 }

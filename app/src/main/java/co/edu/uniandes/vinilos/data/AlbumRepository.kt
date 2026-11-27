@@ -46,6 +46,6 @@ class AlbumServiceAdapter(private val service: AlbumService) {
 }
 
 class RemoteAlbumRepository(private val adapter: AlbumServiceAdapter) : AlbumRepository {
-    override suspend fun getAlbums(): List<Album> = adapter.getAlbums()
-    override suspend fun getAlbum(albumId: Int): AlbumDetail = adapter.getAlbum(albumId)
+    override suspend fun getAlbums(): List<Album> = onIo { adapter.getAlbums() }
+    override suspend fun getAlbum(albumId: Int): AlbumDetail = onIo { adapter.getAlbum(albumId) }
 }

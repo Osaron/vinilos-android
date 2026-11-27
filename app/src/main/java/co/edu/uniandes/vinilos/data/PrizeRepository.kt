@@ -52,6 +52,6 @@ class PrizeServiceAdapter(private val service: PrizeService) {
 }
 
 class RemotePrizeRepository(private val adapter: PrizeServiceAdapter) : PrizeRepository {
-    override suspend fun getPrizes() = adapter.getPrizes()
-    override suspend fun createPrize(prize: NewPrize) = adapter.createPrize(prize)
+    override suspend fun getPrizes() = onIo { adapter.getPrizes() }
+    override suspend fun createPrize(prize: NewPrize) = onIo { adapter.createPrize(prize) }
 }

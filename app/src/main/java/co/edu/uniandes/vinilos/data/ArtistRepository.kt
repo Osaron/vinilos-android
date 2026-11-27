@@ -24,5 +24,5 @@ class ArtistServiceAdapter(private val service: ArtistService) {
 }
 
 class RemoteArtistRepository(private val adapter: ArtistServiceAdapter) : ArtistRepository {
-    override suspend fun getArtists(): List<Artist> = adapter.getArtists()
+    override suspend fun getArtists(): List<Artist> = onIo { adapter.getArtists() }
 }

@@ -66,7 +66,7 @@ class FavoriteArtistServiceAdapter(private val service: FavoriteArtistService) {
 }
 
 class RemoteFavoriteArtistRepository(private val adapter: FavoriteArtistServiceAdapter) : FavoriteArtistRepository {
-    override suspend fun getFavorites(collectorId: Int) = adapter.getFavorites(collectorId)
+    override suspend fun getFavorites(collectorId: Int) = onIo { adapter.getFavorites(collectorId) }
     override suspend fun addFavorite(collectorId: Int, artistId: Int, type: ArtistType) =
-        adapter.addFavorite(collectorId, artistId, type)
+        onIo { adapter.addFavorite(collectorId, artistId, type) }
 }

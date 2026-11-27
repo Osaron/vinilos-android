@@ -57,5 +57,5 @@ class RemoteArtistDetailRepository(
     private val adapter: ArtistDetailServiceAdapter,
 ) : ArtistDetailRepository {
     override suspend fun getArtistDetail(type: ArtistType, artistId: Int): ArtistDetail =
-        adapter.getArtistDetail(type, artistId)
+        onIo { adapter.getArtistDetail(type, artistId) }
 }

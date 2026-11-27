@@ -58,6 +58,6 @@ class BandMusicianServiceAdapter(private val service: BandMusicianService) {
 }
 
 class RemoteBandMusicianRepository(private val adapter: BandMusicianServiceAdapter) : BandMusicianRepository {
-    override suspend fun addMusician(bandId: Int, musicianId: Int) = adapter.addMusician(bandId, musicianId)
-    override suspend fun getMembers(bandId: Int) = adapter.getMembers(bandId)
+    override suspend fun addMusician(bandId: Int, musicianId: Int) = onIo { adapter.addMusician(bandId, musicianId) }
+    override suspend fun getMembers(bandId: Int) = onIo { adapter.getMembers(bandId) }
 }

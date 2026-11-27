@@ -64,5 +64,5 @@ class AlbumCreationServiceAdapter(private val service: AlbumCreationService) {
 class RemoteAlbumCreationRepository(
     private val adapter: AlbumCreationServiceAdapter,
 ) : AlbumCreationRepository {
-    override suspend fun createAlbum(album: NewAlbum): Album = adapter.createAlbum(album)
+    override suspend fun createAlbum(album: NewAlbum): Album = onIo { adapter.createAlbum(album) }
 }

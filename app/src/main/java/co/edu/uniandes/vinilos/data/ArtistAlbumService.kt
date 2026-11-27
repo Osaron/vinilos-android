@@ -71,6 +71,6 @@ class ArtistAlbumServiceAdapter(private val service: ArtistAlbumService) {
 }
 
 class RemoteArtistAlbumRepository(private val adapter: ArtistAlbumServiceAdapter) : ArtistAlbumRepository {
-    override suspend fun getAlbumIds(type: ArtistType, artistId: Int) = adapter.getAlbumIds(type, artistId)
-    override suspend fun addAlbum(type: ArtistType, artistId: Int, albumId: Int) = adapter.addAlbum(type, artistId, albumId)
+    override suspend fun getAlbumIds(type: ArtistType, artistId: Int) = onIo { adapter.getAlbumIds(type, artistId) }
+    override suspend fun addAlbum(type: ArtistType, artistId: Int, albumId: Int) = onIo { adapter.addAlbum(type, artistId, albumId) }
 }

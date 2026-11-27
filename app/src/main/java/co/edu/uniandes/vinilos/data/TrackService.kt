@@ -95,6 +95,6 @@ class TrackServiceAdapter(private val service: TrackService) {
 class RemoteTrackAssociationRepository(
     private val adapter: TrackServiceAdapter,
 ) : TrackAssociationRepository {
-    override suspend fun addTrack(albumId: Int, track: NewTrack): Track = adapter.addTrack(albumId, track)
-    override suspend fun getTracks(albumId: Int): List<Track> = adapter.getTracks(albumId)
+    override suspend fun addTrack(albumId: Int, track: NewTrack): Track = onIo { adapter.addTrack(albumId, track) }
+    override suspend fun getTracks(albumId: Int): List<Track> = onIo { adapter.getTracks(albumId) }
 }
